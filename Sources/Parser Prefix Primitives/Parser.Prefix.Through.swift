@@ -12,7 +12,10 @@ extension Parser.Prefix {
     ///
     /// Like `UpTo` but includes the delimiter in the consumed portion.
     public struct Through<Input: Collection.Slice.`Protocol`>
-    where Input.Element: Equatable {
+    // Element: Copyable is structural (the delimiter is stored as an Array)
+    // and stated explicitly: on toolchains where Equatable is generalized
+    // to ~Copyable it no longer follows from Equatable.
+    where Input.Element: Equatable, Input.Element: Copyable {
         @usableFromInline
         let delimiter: [Input.Element]
 
