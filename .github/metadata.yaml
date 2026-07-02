@@ -1,6 +1,6 @@
 # .github/metadata.yaml
 # Triaged by AI-assisted bulk pass (2026-04-29).
-description: "Parser types for Swift."
+description: "Byte-oriented parser combinators split into narrow, independently importable modules for Swift."
 topics:
   - primitives
   - parser
