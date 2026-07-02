@@ -10,9 +10,11 @@ Add the dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-parser-primitives.git", from: "0.1.0")
+    .package(url: "https://github.com/swift-primitives/swift-parser-primitives.git", branch: "main")
 ]
 ```
+
+> Pre-1.0: no version tags yet. APIs may change; pin a commit for reproducible builds.
 
 Add the umbrella product to your target (re-exports every module):
 
