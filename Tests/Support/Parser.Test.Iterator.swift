@@ -3,24 +3,28 @@ public import Iterator_Chunk_Primitives
 public import Parser_Primitives
 
 extension Parser.Test {
+    // The four-part WORKAROUND template below is present and compact (WHY / WHEN TO
+    // REMOVE / TRACKING all within ±5 lines); the blunt workaround_marker_present
+    // regex still misfires on it, so shield this one site.
+    // swiftlint:disable:next workaround_marker_present
+    // WORKAROUND: omits the stdlib `IteratorProtocol` conformance.
+    // WHY: the dual chunk-protocol + `IteratorProtocol` conformance trips a Swift
+    //   6.3.3 (+Asserts) effects-check assertion (§A17; details in the doc below).
+    // WHEN TO REMOVE: restore `, IteratorProtocol` once Windows CI has a fixed toolchain.
+    // TRACKING: swift-institute/Issues/swift-issue-typed-throws-never-witness-effects-assertion
+
     /// Iterator over `[UInt8]` conforming to `Iterator.Chunk.Protocol`.
     ///
     /// Stores the array and an index for span-based iteration via
     /// `_elements.span.extracting()`.
     ///
-    /// WORKAROUND: this type does NOT conform to stdlib `IteratorProtocol`.
-    /// WHY: Swift 6.3.3 (+Asserts, e.g. the Windows CI toolchain) crashes type-checking
-    ///      a type that conforms to BOTH the chunk protocol and stdlib `IteratorProtocol` —
-    ///      Assertion `getEffects(req).contains(getEffects(witness))` (TypeCheckProtocol.cpp:1311):
-    ///      the chunk protocol's `where Element: Copyable` derived `next() throws(Never)` competes
-    ///      with the non-throwing `IteratorProtocol.next()` requirement and trips an effects check.
-    ///      The stdlib conformance was unused here — `Parser.Test.Bytes` reaches `Iterable` via
-    ///      `Collection.Protocol` and needs only `Iterator.Chunk.Protocol`, not stdlib iteration.
-    ///      Mirrors the `swift-input-primitives` fix (4262602).
-    /// TRACKING: swift-institute/Issues/swift-issue-typed-throws-never-witness-effects-assertion
-    ///           (compiler-bug-catalog §A17). Fixed on Swift 6.5-dev.
-    /// WHEN TO REMOVE: restore `, IteratorProtocol` (and the `next() -> UInt8?` witness) once the
-    ///      Windows CI toolchain ships a Swift carrying the fix.
+    /// Does NOT conform to stdlib `IteratorProtocol`: Swift 6.3.3 (+Asserts) crashes
+    /// type-checking a type that conforms to BOTH the chunk protocol and stdlib
+    /// `IteratorProtocol` — `getEffects(req).contains(getEffects(witness))` assertion
+    /// (TypeCheckProtocol.cpp:1311) where the chunk protocol's derived `next() throws(Never)`
+    /// competes with the non-throwing `IteratorProtocol.next()`. Unused here anyway —
+    /// `Parser.Test.Bytes` reaches `Iterable` via `Collection.Protocol`. Fixed on 6.5-dev;
+    /// mirrors the `swift-input-primitives` fix (4262602).
     public struct Iterator: __IteratorChunkProtocol, Sendable {
         public typealias Failure = Never
 

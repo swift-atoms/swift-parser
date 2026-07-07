@@ -7,9 +7,10 @@
 //
 
 extension Pair: Parser.`Protocol`
-where First: Parser.`Protocol`,
-      Second: Parser.`Protocol`,
-      First.Input == Second.Input
+where
+    First: Parser.`Protocol`,
+    Second: Parser.`Protocol`,
+    First.Input == Second.Input
 {
     public typealias Input = First.Input
     public typealias Output = (First.Output, Second.Output)

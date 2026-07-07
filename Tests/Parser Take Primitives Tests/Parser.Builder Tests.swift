@@ -83,7 +83,9 @@ extension Whitespace: Parser.`Protocol` {
     }
 }
 
-/// Consumes all remaining input, returns byte count. Never fails.
+/// Consumes all remaining input, returns byte count.
+///
+/// Never fails.
 struct CountRest<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }

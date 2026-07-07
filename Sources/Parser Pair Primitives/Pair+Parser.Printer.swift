@@ -7,9 +7,10 @@
 //
 
 extension Pair: Parser.Printer
-where First: Parser.`Protocol` & Parser.Printer,
-      Second: Parser.`Protocol` & Parser.Printer,
-      First.Input == Second.Input
+where
+    First: Parser.`Protocol` & Parser.Printer,
+    Second: Parser.`Protocol` & Parser.Printer,
+    First.Input == Second.Input
 {
     @inlinable
     public borrowing func print(
