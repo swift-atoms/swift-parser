@@ -12,6 +12,7 @@ where
     Second: Parser.`Protocol` & Parser.Printer,
     First.Input == Second.Input
 {
+    /// Prints both outputs into the input, in reverse order so the buffer builds correctly.
     @inlinable
     public borrowing func print(
         _ output: (First.Output, Second.Output),

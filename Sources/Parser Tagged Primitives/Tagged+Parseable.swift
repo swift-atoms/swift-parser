@@ -23,14 +23,20 @@ extension Tagged where Underlying: Parseable, Underlying.Parser.Output == Underl
     /// from the underlying's parser — Tagged adds no input-shape or error
     /// concerns of its own.
     public struct UnderlyingParser: Parser_Primitive.Parser.`Protocol` {
+        /// The input type this parser consumes.
         public typealias Input = Underlying.Parser.Input
+        /// The output type this parser produces: the tagged wrapper value.
         public typealias Output = Tagged<Tag, Underlying>
+        /// The error type this parser can throw, inherited from the underlying parser.
         public typealias Failure = Underlying.Parser.Failure
+        /// A leaf parser has no composed body.
         public typealias Body = Never
 
+        /// Creates the wrapper parser.
         @inlinable
         public init() {}
 
+        /// Runs the underlying parser, then lifts its result into a tagged value.
         @inlinable
         public borrowing func parse(
             _ input: inout Underlying.Parser.Input
@@ -46,6 +52,7 @@ where
     Underlying: Parseable,
     Underlying.Parser.Output == Underlying
 {
+    /// The canonical parser that lifts the underlying value's parser to produce tagged values.
     @inlinable
     public static var parser: Tagged<Tag, Underlying>.UnderlyingParser {
         Tagged<Tag, Underlying>.UnderlyingParser()
