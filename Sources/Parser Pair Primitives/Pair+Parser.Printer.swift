@@ -21,12 +21,12 @@ where
         // Print in reverse order to build input correctly (last printer's
         // output appears latest in the input buffer; first printer's output
         // appears earliest).
-        do {
+        do throws(Second.Failure) {
             try second.print(output.1, into: &input)
         } catch {
             throw .right(error)
         }
-        do {
+        do throws(First.Failure) {
             try first.print(output.0, into: &input)
         } catch {
             throw .left(error)

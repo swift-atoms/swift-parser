@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Fail")
-struct ParserFailTests {
+@Suite
+struct `Parser.Fail` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserFailTests.Unit {
+extension `Parser.Fail`.Unit {
     @Test
     func `always throws the provided error`() {
         let parser = Parser.Fail<Parser.Test.Input, Int, Parser.Match.Error>(
@@ -27,7 +27,7 @@ extension ParserFailTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserFailTests.EdgeCase {
+extension `Parser.Fail`.`Edge Case` {
     @Test
     func `throws on empty input without consuming`() {
         let parser = Parser.Fail<Parser.Test.Input, Void, Parser.Constraint.Error>(

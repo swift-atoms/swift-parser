@@ -22,8 +22,6 @@ extension Parser.Test {
     /// `Parser.Test.Bytes` reaches `Iterable` via `Collection.Protocol`. Fixed on 6.5-dev;
     /// mirrors the `swift-input-primitives` fix (4262602).
     public struct Iterator: __IteratorChunkProtocol, Sendable {
-        public typealias Failure = Never
-
         @usableFromInline
         var _elements: [UInt8]
 
@@ -35,18 +33,22 @@ extension Parser.Test {
             self._elements = array
             self._index = 0
         }
+    }
+}
 
-        @_lifetime(&self)
-        @inlinable
-        public mutating func next(maximumCount: some Carrier.`Protocol`<Cardinal>) -> Swift.Span<UInt8> {
-            let remaining = _elements.count - _index
-            let take = min(Int(maximumCount.underlying.rawValue), remaining)
-            guard take > 0 else { return _elements.span.extracting(first: 0) }
-            let start = _index
-            _index += take
-            return _elements.span
-                .extracting(droppingFirst: start)
-                .extracting(first: take)
-        }
+extension Parser.Test.Iterator {
+    public typealias Failure = Never
+
+    @_lifetime(&self)
+    @inlinable
+    public mutating func next(maximumCount: some Carrier.`Protocol`<Cardinal>) -> Swift.Span<UInt8> {
+        let remaining = _elements.count - _index
+        let take = min(Int(maximumCount.underlying.rawValue), remaining)
+        guard take > 0 else { return _elements.span.extracting(first: 0) }
+        let start = _index
+        _index += take
+        return _elements.span
+            .extracting(droppingFirst: start)
+            .extracting(first: take)
     }
 }

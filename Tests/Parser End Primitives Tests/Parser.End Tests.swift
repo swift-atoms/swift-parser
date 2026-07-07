@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.End")
-struct ParserEndTests {
+@Suite
+struct `Parser.End` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserEndTests.Unit {
+extension `Parser.End`.Unit {
     @Test
     func `succeeds on empty input`() throws(any Swift.Error) {
         let parser = Parser.End<Parser.Test.Input>()
@@ -23,7 +23,7 @@ extension ParserEndTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserEndTests.EdgeCase {
+extension `Parser.End`.`Edge Case` {
     @Test
     func `fails with remaining input`() {
         let parser = Parser.End<Parser.Test.Input>()

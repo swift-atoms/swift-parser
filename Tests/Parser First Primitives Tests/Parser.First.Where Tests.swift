@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.First.Where")
-struct ParserFirstWhereTests {
+@Suite
+struct `Parser.First.Where` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserFirstWhereTests.Unit {
+extension `Parser.First.Where`.Unit {
     @Test
     func `returns element when predicate matches`() throws(any Swift.Error) {
         let parser = Parser.First.Where<Parser.Test.Input>(expected: "digit") {
@@ -28,7 +28,7 @@ extension ParserFirstWhereTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserFirstWhereTests.EdgeCase {
+extension `Parser.First.Where`.`Edge Case` {
     @Test
     func `fails on empty input with EndOfInput error`() {
         let parser = Parser.First.Where<Parser.Test.Input> { _ in true }

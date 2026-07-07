@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Not")
-struct ParserNotTests {
+@Suite
+struct `Parser.Not` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserNotTests.Unit {
+extension `Parser.Not`.Unit {
     @Test
     func `succeeds when upstream fails`() throws(any Swift.Error) {
         let parser = Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }.not()
@@ -38,7 +38,7 @@ extension ParserNotTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserNotTests.EdgeCase {
+extension `Parser.Not`.`Edge Case` {
     @Test
     func `fails when upstream succeeds`() {
         let parser = Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }.not()

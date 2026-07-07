@@ -39,13 +39,13 @@ extension Parser.Take.Two: Parser.`Protocol` {
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let o0: P0.Output
-        do {
+        do throws(P0.Failure) {
             o0 = try p0.parse(&input)
         } catch {
             throw .left(error)
         }
         let o1: P1.Output
-        do {
+        do throws(P1.Failure) {
             o1 = try p1.parse(&input)
         } catch {
             throw .right(error)
@@ -75,12 +75,12 @@ where P0: Parser.Printer, P1: Parser.Printer {
         into input: inout Input
     ) throws(Failure) {
         // Print in reverse order to build input correctly
-        do {
+        do throws(P1.Failure) {
             try p1.print(output.1, into: &input)
         } catch {
             throw .right(error)
         }
-        do {
+        do throws(P0.Failure) {
             try p0.print(output.0, into: &input)
         } catch {
             throw .left(error)

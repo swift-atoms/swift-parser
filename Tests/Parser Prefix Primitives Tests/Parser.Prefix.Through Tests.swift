@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Prefix.Through")
-struct ParserPrefixThroughTests {
+@Suite
+struct `Parser.Prefix.Through` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserPrefixThroughTests.Unit {
+extension `Parser.Prefix.Through`.Unit {
     @Test
     func `consumes through delimiter including it`() throws(any Swift.Error) {
         let parser = Parser.Prefix.Through<Parser.Test.Input>([UInt8(ascii: "\n")])
@@ -36,7 +36,7 @@ extension ParserPrefixThroughTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserPrefixThroughTests.EdgeCase {
+extension `Parser.Prefix.Through`.`Edge Case` {
     @Test
     func `fails when delimiter not found`() {
         let parser = Parser.Prefix.Through<Parser.Test.Input>([0xFF])

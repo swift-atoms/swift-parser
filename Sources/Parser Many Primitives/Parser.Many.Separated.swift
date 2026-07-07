@@ -106,7 +106,7 @@ extension Parser.Many.Separated: Parser.`Protocol` {
             results.reserveCapacity(minimum)
         }
 
-        do {
+        do throws(Element.Failure) {
             let first = try element.parse(&input)
             results.append(first)
         } catch {
@@ -119,14 +119,14 @@ extension Parser.Many.Separated: Parser.`Protocol` {
         while results.count < maximum {
             let checkpoint = input.checkpoint
 
-            do {
+            do throws(Separator.Failure) {
                 _ = try separator.parse(&input)
             } catch {
                 input.restore.to(__unchecked: (), checkpoint)
                 break
             }
 
-            do {
+            do throws(Element.Failure) {
                 let next = try element.parse(&input)
                 results.append(next)
             } catch {
@@ -160,13 +160,13 @@ where Element: Parser.Printer, Separator: Parser.Printer, Separator.Output == Vo
         var isFirst = true
         for item in output.reversed() {
             if !isFirst {
-                do {
+                do throws(Separator.Failure) {
                     try separator.print((), into: &input)
                 } catch {
                     break
                 }
             }
-            do {
+            do throws(Element.Failure) {
                 try element.print(item, into: &input)
             } catch {
                 break

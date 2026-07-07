@@ -43,7 +43,7 @@ extension Parser.Filter: Parser.`Protocol` {
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let output: Upstream.Output
-        do {
+        do throws(Upstream.Failure) {
             output = try upstream.parse(&input)
         } catch {
             throw .left(error)

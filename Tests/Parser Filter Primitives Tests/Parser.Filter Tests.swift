@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Filter")
-struct ParserFilterTests {
+@Suite
+struct `Parser.Filter` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserFilterTests.Unit {
+extension `Parser.Filter`.Unit {
     @Test
     func `passes when predicate returns true`() throws(any Swift.Error) {
         let parser = Parser.First.Element<Parser.Test.Input>()
@@ -26,7 +26,7 @@ extension ParserFilterTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserFilterTests.EdgeCase {
+extension `Parser.Filter`.`Edge Case` {
     @Test
     func `fails when predicate returns false`() {
         let parser = Parser.First.Element<Parser.Test.Input>()

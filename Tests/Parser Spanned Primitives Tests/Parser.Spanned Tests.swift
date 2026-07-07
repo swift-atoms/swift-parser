@@ -3,14 +3,14 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Spanned")
-struct ParserSpannedTests {
+@Suite
+struct `Parser.Spanned` {
     @Suite struct Unit {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserSpannedTests.Unit {
+extension `Parser.Spanned`.Unit {
     @Test
     func `stores value with source span`() {
         let spanned = Parser.Spanned(42, start: 10, end: 14)

@@ -36,7 +36,7 @@ extension Parser.Error.Map: Parser.`Protocol` {
     /// Parses the upstream value, mapping any failure through the transform.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
-        do {
+        do throws(Upstream.Failure) {
             return try upstream.parse(&input)
         } catch {
             throw transform(error)

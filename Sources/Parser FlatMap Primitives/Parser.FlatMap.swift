@@ -43,13 +43,13 @@ extension Parser.FlatMap: Parser.`Protocol` {
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let upstreamOutput: Upstream.Output
-        do {
+        do throws(Upstream.Failure) {
             upstreamOutput = try upstream.parse(&input)
         } catch {
             throw .left(error)
         }
         let downstream = transform(upstreamOutput)
-        do {
+        do throws(Downstream.Failure) {
             return try downstream.parse(&input)
         } catch {
             throw .right(error)
