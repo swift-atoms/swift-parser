@@ -26,6 +26,7 @@ extension Parser.Map {
         @usableFromInline
         let transform: (Upstream.Output) throws(E) -> Output
 
+        /// Creates a throwing-map parser wrapping the upstream parser with a throwing transform.
         @inlinable
         public init(
             upstream: Upstream,
@@ -38,9 +39,12 @@ extension Parser.Map {
 }
 
 extension Parser.Map.Throwing: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Upstream.Input
+    /// The error type this parser can throw, combining upstream and transform failures.
     public typealias Failure = Either<Upstream.Failure, E>
 
+    /// Parses the upstream value, then applies the throwing transform, failing on either.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let upstreamOutput: Upstream.Output

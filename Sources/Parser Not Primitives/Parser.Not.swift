@@ -60,11 +60,15 @@ extension Parser.Not {
 // MARK: - Parser Conformance
 
 extension Parser.Not: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Upstream.Input
+    /// This parser produces no value.
     public typealias Output = Void
+    /// The error type this parser can throw when the upstream parser unexpectedly matches.
     public typealias Failure = Parser.Not<Upstream>.Error
 
     // on Property.Inout accessor chains (input.restore.to) in multiple control flow paths.
+    /// Succeeds without consuming input when the upstream parser fails; fails when it matches.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) {
         let checkpoint = input.checkpoint

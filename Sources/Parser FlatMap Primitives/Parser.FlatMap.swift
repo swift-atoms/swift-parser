@@ -19,6 +19,7 @@ extension Parser {
         @usableFromInline
         let transform: (Upstream.Output) -> Downstream
 
+        /// Creates a parser that derives the next parser from the upstream output.
         @inlinable
         public init(
             upstream: Upstream,
@@ -31,10 +32,14 @@ extension Parser {
 }
 
 extension Parser.FlatMap: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Upstream.Input
+    /// The output type this parser produces: the downstream parser's output.
     public typealias Output = Downstream.Output
+    /// The error type this parser can throw, discriminating upstream from downstream failures.
     public typealias Failure = Either<Upstream.Failure, Downstream.Failure>
 
+    /// Parses the upstream value, derives the downstream parser from it, then parses that.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let upstreamOutput: Upstream.Output
