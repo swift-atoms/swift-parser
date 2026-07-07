@@ -28,10 +28,14 @@ extension Parser.Take.Two {
 }
 
 extension Parser.Take.Two.Map: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = P0.Input
+    /// The output type this parser produces after transformation.
     public typealias Output = NewOutput
+    /// The error type this parser can throw, inherited from the underlying pair.
     public typealias Failure = Parser.Take.Two<P0, P1>.Failure
 
+    /// Parses the pair, then applies the transform to both outputs.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let (o0, o1) = try upstream.parse(&input)

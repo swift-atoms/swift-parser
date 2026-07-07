@@ -17,6 +17,7 @@ extension Parser.Skip {
         @usableFromInline
         internal let p1: P1
 
+        /// Creates a parser that runs both parsers but keeps only the second's output.
         @inlinable
         public init(_ p0: P0, _ p1: P1) {
             self.p0 = p0
@@ -26,10 +27,14 @@ extension Parser.Skip {
 }
 
 extension Parser.Skip.First: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = P0.Input
+    /// The output type this parser produces: the second parser's output.
     public typealias Output = P1.Output
+    /// The error type this parser can throw, discriminating which parser failed.
     public typealias Failure = Either<P0.Failure, P1.Failure>
 
+    /// Parses the first parser and discards its output, then parses and returns the second.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         do {
@@ -49,6 +54,7 @@ extension Parser.Skip.First: Parser.`Protocol` {
 
 extension Parser.Skip.First: Parser.Printer
 where P0: Parser.Printer, P1: Parser.Printer {
+    /// Prints the second parser's output, then the first parser's empty output, in reverse order.
     @inlinable
     public func print(_ output: P1.Output, into input: inout Input) throws(Failure) {
         // Print in reverse order

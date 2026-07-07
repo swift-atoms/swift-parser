@@ -40,6 +40,7 @@ extension Parser {
         @usableFromInline
         let maximum: Int
 
+        /// Creates a parser applying the element parser at least the range's lower bound times.
         @inlinable
         public init(
             _ range: PartialRangeFrom<Int>,
@@ -50,6 +51,7 @@ extension Parser {
             self.maximum = .max
         }
 
+        /// Creates a parser applying the element parser a number of times within the given range.
         @inlinable
         public init(
             _ range: ClosedRange<Int>,
@@ -60,6 +62,7 @@ extension Parser {
             self.maximum = range.upperBound
         }
 
+        /// Creates a parser applying the element parser zero or more times.
         @inlinable
         public init(
             @Parser.Take.Builder<Input> element: () -> Element
@@ -72,9 +75,12 @@ extension Parser {
 }
 
 extension Parser.Many: Parser.`Protocol` {
+    /// The output type this parser produces: an array of element outputs.
     public typealias Output = [Element.Output]
+    /// The error type this parser can throw when the element count is out of range.
     public typealias Failure = Parser.Many<Input, Element>.Error
 
+    /// Applies the element parser until it fails or the maximum is reached, collecting outputs.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var results: [Element.Output] = []
@@ -108,6 +114,7 @@ extension Parser.Many: Parser.`Protocol` {
 
 extension Parser.Many: Parser.Printer
 where Element: Parser.Printer {
+    /// Prints each element in reverse order into the input.
     @inlinable
     public func print(_ output: [Element.Output], into input: inout Input) throws(Failure) {
         if output.count < minimum {

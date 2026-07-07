@@ -19,11 +19,13 @@ extension Parser.Take {
     /// ```
     public struct Transform<Input, BodyOutput, Output, Body: Parser.`Protocol`>
     where Body.Input == Input, Body.Output == BodyOutput {
+        /// The composed parser built from the sequence.
         public let body: Body
 
         @usableFromInline
         let transform: (BodyOutput) -> Output
 
+        /// Creates a transforming parser from the transform and the result-builder closure.
         @inlinable
         public init(
             _ transform: @escaping (BodyOutput) -> Output,
@@ -36,8 +38,10 @@ extension Parser.Take {
 }
 
 extension Parser.Take.Transform: Parser.`Protocol` {
+    /// The error type this parser can throw, inherited from the composed body.
     public typealias Failure = Body.Failure
 
+    /// Parses the body, then applies the transform to its output.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         transform(try body.parse(&input))
