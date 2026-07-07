@@ -25,10 +25,14 @@ extension Parser.Error {
 }
 
 extension Parser.Error.Replace: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Upstream.Input
+    /// The output type this parser produces, unchanged from the upstream parser.
     public typealias Output = Upstream.Output
+    /// This parser is infallible.
     public typealias Failure = Never
 
+    /// Parses the upstream value, returning the default output when it fails.
     @inlinable
     public func parse(_ input: inout Input) -> Output {
         do {
