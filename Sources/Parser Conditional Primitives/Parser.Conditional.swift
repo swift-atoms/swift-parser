@@ -20,10 +20,14 @@ extension Parser {
 }
 
 extension Parser.Conditional: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = First.Input
+    /// The output type both branches produce.
     public typealias Output = First.Output
+    /// The error type this parser can throw, discriminating which branch failed.
     public typealias Failure = Either<First.Failure, Second.Failure>
 
+    /// Parses using whichever branch this value holds.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         switch self {
@@ -48,6 +52,7 @@ extension Parser.Conditional: Parser.`Protocol` {
 
 extension Parser.Conditional: Parser.Printer
 where First: Parser.Printer, Second: Parser.Printer {
+    /// Prints using whichever branch this value holds.
     @inlinable
     public func print(_ output: Output, into input: inout Input) throws(Failure) {
         switch self {
