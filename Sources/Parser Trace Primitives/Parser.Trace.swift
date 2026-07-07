@@ -60,10 +60,14 @@ extension Parser {
 // MARK: - Parser Conformance
 
 extension Parser.Trace: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Upstream.Input
+    /// The output type this parser produces, unchanged from the upstream parser.
     public typealias Output = Upstream.Output
+    /// The error type this parser can throw, unchanged from the upstream parser.
     public typealias Failure = Upstream.Failure
 
+    /// Parses using the upstream parser, logging entry, success, and failure events.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         log("[\(label)] enter")

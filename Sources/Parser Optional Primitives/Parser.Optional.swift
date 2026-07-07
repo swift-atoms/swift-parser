@@ -13,6 +13,7 @@ extension Parser {
         @usableFromInline
         let wrapped: Wrapped?
 
+        /// Creates a parser wrapping an optional parser.
         @inlinable
         public init(_ wrapped: Wrapped?) {
             self.wrapped = wrapped
@@ -21,10 +22,14 @@ extension Parser {
 }
 
 extension Parser.Optional: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Wrapped.Input
+    /// The output type this parser produces: the wrapped output, or nil when absent.
     public typealias Output = Wrapped.Output?
+    /// The error type this parser can throw, inherited from the wrapped parser.
     public typealias Failure = Wrapped.Failure
 
+    /// Parses using the wrapped parser when present, otherwise returns nil.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         guard let wrapped else {
@@ -38,6 +43,7 @@ extension Parser.Optional: Parser.`Protocol` {
 
 extension Parser.Optional: Parser.Printer
 where Wrapped: Parser.Printer {
+    /// Prints the wrapped output when both the parser and the value are present.
     @inlinable
     public func print(_ output: Wrapped.Output?, into input: inout Input) throws(Failure) {
         guard let wrapped, let output else { return }

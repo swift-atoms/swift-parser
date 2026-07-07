@@ -73,10 +73,14 @@ extension Parser {
 // MARK: - Parser Conformance
 
 extension Parser.Lazy: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = P.Input
+    /// The output type this parser produces.
     public typealias Output = P.Output
+    /// The error type this parser can throw.
     public typealias Failure = P.Failure
 
+    /// Builds a fresh parser from the stored closure, then parses with it.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         try build().parse(&input)

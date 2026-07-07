@@ -25,6 +25,7 @@ extension Parser {
         @usableFromInline
         internal let transform: (Upstream.Output) -> Output
 
+        /// Creates a map parser wrapping the upstream parser with an output transform.
         @inlinable
         public init(
             upstream: Upstream,
@@ -37,9 +38,12 @@ extension Parser {
 }
 
 extension Parser.Map: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Upstream.Input
+    /// The error type this parser can throw.
     public typealias Failure = Upstream.Failure
 
+    /// Parses using the upstream parser, then applies the transform to its output.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         transform(try upstream.parse(&input))

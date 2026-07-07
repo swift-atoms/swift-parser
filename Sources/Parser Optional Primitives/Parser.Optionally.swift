@@ -22,6 +22,7 @@ extension Parser {
         @usableFromInline
         internal let wrapped: Wrapped
 
+        /// Creates a parser that backtracks and yields nil when the wrapped parser fails.
         @inlinable
         public init(_ wrapped: Wrapped) {
             self.wrapped = wrapped
@@ -30,11 +31,15 @@ extension Parser {
 }
 
 extension Parser.Optionally: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Wrapped.Input
+    /// The output type this parser produces: the wrapped output, or nil on failure.
     public typealias Output = Wrapped.Output?
+    /// This parser is infallible.
     public typealias Failure = Never
 
     // on Property.Inout accessor chains (input.restore.to) in multiple control flow paths.
+    /// Parses using the wrapped parser, backtracking and returning nil on failure.
     @inlinable
     public func parse(_ input: inout Input) -> Output {
         let checkpoint = input.checkpoint
@@ -51,6 +56,7 @@ extension Parser.Optionally: Parser.`Protocol` {
 
 extension Parser.Optionally: Parser.Printer
 where Wrapped: Parser.Printer {
+    /// Prints the wrapped output when present, silently discarding any printer error.
     @inlinable
     public func print(_ output: Wrapped.Output?, into input: inout Input) throws(Failure) {
         guard let output else { return }
