@@ -63,8 +63,10 @@ extension Parser {
     /// (HANDOFF.md Wave 1 Item 3c).
     @frozen
     public struct Parse<P: Parser.`Protocol` & ~Copyable>: ~Copyable {
+        /// The parser this accessor wraps.
         public let parser: P
 
+        /// Creates a parse-variants accessor that consumes the given parser.
         @inlinable
         public init(parser: consuming P) {
             self.parser = parser

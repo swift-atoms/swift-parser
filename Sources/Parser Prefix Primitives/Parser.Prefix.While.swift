@@ -34,6 +34,7 @@ extension Parser.Prefix {
         @usableFromInline
         let predicate: (Input.Element) -> Bool
 
+        /// Creates a parser consuming elements while the predicate holds, within the length bounds.
         @inlinable
         public init(
             minLength: Int = 0,
@@ -48,9 +49,12 @@ extension Parser.Prefix {
 }
 
 extension Parser.Prefix.While: Parser.`Protocol` {
+    /// The output type this parser produces: the consumed prefix.
     public typealias Output = Input
+    /// The error type this parser can throw when fewer than the minimum elements match.
     public typealias Failure = Parser.Constraint.Error
 
+    /// Greedily consumes elements while the predicate holds, up to the maximum length.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var count = 0
