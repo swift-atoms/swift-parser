@@ -13,6 +13,7 @@ extension Parser.Consume {
         @usableFromInline
         let count: Int
 
+        /// Creates a parser that consumes the given number of elements.
         @inlinable
         public init(_ count: Int) {
             self.count = count
@@ -21,9 +22,12 @@ extension Parser.Consume {
 }
 
 extension Parser.Consume.Exactly: Parser.`Protocol` {
+    /// The output type this parser produces: the consumed elements.
     public typealias Output = Input
+    /// The error type this parser can throw when fewer than the requested elements remain.
     public typealias Failure = Parser.Constraint.Error
 
+    /// Consumes exactly the requested number of elements, failing if too few remain.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var endIndex = input.startIndex

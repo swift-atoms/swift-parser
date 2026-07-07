@@ -108,6 +108,7 @@ extension Parser.Spanned {
 // MARK: - CustomStringConvertible
 
 extension Parser.Spanned: CustomStringConvertible where T: CustomStringConvertible {
+    /// A textual description showing the value and its span.
     public var description: String {
         "\(value) [\(start)..<\(end)]"
     }

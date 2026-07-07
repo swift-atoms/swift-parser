@@ -25,6 +25,7 @@ extension Parser {
         @usableFromInline
         let upstream: Upstream
 
+        /// Creates a parser that annotates the upstream parser's failures with their location.
         @inlinable
         public init(_ upstream: Upstream) {
             self.upstream = upstream
@@ -33,10 +34,14 @@ extension Parser {
 }
 
 extension Parser.Locate: Parser.`Protocol` {
+    /// The input type this parser consumes: offset-tracking input.
     public typealias Input = Parser.Tracked<Base>
+    /// The output type this parser produces, unchanged from the upstream parser.
     public typealias Output = Upstream.Output
+    /// The error type this parser can throw, annotated with the failure location.
     public typealias Failure = Parser.Error.Located<Upstream.Failure>
 
+    /// Parses the upstream value; failures are wrapped with the offset at which they occurred.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         try input.parseTracked(upstream).output

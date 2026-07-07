@@ -20,6 +20,7 @@ extension Parser.Prefix {
         @usableFromInline
         let delimiter: [Input.Element]
 
+        /// Creates a parser consuming input up to the given delimiter sequence.
         @inlinable
         public init(_ delimiter: [Input.Element]) {
             self.delimiter = delimiter
@@ -28,9 +29,12 @@ extension Parser.Prefix {
 }
 
 extension Parser.Prefix.UpTo: Parser.`Protocol` {
+    /// The output type this parser produces: the consumed prefix.
     public typealias Output = Input
+    /// This parser is infallible.
     public typealias Failure = Never
 
+    /// Consumes input up to, but not including, the delimiter sequence.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var endIndex = input.startIndex

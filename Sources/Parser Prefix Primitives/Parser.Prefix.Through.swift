@@ -19,6 +19,7 @@ extension Parser.Prefix {
         @usableFromInline
         let delimiter: [Input.Element]
 
+        /// Creates a parser consuming input through the given delimiter sequence.
         @inlinable
         public init(_ delimiter: [Input.Element]) {
             self.delimiter = delimiter
@@ -27,9 +28,12 @@ extension Parser.Prefix {
 }
 
 extension Parser.Prefix.Through: Parser.`Protocol` {
+    /// The output type this parser produces: the consumed prefix.
     public typealias Output = Input
+    /// The error type this parser can throw when the delimiter is not found.
     public typealias Failure = Parser.Match.Error
 
+    /// Consumes input through, and including, the delimiter sequence, failing if it is absent.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var endIndex = input.startIndex

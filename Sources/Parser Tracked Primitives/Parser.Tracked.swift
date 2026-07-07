@@ -81,6 +81,7 @@ extension Parser {
 // MARK: - Input Conformance
 
 extension Parser.Tracked: Input_Primitives.Input.`Protocol` {
+    /// The element type of the underlying input.
     public typealias Element = Base.Element
 
     /// Checkpoint stores both the base input checkpoint and tracked offset.
@@ -100,44 +101,52 @@ extension Parser.Tracked: Input_Primitives.Input.`Protocol` {
             self.trackedOffset = trackedOffset
         }
 
+        /// Returns whether two checkpoints refer to the same base position.
         @inlinable
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.baseCheckpoint == rhs.baseCheckpoint
         }
 
+        /// Returns whether one checkpoint precedes another in the base input.
         @inlinable
         public static func < (lhs: Self, rhs: Self) -> Bool {
             lhs.baseCheckpoint < rhs.baseCheckpoint
         }
     }
 
+    /// Whether the underlying input has no more elements.
     @inlinable
     public var isEmpty: Bool {
         base.isEmpty
     }
 
+    /// The number of elements remaining in the underlying input.
     @inlinable
     public var count: Index<Element>.Count {
         base.count
     }
 
+    /// A checkpoint capturing the current base position and tracked offset.
     @inlinable
     public var checkpoint: Checkpoint {
         Checkpoint(baseCheckpoint: base.checkpoint, trackedOffset: offset)
     }
 
+    /// The range of valid checkpoints for the underlying input.
     @inlinable
     public var bounds: ClosedRange<Checkpoint> {
         let baseRange = base.bounds
         return Checkpoint(baseCheckpoint: baseRange.lowerBound, trackedOffset: .zero)...Checkpoint(baseCheckpoint: baseRange.upperBound, trackedOffset: .zero)
     }
 
+    /// Restores the underlying input and tracked offset to the given checkpoint.
     @inlinable
     public mutating func seek(to checkpoint: Checkpoint) {
         base.seek(to: checkpoint.baseCheckpoint)
         offset = checkpoint.trackedOffset
     }
 
+    /// Advances past one element, incrementing the tracked offset, and returns it.
     @inlinable
     @discardableResult
     public mutating func advance() throws(Input.Stream.Error) -> Element {
@@ -145,6 +154,7 @@ extension Parser.Tracked: Input_Primitives.Input.`Protocol` {
         return try base.advance()
     }
 
+    /// Advances past the given number of elements, incrementing the tracked offset.
     @inlinable
     public mutating func advance(by count: Index<Element>.Count) {
         offset += count
