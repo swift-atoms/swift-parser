@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Prefix.While")
-struct ParserPrefixWhileTests {
+@Suite
+struct `Parser.Prefix.While` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserPrefixWhileTests.Unit {
+extension `Parser.Prefix.While`.Unit {
     @Test
     func `consumes while predicate holds`() throws(any Swift.Error) {
         let digits = Parser.Prefix.While<Parser.Test.Input> {
@@ -40,7 +40,7 @@ extension ParserPrefixWhileTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserPrefixWhileTests.EdgeCase {
+extension `Parser.Prefix.While`.`Edge Case` {
     @Test
     func `returns empty when predicate immediately fails`() throws(any Swift.Error) {
         let parser = Parser.Prefix.While<Parser.Test.Input> { _ in false }

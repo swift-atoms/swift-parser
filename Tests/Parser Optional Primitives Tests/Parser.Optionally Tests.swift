@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Optionally")
-struct ParserOptionallyTests {
+@Suite
+struct `Parser.Optionally` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserOptionallyTests.Unit {
+extension `Parser.Optionally`.Unit {
     @Test
     func `returns value when parser succeeds`() {
         let parser = Parser.Optionally<Parser.First.Where<Parser.Test.Input>> {
@@ -40,7 +40,7 @@ extension ParserOptionallyTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserOptionallyTests.EdgeCase {
+extension `Parser.Optionally`.`Edge Case` {
     @Test
     func `backtracks on failure`() {
         let parser = Parser.Optionally<Parser.First.Where<Parser.Test.Input>> {

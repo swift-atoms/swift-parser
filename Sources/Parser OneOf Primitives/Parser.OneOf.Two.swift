@@ -46,11 +46,11 @@ extension Parser.OneOf.Two: Parser.`Protocol` {
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let checkpoint = input.checkpoint
 
-        do {
+        do throws(P0.Failure) {
             return try p0.parse(&input)
         } catch let error0 {
             input.restore.to(__unchecked: (), checkpoint)
-            do {
+            do throws(P1.Failure) {
                 return try p1.parse(&input)
             } catch let error1 {
                 throw Failure(error0, error1)
@@ -68,12 +68,12 @@ where P0: Parser.Printer, P1: Parser.Printer {
     public func print(_ output: Output, into input: inout Input) throws(Failure) {
         // Try first printer, fall back to second
         let checkpoint = input.checkpoint
-        do {
+        do throws(P0.Failure) {
             try p0.print(output, into: &input)
             return
         } catch let error0 {
             input.restore.to(__unchecked: (), checkpoint)
-            do {
+            do throws(P1.Failure) {
                 try p1.print(output, into: &input)
             } catch let error1 {
                 throw Failure(error0, error1)

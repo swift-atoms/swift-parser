@@ -43,7 +43,7 @@ extension Parser.Optionally: Parser.`Protocol` {
     @inlinable
     public func parse(_ input: inout Input) -> Output {
         let checkpoint = input.checkpoint
-        do {
+        do throws(Wrapped.Failure) {
             return try wrapped.parse(&input)
         } catch {
             input.restore.to(__unchecked: (), checkpoint)
@@ -66,7 +66,7 @@ where Wrapped: Parser.Printer {
         // WHEN TO REMOVE: When Parser.Printer supports a separate Failure type from
         //   the parser's Failure, allowing the printer to throw independently.
         // TRACKING: Parser.Printer ABI — no upstream Swift Evolution proposal yet.
-        do {
+        do throws(Wrapped.Failure) {
             try wrapped.print(output, into: &input)
         } catch {}
     }

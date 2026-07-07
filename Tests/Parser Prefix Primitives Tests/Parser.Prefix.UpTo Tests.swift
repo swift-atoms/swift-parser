@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Prefix.UpTo")
-struct ParserPrefixUpToTests {
+@Suite
+struct `Parser.Prefix.UpTo` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserPrefixUpToTests.Unit {
+extension `Parser.Prefix.UpTo`.Unit {
     @Test
     func `consumes up to delimiter without including it`() {
         let parser = Parser.Prefix.UpTo<Parser.Test.Input>([UInt8(ascii: ",")])
@@ -36,7 +36,7 @@ extension ParserPrefixUpToTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserPrefixUpToTests.EdgeCase {
+extension `Parser.Prefix.UpTo`.`Edge Case` {
     @Test
     func `consumes all when delimiter not found`() {
         let parser = Parser.Prefix.UpTo<Parser.Test.Input>([0xFF])

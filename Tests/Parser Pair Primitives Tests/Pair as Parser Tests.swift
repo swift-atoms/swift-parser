@@ -4,14 +4,14 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Pair as Parser")
-struct PairAsParserTests {
-    @Suite struct ParityWithTakeTwo {}
+@Suite
+struct `Pair as Parser` {
+    @Suite struct `Parity With Take Two` {}
 }
 
 // MARK: - Parity with Parser.Take.Two
 
-extension PairAsParserTests.ParityWithTakeTwo {
+extension `Pair as Parser`.`Parity With Take Two` {
     @Test
     func `both succeed: outputs match and input state matches`() throws(any Swift.Error) {
         var inputA = Parser.Test.Input([0x0A, 0x0B, 0x0C])

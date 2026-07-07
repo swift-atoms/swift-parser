@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Consume.Exactly")
-struct ParserConsumeExactlyTests {
+@Suite
+struct `Parser.Consume.Exactly` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserConsumeExactlyTests.Unit {
+extension `Parser.Consume.Exactly`.Unit {
     @Test
     func `consumes exactly N elements`() throws(any Swift.Error) {
         let parser = Parser.Consume.Exactly<Parser.Test.Input>(3)
@@ -37,7 +37,7 @@ extension ParserConsumeExactlyTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserConsumeExactlyTests.EdgeCase {
+extension `Parser.Consume.Exactly`.`Edge Case` {
     @Test
     func `fails when input has fewer elements than requested`() {
         let parser = Parser.Consume.Exactly<Parser.Test.Input>(5)

@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Many.Separated")
-struct ParserManySeparatedTests {
+@Suite
+struct `Parser.Many.Separated` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserManySeparatedTests.Unit {
+extension `Parser.Many.Separated`.Unit {
     @Test
     func `parses comma-separated bytes`() throws(any Swift.Error) {
         let parser = Parser.Many.Separated {
@@ -46,7 +46,7 @@ extension ParserManySeparatedTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserManySeparatedTests.EdgeCase {
+extension `Parser.Many.Separated`.`Edge Case` {
     @Test
     func `empty input returns empty array`() throws(any Swift.Error) {
         let parser = Parser.Many.Separated {

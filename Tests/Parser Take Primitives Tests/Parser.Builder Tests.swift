@@ -3,10 +3,10 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Builder — var body declarative composition")
-struct ParserBuilderTests {
+@Suite
+struct `Parser.Builder — var body declarative composition` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Test Parsers (Leaf)
@@ -436,7 +436,7 @@ extension TwoDigitNumber: Parser.`Protocol` {
 
 // MARK: - Unit Tests
 
-extension ParserBuilderTests.Unit {
+extension `Parser.Builder — var body declarative composition`.Unit {
     @Test
     func `leaf parser has Body == Never`() throws(any Swift.Error) {
         let parser = Digit<Parser.Test.Input>()
@@ -594,7 +594,7 @@ extension ParserBuilderTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserBuilderTests.EdgeCase {
+extension `Parser.Builder — var body declarative composition`.`Edge Case` {
     @Test
     func `single pass-through body propagates failure`() {
         let parser = SingleDigit<Parser.Test.Input>()

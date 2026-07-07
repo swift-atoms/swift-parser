@@ -100,18 +100,6 @@ extension Parser.Tracked: Input_Primitives.Input.`Protocol` {
             self.baseCheckpoint = baseCheckpoint
             self.trackedOffset = trackedOffset
         }
-
-        /// Returns whether two checkpoints refer to the same base position.
-        @inlinable
-        public static func == (lhs: Self, rhs: Self) -> Bool {
-            lhs.baseCheckpoint == rhs.baseCheckpoint
-        }
-
-        /// Returns whether one checkpoint precedes another in the base input.
-        @inlinable
-        public static func < (lhs: Self, rhs: Self) -> Bool {
-            lhs.baseCheckpoint < rhs.baseCheckpoint
-        }
     }
 
     /// Whether the underlying input has no more elements.
@@ -162,6 +150,22 @@ extension Parser.Tracked: Input_Primitives.Input.`Protocol` {
     }
 }
 
+// MARK: - Checkpoint Comparable
+
+extension Parser.Tracked.Checkpoint {
+    /// Returns whether two checkpoints refer to the same base position.
+    @inlinable
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.baseCheckpoint == rhs.baseCheckpoint
+    }
+
+    /// Returns whether one checkpoint precedes another in the base input.
+    @inlinable
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.baseCheckpoint < rhs.baseCheckpoint
+    }
+}
+
 // MARK: - Conditional Sendable
 //
 // Data-container conditional Sendable per [MEM-SEND-013] out-of-scope carve-out.
@@ -183,7 +187,7 @@ extension Parser.Tracked {
         let start = currentOffset
         let countBefore = base.count
         let value: P.Output
-        do {
+        do throws(P.Failure) {
             value = try parser.parse(&base)
         } catch {
             throw Parser.Error.Located(error, at: start)

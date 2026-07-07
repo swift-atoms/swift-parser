@@ -6,7 +6,7 @@ import Testing
 @Suite("Either")
 struct ParserErrorEitherTests {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
@@ -50,7 +50,7 @@ extension ParserErrorEitherTests.Unit {
 
 // MARK: - Edge Case Tests — Never Elimination
 
-extension ParserErrorEitherTests.EdgeCase {
+extension ParserErrorEitherTests.`Edge Case` {
     @Test
     func `left Never extracts right unconditionally`() {
         let error: Either<Never, Parser.Match.Error> =

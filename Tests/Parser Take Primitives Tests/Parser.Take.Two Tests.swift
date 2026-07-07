@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Take.Two")
-struct ParserTakeTwoTests {
+@Suite
+struct `Parser.Take.Two` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserTakeTwoTests.Unit {
+extension `Parser.Take.Two`.Unit {
     @Test
     func `runs both parsers and collects outputs`() throws(any Swift.Error) {
         let parser = Parser.Take.Two(
@@ -43,7 +43,7 @@ extension ParserTakeTwoTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserTakeTwoTests.EdgeCase {
+extension `Parser.Take.Two`.`Edge Case` {
     @Test
     func `fails when first parser fails`() {
         let parser = Parser.Take.Two(

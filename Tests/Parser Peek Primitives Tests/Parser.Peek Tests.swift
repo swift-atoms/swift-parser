@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Peek")
-struct ParserPeekTests {
+@Suite
+struct `Parser.Peek` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserPeekTests.Unit {
+extension `Parser.Peek`.Unit {
     @Test
     func `returns output without consuming input`() throws(any Swift.Error) {
         let parser = Parser.First.Element<Parser.Test.Input>().peek()
@@ -38,7 +38,7 @@ extension ParserPeekTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserPeekTests.EdgeCase {
+extension `Parser.Peek`.`Edge Case` {
     @Test
     func `upstream failure does not consume input`() {
         let parser = Parser.First.Where<Parser.Test.Input> { $0 == 0x41 }.peek()

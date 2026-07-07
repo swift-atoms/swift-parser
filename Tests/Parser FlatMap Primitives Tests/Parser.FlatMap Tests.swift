@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.FlatMap")
-struct ParserFlatMapTests {
+@Suite
+struct `Parser.FlatMap` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserFlatMapTests.Unit {
+extension `Parser.FlatMap`.Unit {
     @Test
     func `chains parsers where second depends on first output`() throws(any Swift.Error) {
         let parser = Parser.First.Element<Parser.Test.Input>()
@@ -29,7 +29,7 @@ extension ParserFlatMapTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserFlatMapTests.EdgeCase {
+extension `Parser.FlatMap`.`Edge Case` {
     @Test
     func `upstream failure prevents downstream execution`() {
         let parser = Parser.First.Element<Parser.Test.Input>()

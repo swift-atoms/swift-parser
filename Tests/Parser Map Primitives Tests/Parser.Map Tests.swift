@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Map.Transform")
-struct ParserMapTransformTests {
+@Suite
+struct `Parser.Map.Transform` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserMapTransformTests.Unit {
+extension `Parser.Map.Transform`.Unit {
     @Test
     func `transforms output of upstream parser`() throws(any Swift.Error) {
         let parser = Parser.First.Element<Parser.Test.Input>()
@@ -37,7 +37,7 @@ extension ParserMapTransformTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserMapTransformTests.EdgeCase {
+extension `Parser.Map.Transform`.`Edge Case` {
     @Test
     func `upstream failure propagates through map`() {
         let parser = Parser.First.Element<Parser.Test.Input>()

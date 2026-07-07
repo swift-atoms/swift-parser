@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Rest")
-struct ParserRestTests {
+@Suite
+struct `Parser.Rest` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserRestTests.Unit {
+extension `Parser.Rest`.Unit {
     @Test
     func `consumes all remaining input`() {
         let parser = Parser.Rest<Parser.Test.Input>()
@@ -26,7 +26,7 @@ extension ParserRestTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserRestTests.EdgeCase {
+extension `Parser.Rest`.`Edge Case` {
     @Test
     func `returns empty slice on empty input`() {
         let parser = Parser.Rest<Parser.Test.Input>()

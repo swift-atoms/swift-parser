@@ -16,7 +16,7 @@ extension Parser.`Protocol` {
     where Input: Collection.Slice.`Protocol` & Copyable {
         var input = input
         let output: Output
-        do {
+        do throws(Failure) {
             output = try parse(&input)
         } catch {
             throw .left(error)

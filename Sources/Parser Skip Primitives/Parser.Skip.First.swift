@@ -37,12 +37,12 @@ extension Parser.Skip.First: Parser.`Protocol` {
     /// Parses the first parser and discards its output, then parses and returns the second.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
-        do {
+        do throws(P0.Failure) {
             _ = try p0.parse(&input)
         } catch {
             throw .left(error)
         }
-        do {
+        do throws(P1.Failure) {
             return try p1.parse(&input)
         } catch {
             throw .right(error)
@@ -58,12 +58,12 @@ where P0: Parser.Printer, P1: Parser.Printer {
     @inlinable
     public func print(_ output: P1.Output, into input: inout Input) throws(Failure) {
         // Print in reverse order
-        do {
+        do throws(P1.Failure) {
             try p1.print(output, into: &input)
         } catch {
             throw .right(error)
         }
-        do {
+        do throws(P0.Failure) {
             try p0.print((), into: &input)
         } catch {
             throw .left(error)

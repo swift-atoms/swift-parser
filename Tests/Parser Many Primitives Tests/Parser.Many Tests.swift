@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Many")
-struct ParserManySimpleTests {
+@Suite
+struct `Parser.Many` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserManySimpleTests.Unit {
+extension `Parser.Many`.Unit {
     @Test
     func `zero or more collects all matching elements`() throws(any Swift.Error) {
         let parser = Parser.Many {
@@ -53,7 +53,7 @@ extension ParserManySimpleTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserManySimpleTests.EdgeCase {
+extension `Parser.Many`.`Edge Case` {
     @Test
     func `zero or more returns empty on no match`() throws(any Swift.Error) {
         let parser = Parser.Many {

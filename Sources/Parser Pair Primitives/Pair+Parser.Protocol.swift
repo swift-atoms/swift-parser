@@ -23,13 +23,13 @@ where
     @inlinable
     public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
         let o0: First.Output
-        do {
+        do throws(First.Failure) {
             o0 = try first.parse(&input)
         } catch {
             throw .left(error)
         }
         let o1: Second.Output
-        do {
+        do throws(Second.Failure) {
             o1 = try second.parse(&input)
         } catch {
             throw .right(error)

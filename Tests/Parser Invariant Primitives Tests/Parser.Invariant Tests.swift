@@ -3,18 +3,18 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Invariant")
-struct ParserInvariantTests {
-    @Suite struct InputPosition {}
+@Suite
+struct `Parser.Invariant` {
+    @Suite struct `Input Position` {}
     @Suite struct Algebra {}
-    @Suite struct ErrorPropagation {}
-    @Suite struct CheckpointRestore {}
+    @Suite struct `Error Propagation` {}
+    @Suite struct `Checkpoint Restore` {}
     @Suite struct Boundary {}
 }
 
 // MARK: - Input Position: Non-Consuming Parsers
 
-extension ParserInvariantTests.InputPosition {
+extension `Parser.Invariant`.`Input Position` {
     @Test
     func `Always does not advance input`() {
         let parser = Parser.Always<Parser.Test.Input, Int>(99)
@@ -146,7 +146,7 @@ extension ParserInvariantTests.InputPosition {
 
 // MARK: - Parser Algebra Laws
 
-extension ParserInvariantTests.Algebra {
+extension `Parser.Invariant`.Algebra {
     @Test
     func `map identity law`() throws(any Swift.Error) {
         let base = Parser.First.Element<Parser.Test.Input>()
@@ -217,7 +217,7 @@ extension ParserInvariantTests.Algebra {
 
 // MARK: - Error Propagation
 
-extension ParserInvariantTests.ErrorPropagation {
+extension `Parser.Invariant`.`Error Propagation` {
     @Test
     func `FlatMap tags upstream error as left`() {
         let parser = Parser.First.Element<Parser.Test.Input>()
@@ -296,7 +296,7 @@ extension ParserInvariantTests.ErrorPropagation {
 
 // MARK: - Checkpoint/Restore
 
-extension ParserInvariantTests.CheckpointRestore {
+extension `Parser.Invariant`.`Checkpoint Restore` {
     @Test
     func `OneOf.Two restores position on first-branch failure`() throws(any Swift.Error) {
         let parser = Parser.OneOf.Two(
@@ -350,7 +350,7 @@ extension ParserInvariantTests.CheckpointRestore {
 
 // MARK: - Boundary Conditions
 
-extension ParserInvariantTests.Boundary {
+extension `Parser.Invariant`.Boundary {
     @Test
     func `empty input - First.Element fails`() {
         let parser = Parser.First.Element<Parser.Test.Input>()

@@ -93,7 +93,7 @@ extension Parser.Many: Parser.`Protocol` {
         while results.count < maximum {
             let checkpoint = input.checkpoint
 
-            do {
+            do throws(Element.Failure) {
                 let next = try element.parse(&input)
                 results.append(next)
             } catch {
@@ -125,7 +125,7 @@ where Element: Parser.Printer {
         }
 
         for item in output.reversed() {
-            do {
+            do throws(Element.Failure) {
                 try element.print(item, into: &input)
             } catch {
                 break

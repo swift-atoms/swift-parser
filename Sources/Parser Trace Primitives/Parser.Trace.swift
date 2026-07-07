@@ -71,7 +71,7 @@ extension Parser.Trace: Parser.`Protocol` {
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         log("[\(label)] enter")
-        do {
+        do throws(Upstream.Failure) {
             let result = try upstream.parse(&input)
             log("[\(label)] success: \(result)")
             return result

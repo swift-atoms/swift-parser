@@ -35,7 +35,7 @@ extension Parser.Error.Replace: Parser.`Protocol` {
     /// Parses the upstream value, returning the default output when it fails.
     @inlinable
     public func parse(_ input: inout Input) -> Output {
-        do {
+        do throws(Upstream.Failure) {
             return try upstream.parse(&input)
         } catch {
             return output

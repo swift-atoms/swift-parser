@@ -4,15 +4,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.Always")
-struct ParserAlwaysTests {
+@Suite
+struct `Parser.Always` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserAlwaysTests.Unit {
+extension `Parser.Always`.Unit {
     @Test
     func `returns provided value without consuming input`() {
         let parser = Parser.Always<Parser.Test.Input, Int>(42)
@@ -37,7 +37,7 @@ extension ParserAlwaysTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserAlwaysTests.EdgeCase {
+extension `Parser.Always`.`Edge Case` {
     @Test
     func `succeeds on empty input`() {
         let parser = Parser.Always<Parser.Test.Input, String>("hello")

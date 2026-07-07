@@ -57,7 +57,7 @@ extension Parser.Peek: Parser.`Protocol` {
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let checkpoint = input.checkpoint
-        do {
+        do throws(Upstream.Failure) {
             let result = try upstream.parse(&input)
             input.restore.to(__unchecked: (), checkpoint)
             return result

@@ -3,15 +3,15 @@ import Testing
 
 // MARK: - Test Suite Structure
 
-@Suite("Parser.First.Element")
-struct ParserFirstElementTests {
+@Suite
+struct `Parser.First.Element` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 // MARK: - Unit Tests
 
-extension ParserFirstElementTests.Unit {
+extension `Parser.First.Element`.Unit {
     @Test
     func `returns first element and advances`() throws(any Swift.Error) {
         let parser = Parser.First.Element<Parser.Test.Input>()
@@ -37,7 +37,7 @@ extension ParserFirstElementTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension ParserFirstElementTests.EdgeCase {
+extension `Parser.First.Element`.`Edge Case` {
     @Test
     func `fails on empty input`() {
         let parser = Parser.First.Element<Parser.Test.Input>()

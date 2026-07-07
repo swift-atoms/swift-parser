@@ -32,14 +32,14 @@ extension Parser.Conditional: Parser.`Protocol` {
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         switch self {
         case .first(let parser):
-            do {
+            do throws(First.Failure) {
                 return try parser.parse(&input)
             } catch {
                 throw .left(error)
             }
 
         case .second(let parser):
-            do {
+            do throws(Second.Failure) {
                 return try parser.parse(&input)
             } catch {
                 throw .right(error)
@@ -57,14 +57,14 @@ where First: Parser.Printer, Second: Parser.Printer {
     public func print(_ output: Output, into input: inout Input) throws(Failure) {
         switch self {
         case .first(let printer):
-            do {
+            do throws(First.Failure) {
                 try printer.print(output, into: &input)
             } catch {
                 throw .left(error)
             }
 
         case .second(let printer):
-            do {
+            do throws(Second.Failure) {
                 try printer.print(output, into: &input)
             } catch {
                 throw .right(error)
