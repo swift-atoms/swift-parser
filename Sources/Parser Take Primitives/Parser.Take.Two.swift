@@ -18,6 +18,7 @@ extension Parser.Take {
         @usableFromInline
         internal let p1: P1
 
+        /// Creates a parser that runs the two given parsers in sequence.
         @inlinable
         public init(_ p0: P0, _ p1: P1) {
             self.p0 = p0
@@ -27,10 +28,14 @@ extension Parser.Take {
 }
 
 extension Parser.Take.Two: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = P0.Input
+    /// The output type this parser produces: a tuple of both parsers' outputs.
     public typealias Output = (P0.Output, P1.Output)
+    /// The error type this parser can throw, discriminating which parser failed.
     public typealias Failure = Either<P0.Failure, P1.Failure>
 
+    /// Runs the first parser then the second, returning both outputs as a tuple.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let o0: P0.Output
@@ -63,6 +68,7 @@ extension Parser.Take.Two {
 
 extension Parser.Take.Two: Parser.Printer
 where P0: Parser.Printer, P1: Parser.Printer {
+    /// Prints both outputs into the input, in reverse order so the buffer builds correctly.
     @inlinable
     public func print(
         _ output: (P0.Output, P1.Output),
