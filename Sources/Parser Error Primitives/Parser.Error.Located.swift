@@ -73,6 +73,7 @@ extension Parser.Error.Located: Hashable where E: Hashable {}
 // MARK: - CustomStringConvertible
 
 extension Parser.Error.Located: CustomStringConvertible {
+    /// A textual description showing the offset and the underlying error.
     public var description: String {
         "at offset \(offset): \(error)"
     }

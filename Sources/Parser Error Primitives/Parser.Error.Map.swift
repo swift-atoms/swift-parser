@@ -26,10 +26,14 @@ extension Parser.Error {
 }
 
 extension Parser.Error.Map: Parser.`Protocol` {
+    /// The input type this parser consumes.
     public typealias Input = Upstream.Input
+    /// The output type this parser produces, unchanged from the upstream parser.
     public typealias Output = Upstream.Output
+    /// The error type this parser can throw after transformation.
     public typealias Failure = NewFailure
 
+    /// Parses the upstream value, mapping any failure through the transform.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         do {

@@ -24,9 +24,11 @@ public protocol _EitherChain {
 // MARK: - _EitherChain Conformance
 
 extension Either: _EitherChain {
+    /// The left case, exposed for chain-accessor dispatch.
     @inlinable
     public var _left: Left? { left }
 
+    /// The right case, exposed for chain-accessor dispatch.
     @inlinable
     public var _right: Right? { right }
 }
