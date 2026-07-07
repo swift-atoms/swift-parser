@@ -9,7 +9,9 @@ public import Collection_Primitives
 public import Input_Primitives
 
 extension Collection.Slice.`Protocol` where Self: Input_Primitives.Input.Streaming {
-    /// Parses inline using a builder closure. Input type is inferred from `self`.
+    /// Parses inline using a builder closure.
+    ///
+    /// Input type is inferred from `self`.
     ///
     /// The receiver provides the builder's `Input` generic parameter,
     /// enabling `<_, UInt16>` type placeholder inference for leaf parsers.
@@ -30,7 +32,9 @@ extension Collection.Slice.`Protocol` where Self: Input_Primitives.Input.Streami
         try build().parse(&self)
     }
 
-    /// Parses inline, discarding remaining input. One-shot convenience.
+    /// Parses inline, discarding remaining input.
+    ///
+    /// One-shot convenience.
     ///
     /// ```swift
     /// let (host, port) = try Byte.Input(utf8: "80:443").parsing {

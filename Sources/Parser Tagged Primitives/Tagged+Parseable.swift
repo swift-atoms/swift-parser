@@ -41,7 +41,8 @@ extension Tagged where Underlying: Parseable, Underlying.Parser.Output == Underl
     }
 }
 
-extension Tagged: Parseable where
+extension Tagged: Parseable
+where
     Underlying: Parseable,
     Underlying.Parser.Output == Underlying
 {

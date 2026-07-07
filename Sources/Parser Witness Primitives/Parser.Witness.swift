@@ -40,7 +40,9 @@ extension Parser {
     /// signals "implementation hatch — consumers should call ``parse(_:)``
     /// rather than invoke the closure directly."
     public struct Witness<Input: ~Copyable & ~Escapable, Output, Failure: Swift.Error> {
-        /// The stored parse closure. Underscore signals implementation hatch.
+        /// The stored parse closure.
+        ///
+        /// Underscore signals implementation hatch.
         public var _parse: (inout Input) throws(Failure) -> Output
 
         /// Creates a parser witness from a parse closure.
@@ -66,5 +68,5 @@ extension Parser {
     /// }
     /// ```
     public typealias Pure<Input, Output> = Witness<Input, Output, Never>
-        where Input: ~Copyable & ~Escapable
+    where Input: ~Copyable & ~Escapable
 }

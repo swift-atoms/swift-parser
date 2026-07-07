@@ -41,6 +41,7 @@ extension Parser.First.Where: Parser.`Protocol` {
             throw .left(.unexpected(expected: expected))
         }
         // SAFETY: isEmpty returned false, so advance() cannot throw .empty
+        // swift-format-ignore: NeverUseForceTry
         // swiftlint:disable:next force_try
         let element = try! input.advance()
         guard predicate(element) else {

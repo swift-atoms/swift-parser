@@ -141,6 +141,9 @@ extension Parser.`Protocol` where Self: ~Copyable, Body == Never {
 extension Parser.`Protocol`
 where
     Self: ~Copyable,
+    // `Body: Self` would be invalid: inside a `Parser.Protocol` extension `Self`
+    // is the conforming type, not the protocol. (prefer_self where-clause FP.)
+    // swiftlint:disable:next prefer_self_in_static_references
     Body: Parser.`Protocol`,
     Body.Input == Input,
     Body.Output == Output,
