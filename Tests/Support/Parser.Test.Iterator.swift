@@ -3,10 +3,6 @@ public import Iterator_Chunk_Primitives
 public import Parser_Primitives
 
 extension Parser.Test {
-    // The four-part WORKAROUND template below is present and compact (WHY / WHEN TO
-    // REMOVE / TRACKING all within ±5 lines); the blunt workaround_marker_present
-    // regex still misfires on it, so shield this one site.
-    // swiftlint:disable:next workaround_marker_present
     // WORKAROUND: omits the stdlib `IteratorProtocol` conformance.
     // WHY: the dual chunk-protocol + `IteratorProtocol` conformance trips a Swift
     //   6.3.3 (+Asserts) effects-check assertion (§A17; details in the doc below).
