@@ -12,15 +12,19 @@ extension Parser {
     ///
     /// Consumes nothing and produces Void. Fails if input remains.
     public struct End<Input: Collection.Slice.`Protocol`> {
+        /// Creates an end-of-input parser.
         @inlinable
         public init() {}
     }
 }
 
 extension Parser.End: Parser.`Protocol` {
+    /// This parser produces no value.
     public typealias Output = Void
+    /// The error type this parser can throw when input remains.
     public typealias Failure = Parser.Match.Error
 
+    /// Succeeds only when the input is exhausted, otherwise fails.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) {
         guard input.isEmpty else {
@@ -32,6 +36,7 @@ extension Parser.End: Parser.`Protocol` {
 // MARK: - Printer Conformance
 
 extension Parser.End: Parser.Printer {
+    /// Prints nothing; end of input is a marker with no representation.
     @inlinable
     public func print(_ output: Void, into input: inout Input) {
         // End produces nothing - it's a marker

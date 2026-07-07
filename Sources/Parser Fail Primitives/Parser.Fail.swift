@@ -14,6 +14,7 @@ extension Parser {
         @usableFromInline
         let error: F
 
+        /// Creates a parser that always fails with the given error.
         @inlinable
         public init(_ error: F) {
             self.error = error
@@ -22,8 +23,10 @@ extension Parser {
 }
 
 extension Parser.Fail: Parser.`Protocol` {
+    /// The error type this parser always throws.
     public typealias Failure = F
 
+    /// Always throws the stored error without consuming input.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         throw error

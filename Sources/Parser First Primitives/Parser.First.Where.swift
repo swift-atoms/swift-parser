@@ -20,6 +20,7 @@ extension Parser.First {
         @usableFromInline
         let expected: String
 
+        /// Creates a parser consuming the first element when it satisfies the predicate.
         @inlinable
         public init(
             expected: String = "matching element",
@@ -32,9 +33,12 @@ extension Parser.First {
 }
 
 extension Parser.First.Where: Parser.`Protocol` {
+    /// The output type this parser produces: the input's element type.
     public typealias Output = Input.Element
+    /// The error type this parser can throw on empty input or a failed predicate.
     public typealias Failure = Either<Parser.EndOfInput.Error, Parser.Match.Error>
 
+    /// Consumes and returns the first element when it satisfies the predicate.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         guard !input.isEmpty else {
