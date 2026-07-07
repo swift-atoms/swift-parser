@@ -21,8 +21,10 @@
 //
 
 extension Parser.Witness: Parser.`Protocol` where Input: ~Copyable & ~Escapable {
+    /// A leaf parser has no composed body.
     public typealias Body = Never
 
+    /// Parses by invoking the wrapped parsing closure.
     @inlinable
     public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
         try _parse(&input)
