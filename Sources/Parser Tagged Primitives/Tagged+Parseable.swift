@@ -22,28 +22,34 @@ extension Tagged where Underlying: Parseable, Underlying.Parser.Output == Underl
     /// `_unchecked:` initializer. The Input and Failure types are inherited
     /// from the underlying's parser — Tagged adds no input-shape or error
     /// concerns of its own.
-    public struct UnderlyingParser: Parser_Primitive.Parser.`Protocol` {
-        /// The input type this parser consumes.
-        public typealias Input = Underlying.Parser.Input
-        /// The output type this parser produces: the tagged wrapper value.
-        public typealias Output = Tagged<Tag, Underlying>
-        /// The error type this parser can throw, inherited from the underlying parser.
-        public typealias Failure = Underlying.Parser.Failure
-        /// A leaf parser has no composed body.
-        public typealias Body = Never
-
+    public struct UnderlyingParser {
         /// Creates the wrapper parser.
         @inlinable
         public init() {}
+    }
+}
 
-        /// Runs the underlying parser, then lifts its result into a tagged value.
-        @inlinable
-        public borrowing func parse(
-            _ input: inout Underlying.Parser.Input
-        ) throws(Underlying.Parser.Failure) -> Tagged<Tag, Underlying> {
-            let underlying = try Underlying.parser.parse(&input)
-            return Tagged<Tag, Underlying>(_unchecked: underlying)
-        }
+extension Tagged.UnderlyingParser: Parser_Primitive.Parser.`Protocol`
+where
+    Underlying: Parseable,
+    Underlying.Parser.Output == Underlying
+{
+    /// The input type this parser consumes.
+    public typealias Input = Underlying.Parser.Input
+    /// The output type this parser produces: the tagged wrapper value.
+    public typealias Output = Tagged<Tag, Underlying>
+    /// The error type this parser can throw, inherited from the underlying parser.
+    public typealias Failure = Underlying.Parser.Failure
+    /// A leaf parser has no composed body.
+    public typealias Body = Never
+
+    /// Runs the underlying parser, then lifts its result into a tagged value.
+    @inlinable
+    public borrowing func parse(
+        _ input: inout Underlying.Parser.Input
+    ) throws(Underlying.Parser.Failure) -> Tagged<Tag, Underlying> {
+        let underlying = try Underlying.parser.parse(&input)
+        return Tagged<Tag, Underlying>(_unchecked: underlying)
     }
 }
 

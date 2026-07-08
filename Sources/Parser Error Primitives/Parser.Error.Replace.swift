@@ -17,7 +17,7 @@ extension Parser.Error {
         let output: Upstream.Output
 
         @inlinable
-        init(_ upstream: Upstream, output: Upstream.Output) {
+        package init(_ upstream: Upstream, output: Upstream.Output) {
             self.upstream = upstream
             self.output = output
         }

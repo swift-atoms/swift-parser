@@ -26,7 +26,7 @@ extension Parser.Error {
         let upstream: Upstream
 
         @inlinable
-        init(_ upstream: Upstream) {
+        package init(_ upstream: Upstream) {
             self.upstream = upstream
         }
     }

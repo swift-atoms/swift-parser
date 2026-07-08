@@ -17,7 +17,7 @@ extension Parser.Take.Two {
         let transform: (P0.Output, P1.Output) -> NewOutput
 
         @inlinable
-        init(
+        package init(
             upstream: Parser.Take.Two<P0, P1>,
             transform: @escaping (P0.Output, P1.Output) -> NewOutput
         ) {
