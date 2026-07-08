@@ -15,7 +15,7 @@ extension Parser.Error {
         let transform: (Upstream.Failure) -> NewFailure
 
         @inlinable
-        init(
+        package init(
             _ upstream: Upstream,
             transform: @escaping (Upstream.Failure) -> NewFailure
         ) {

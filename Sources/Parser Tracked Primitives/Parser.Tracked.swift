@@ -96,7 +96,7 @@ extension Parser.Tracked: Input_Primitives.Input.`Protocol` {
         let trackedOffset: Index<Element>
 
         @inlinable
-        init(baseCheckpoint: Base.Checkpoint, trackedOffset: Index<Element>) {
+        package init(baseCheckpoint: Base.Checkpoint, trackedOffset: Index<Element>) {
             self.baseCheckpoint = baseCheckpoint
             self.trackedOffset = trackedOffset
         }
