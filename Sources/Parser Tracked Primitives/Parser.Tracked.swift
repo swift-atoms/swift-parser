@@ -46,14 +46,6 @@ extension Parser {
         @usableFromInline
         internal var offset: Index<Element>
 
-        /// The underlying input (read-only access).
-        @inlinable
-        public var input: Base { base }
-
-        /// Current element offset from the start of input.
-        @inlinable
-        public var currentOffset: Index<Element> { offset }
-
         /// Creates a tracked input.
         ///
         /// - Parameter base: The input to track.
@@ -76,6 +68,18 @@ extension Parser {
             self.offset = offset
         }
     }
+}
+
+// MARK: - Accessors
+
+extension Parser.Tracked {
+    /// The underlying input (read-only access).
+    @inlinable
+    public var input: Base { base }
+
+    /// Current element offset from the start of input.
+    @inlinable
+    public var currentOffset: Index<Element> { offset }
 }
 
 // MARK: - Input Conformance

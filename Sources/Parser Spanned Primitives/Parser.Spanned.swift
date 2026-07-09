@@ -56,18 +56,20 @@ extension Parser {
             self.start = start
             self.end = end
         }
+    }
+}
 
-        /// The length of this span in bytes.
-        @inlinable
-        public var length: Int {
-            end - start
-        }
+extension Parser.Spanned {
+    /// The length of this span in bytes.
+    @inlinable
+    public var length: Int {
+        end - start
+    }
 
-        /// The range of this span.
-        @inlinable
-        public var range: Range<Int> {
-            start..<end
-        }
+    /// The range of this span.
+    @inlinable
+    public var range: Range<Int> {
+        start..<end
     }
 }
 
