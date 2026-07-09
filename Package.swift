@@ -63,6 +63,10 @@ let package = Package(
             targets: ["Parser Map Primitives"]
         ),
         .library(
+            name: "Parser Conversion Primitives",
+            targets: ["Parser Conversion Primitives"]
+        ),
+        .library(
             name: "Parser FlatMap Primitives",
             targets: ["Parser FlatMap Primitives"]
         ),
@@ -291,6 +295,13 @@ let package = Package(
         ),
         .target(
             name: "Parser Map Primitives",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error Primitives",
+            ]
+        ),
+        .target(
+            name: "Parser Conversion Primitives",
             dependencies: [
                 "Parser Primitive",
                 "Parser Error Primitives",
@@ -536,6 +547,7 @@ let package = Package(
                 "Parser Constraint Primitives",
                 "Parser OneOf Primitives",
                 "Parser Map Primitives",
+                "Parser Conversion Primitives",
                 "Parser FlatMap Primitives",
                 "Parser Filter Primitives",
                 "Parser Conditional Primitives",
@@ -618,6 +630,10 @@ let package = Package(
         ),
         .testTarget(
             name: "Parser Map Primitives Tests",
+            dependencies: ["Parser Primitives Test Support"]
+        ),
+        .testTarget(
+            name: "Parser Conversion Primitives Tests",
             dependencies: ["Parser Primitives Test Support"]
         ),
         .testTarget(
