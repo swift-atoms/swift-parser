@@ -3,6 +3,7 @@
 @_exported public import Parser_Conformance_Primitives
 @_exported public import Parser_Constraint_Primitives
 @_exported public import Parser_Consume_Primitives
+@_exported public import Parser_Conversion_Primitives
 @_exported public import Parser_Discard_Primitives
 @_exported public import Parser_EndOfInput_Primitives
 @_exported public import Parser_End_Primitives
