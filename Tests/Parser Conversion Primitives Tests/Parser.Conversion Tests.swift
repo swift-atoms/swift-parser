@@ -41,6 +41,14 @@ private struct Tag: RawRepresentable, Equatable {
     init(rawValue: Int) { self.rawValue = rawValue }
 }
 
+/// A payload-carrying enum used to probe ``Parser/Conversion/Case``: `leaf`
+/// carries an `Int` payload, `empty` is the wrong case that makes `unapply`
+/// (extract) fail.
+private enum Node: Equatable {
+    case leaf(Int)
+    case empty
+}
+
 // MARK: - Test Suite Structure
 
 @Suite
@@ -100,6 +108,22 @@ extension `Parser.Conversion`.`Combinator` {
     }
 
     @Test
+    func `case embeds a payload and extracts it`() throws(any Swift.Error) {
+        let conversion = Parser.Conversion.Case<Node, Int>(
+            embed: Node.leaf,
+            extract: { if case let .leaf(value) = $0 { value } else { nil } }
+        )
+        // apply embeds the payload into its case.
+        #expect(conversion.apply(7) == .leaf(7))
+        // unapply extracts the payload from the matching case.
+        #expect(try conversion.unapply(.leaf(7)) == 7)
+        // unapply throws on the wrong case.
+        #expect(throws: Parser.Conversion.Error.absentCase) {
+            try conversion.unapply(.empty)
+        }
+    }
+
+    @Test
     func `map composes two conversions`() throws(any Swift.Error) {
         // Int --Identity--> Int --RawValue--> Tag
         let conversion = Parser.Conversion.Identity<Int>()
@@ -140,6 +164,26 @@ extension `Parser.Conversion`.`Parser Map` {
         var output: Substring = ""
         try grammar.print(Tag(rawValue: 5), into: &output)
         #expect(output == "5")
+    }
+
+    @Test
+    func `converted parser embeds into an enum case`() throws(any Swift.Error) {
+        // Digit parses an Int payload; `.case` embeds it into `Node.leaf`,
+        // exercising the printer-preserving `.map(conversion)` seam through
+        // Parser.Conversion.Case.
+        let grammar = Digit().map(
+            .case(
+                embed: Node.leaf,
+                extract: { (node: Node) in if case let .leaf(value) = node { value } else { nil } }
+            )
+        )
+
+        var input: Substring = "8"
+        #expect(try grammar.parse(&input) == .leaf(8))
+
+        var output: Substring = ""
+        try grammar.print(.leaf(8), into: &output)
+        #expect(output == "8")
     }
 }
 

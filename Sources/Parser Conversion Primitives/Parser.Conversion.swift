@@ -22,6 +22,7 @@ extension Parser {
     /// - ``Parser/Conversion/Memberwise`` — tuple ⇆ struct via explicit embed/project.
     /// - ``Parser/Conversion/RawValue`` — raw value ⇆ `RawRepresentable`.
     /// - ``Parser/Conversion/Fixed`` — `Void` ⇆ a constant value.
+    /// - ``Parser/Conversion/Case`` — enum-case payload ⇆ enum.
     ///
     /// Applying a conversion to a parser-printer is spelled `parser.map(conversion)`,
     /// which yields a ``Parser/Converted`` parser that is itself
