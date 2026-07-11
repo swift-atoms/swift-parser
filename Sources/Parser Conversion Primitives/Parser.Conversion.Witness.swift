@@ -27,6 +27,19 @@ extension Parser.Conversion {
     /// `_apply` / `_unapply` are `public` so `@inlinable` methods can inline
     /// through. The underscore signals "implementation hatch — call
     /// ``apply(_:)`` / ``unapply(_:)`` rather than the closures directly."
+    ///
+    /// ## Concurrency (friction F3)
+    ///
+    /// `Witness` is **not** `Sendable`. `_apply` / `_unapply` are plain
+    /// (non-`@Sendable`) function values, so a stored closure may capture
+    /// non-`Sendable` state. An honest conditional `Sendable` conformance is
+    /// therefore impossible: it would require the stored-closure types to be
+    /// `@Sendable`, which is a source-breaking signature change to these `public`
+    /// properties and to `init(apply:unapply:)`, and `@unchecked Sendable` would
+    /// be unsound for arbitrary captured closures. Under strict concurrency, hold
+    /// a `Witness` (e.g. a reusable case conversion) as a **computed**
+    /// `static var` — a fresh value per access, no shared mutable global state —
+    /// rather than a `static let` constant.
     public struct Witness<Input, Output, Failure: Swift.Error> {
         /// The stored forward closure.
         public var _apply: (Input) throws(Failure) -> Output
