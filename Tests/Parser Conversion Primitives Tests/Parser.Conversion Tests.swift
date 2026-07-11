@@ -31,6 +31,30 @@ private struct Digit: Parser.Bidirectional {
     }
 }
 
+/// A bidirectional leaf that consumes/produces the first character of a
+/// `Substring` as a `Substring`. Used to exercise the `.string` conversion
+/// (`Substring -> String`) through the printer-preserving `.map(conversion)`
+/// seam.
+private struct Head: Parser.Bidirectional {
+    typealias Input = Substring
+    typealias Output = Substring
+    typealias Failure = Parser.Match.Error
+    typealias Body = Never
+
+    func parse(_ input: inout Substring) throws(Parser.Match.Error) -> Substring {
+        guard input.first != nil else {
+            throw .predicateFailed(description: "expected a character")
+        }
+        let head = input.prefix(1)
+        input = input.dropFirst()
+        return head
+    }
+
+    func print(_ output: Substring, into input: inout Substring) throws(Parser.Match.Error) {
+        input.insert(contentsOf: output, at: input.startIndex)
+    }
+}
+
 private struct Point: Equatable {
     var x: Int
     var y: Int
@@ -124,6 +148,13 @@ extension `Parser.Conversion`.`Combinator` {
     }
 
     @Test
+    func `string copies a substring and wraps it back`() {
+        let conversion = Parser.Conversion.String()
+        #expect(conversion.apply("route") == "route")
+        #expect(conversion.unapply("route") == Substring("route"))
+    }
+
+    @Test
     func `map composes two conversions`() throws(any Swift.Error) {
         // Int --Identity--> Int --RawValue--> Tag
         let conversion = Parser.Conversion.Identity<Int>()
@@ -152,6 +183,21 @@ extension `Parser.Conversion`.`Parser Map` {
         var output: Substring = ""
         try grammar.print(Point(x: 3, y: 4), into: &output)
         #expect(output == "34")
+    }
+
+    @Test
+    func `string lifts a Substring parser to a String parser`() throws(any Swift.Error) {
+        // `.string` resolves to Parser.Conversion.String and preserves
+        // printability: parse copies out a String, print wraps it back.
+        let grammar = Head().map(.string)
+
+        var input: Substring = "x"
+        #expect(try grammar.parse(&input) == "x")
+        #expect(input.isEmpty)
+
+        var output: Substring = ""
+        try grammar.print("x", into: &output)
+        #expect(output == "x")
     }
 
     @Test
