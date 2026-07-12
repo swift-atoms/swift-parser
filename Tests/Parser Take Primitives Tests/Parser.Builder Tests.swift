@@ -434,6 +434,66 @@ extension TwoDigitNumber: Parser.`Protocol` {
     }
 }
 
+// ────────────────────────────────────────────────────────────
+// Pattern 9: Both-Void tiebreaker — two Void parsers, no value
+//
+//     var body: some Parser.Protocol<Input, Void, ...> {
+//         Expect<Input>(0x2E)   // Void
+//         Expect<Input>(0x2E)   // Void
+//     }
+//
+// When BOTH accumulated and next produce Void, the single-Void Skip.First
+// and Skip.Second buildPartialBlock overloads are equally specific — the
+// call was "ambiguous use of buildPartialBlock" until the both-Void overload
+// (strictly more specific) was added. The demand came from swift-stripe-live's
+// AuthenticatedClient router body composing two Void-output parsers
+// (Field("Stripe-Version") + ContentType). Resolves to Skip.First: runs both
+// parsers and emits Void.
+// ────────────────────────────────────────────────────────────
+
+struct BothVoid<Input: Collection.Slice.`Protocol`>: Sendable
+where Input: Sendable, Input.Element == UInt8 {
+}
+
+extension BothVoid: Parser.`Protocol` {
+    typealias Output = Void
+    typealias Failure = Either<Expect<Input>.Error, Expect<Input>.Error>
+
+    var body: some Parser.`Protocol`<Input, Void, Either<Expect<Input>.Error, Expect<Input>.Error>> {
+        Expect<Input>(0x2E)
+        Expect<Input>(0x2E)
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// Pattern 10: Both-Void tiebreaker mid-chain, then a value
+//
+//     var body: some Parser.Protocol<Input, UInt8, ...> {
+//         Expect<Input>(0x2E)   // Void   ┐ both-Void tie
+//         Expect<Input>(0x2E)   // Void   ┘ (intermediate accumulation step)
+//         Digit<Input>()        // UInt8  → Skip.First keeps the digit
+//     }
+//
+// The downstream evidence showed the tie relocating into the enclosing
+// builder, so the both-Void overload must also resolve when the pair is an
+// intermediate accumulation step of a longer chain that later takes a value.
+// ────────────────────────────────────────────────────────────
+
+struct BothVoidThenDigit<Input: Collection.Slice.`Protocol`>: Sendable
+where Input: Sendable, Input.Element == UInt8 {
+}
+
+extension BothVoidThenDigit: Parser.`Protocol` {
+    typealias Output = UInt8
+    typealias Failure = Either<Either<Expect<Input>.Error, Expect<Input>.Error>, Digit<Input>.Error>
+
+    var body: some Parser.`Protocol`<Input, UInt8, Either<Either<Expect<Input>.Error, Expect<Input>.Error>, Digit<Input>.Error>> {
+        Expect<Input>(0x2E)
+        Expect<Input>(0x2E)
+        Digit<Input>()
+    }
+}
+
 // MARK: - Unit Tests
 
 extension `Parser.Builder — var body declarative composition`.Unit {
@@ -589,6 +649,27 @@ extension `Parser.Builder — var body declarative composition`.Unit {
         let version = try parser.parse(&input)
 
         #expect(version == Version(9, 9, 9))
+    }
+
+    @Test
+    func `both-Void pair as the only two statements resolves the tie`() throws(any Swift.Error) {
+        let parser = BothVoid<Parser.Test.Input>()
+        var input = Parser.Test.Input(utf8: "..rest")
+
+        try parser.parse(&input)
+
+        #expect(input.first == UInt8(ascii: "r"))
+    }
+
+    @Test
+    func `both-Void pair mid-chain composes forward to a value`() throws(any Swift.Error) {
+        let parser = BothVoidThenDigit<Parser.Test.Input>()
+        var input = Parser.Test.Input(utf8: "..5rest")
+
+        let value = try parser.parse(&input)
+
+        #expect(value == 5)
+        #expect(input.first == UInt8(ascii: "r"))
     }
 }
 
