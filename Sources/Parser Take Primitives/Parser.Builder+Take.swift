@@ -108,6 +108,16 @@ extension Parser.Builder {
     where Accumulated.Input == Input, Next.Input == Input, Next.Output == Void {
         Parser.Skip.Second(accumulated, next)
     }
+
+    /// Accumulates with Void skipping (both accumulated and next are Void).
+    @inlinable
+    public static func buildPartialBlock<Accumulated: Parser.`Protocol`, Next: Parser.`Protocol`>(
+        accumulated: Accumulated,
+        next: Next
+    ) -> Parser.Skip.First<Accumulated, Next>
+    where Accumulated.Input == Input, Next.Input == Input, Accumulated.Output == Void, Next.Output == Void {
+        Parser.Skip.First(accumulated, next)
+    }
 }
 
 // MARK: - Conditionals
