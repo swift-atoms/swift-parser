@@ -254,7 +254,6 @@ let package = Package(
             dependencies: [
                 "Parser Primitive",
                 .product(name: "Either Primitives", package: "swift-either-primitives"),
-                .product(name: "Product Primitives", package: "swift-product-primitives"),
                 .product(name: "Text Primitives", package: "swift-text-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
             ]
@@ -291,6 +290,7 @@ let package = Package(
                 "Parser Primitive",
                 "Parser Error Primitives",
                 .product(name: "Input Primitives", package: "swift-input-primitives"),
+                .product(name: "Product Primitives", package: "swift-product-primitives"),
             ]
         ),
         .target(

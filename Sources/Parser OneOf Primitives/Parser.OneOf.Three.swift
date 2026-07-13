@@ -6,6 +6,7 @@
 //
 
 public import Input_Primitives
+public import Product_Primitives
 
 extension Parser.OneOf {
     /// A parser that tries three alternatives.
