@@ -25,7 +25,9 @@ struct `Parser.OneOf.Sequence` {
 
 extension `Parser.OneOf.Sequence`.`Printer Propagation` {
     /// An alternation built through `Parser.OneOf.Sequence { … }` prints — the
-    /// F4 fix. Each branch is a `Void`-parser (`Parser.Always`) lifted to a
+    /// F4 fix.
+    ///
+    /// Each branch is a `Void`-parser (`Parser.Always`) lifted to a
     /// labelled output through `.map(.fixed(_))`, so both branches are printers;
     /// the wrapper must forward `print` to the composed `Parser.OneOf.Two`, and
     /// the `.b` direction only succeeds if that forwarding drives the OneOf

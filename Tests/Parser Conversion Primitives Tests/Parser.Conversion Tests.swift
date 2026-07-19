@@ -4,7 +4,9 @@ import Testing
 // MARK: - Test Support Types
 
 /// A bidirectional leaf parser-printer for a single ASCII decimal digit over
-/// `Substring`. Used to build value-producing grammars for the round-trip and
+/// `Substring`.
+///
+/// Used to build value-producing grammars for the round-trip and
 /// builder-propagation probes.
 private struct Digit: Parser.Bidirectional {
     typealias Input = Substring
@@ -14,8 +16,8 @@ private struct Digit: Parser.Bidirectional {
 
     func parse(_ input: inout Substring) throws(Parser.Match.Error) -> Int {
         guard let character = input.first,
-              ("0"..."9").contains(character),
-              let digit = character.wholeNumberValue
+            ("0"..."9").contains(character),
+            let digit = character.wholeNumberValue
         else {
             throw .predicateFailed(description: "expected decimal digit")
         }
@@ -32,9 +34,10 @@ private struct Digit: Parser.Bidirectional {
 }
 
 /// A bidirectional leaf that consumes/produces the first character of a
-/// `Substring` as a `Substring`. Used to exercise the `.string` conversion
-/// (`Substring -> String`) through the printer-preserving `.map(conversion)`
-/// seam.
+/// `Substring` as a `Substring`.
+///
+/// Used to exercise the `.string` conversion (`Substring -> String`) through
+/// the printer-preserving `.map(conversion)` seam.
 private struct Head: Parser.Bidirectional {
     typealias Input = Substring
     typealias Output = Substring
@@ -135,7 +138,7 @@ extension `Parser.Conversion`.`Combinator` {
     func `case embeds a payload and extracts it`() throws(any Swift.Error) {
         let conversion = Parser.Conversion.Case<Node, Int>(
             embed: Node.leaf,
-            extract: { if case let .leaf(value) = $0 { value } else { nil } }
+            extract: { if case .leaf(let value) = $0 { value } else { nil } }
         )
         // apply embeds the payload into its case.
         #expect(conversion.apply(7) == .leaf(7))
@@ -170,10 +173,12 @@ extension `Parser.Conversion`.`Parser Map` {
     @Test
     func `converted parser is bidirectional over a direct Take.Two`() throws(any Swift.Error) {
         let grammar = Parser.Take.Two(Digit(), Digit())
-            .map(.memberwise(
-                { (values: (Int, Int)) in Point(x: values.0, y: values.1) },
-                { (point: Point) in (point.x, point.y) }
-            ))
+            .map(
+                .memberwise(
+                    { (values: (Int, Int)) in Point(x: values.0, y: values.1) },
+                    { (point: Point) in (point.x, point.y) }
+                )
+            )
 
         var input: Substring = "34"
         let parsed = try grammar.parse(&input)
@@ -220,7 +225,7 @@ extension `Parser.Conversion`.`Parser Map` {
         let grammar = Digit().map(
             .case(
                 embed: Node.leaf,
-                extract: { (node: Node) in if case let .leaf(value) = node { value } else { nil } }
+                extract: { (node: Node) in if case .leaf(let value) = node { value } else { nil } }
             )
         )
 
@@ -238,7 +243,9 @@ extension `Parser.Conversion`.`Parser Map` {
 extension `Parser.Conversion`.`Builder Propagation` {
     /// The acceptance probe: a grammar composed through the `Take.Builder`
     /// result builder (`Parser.Take.Sequence { … }`) provably prints through a
-    /// `Conversion`. This exercises the builder-propagation fix
+    /// `Conversion`.
+    ///
+    /// This exercises the builder-propagation fix
     /// (`Parser.Take.Sequence: Parser.Printer`) together with `.map(conversion)`.
     @Test
     func `builder-composed grammar round-trips through a conversion`() throws(any Swift.Error) {
