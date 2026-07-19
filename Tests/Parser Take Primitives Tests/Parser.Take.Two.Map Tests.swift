@@ -4,7 +4,9 @@ import Testing
 // MARK: - Test Support Types
 
 /// A bidirectional leaf parser-printer for a single ASCII decimal digit over
-/// `Substring`. Value-producing, so a multi-value grammar can be composed.
+/// `Substring`.
+///
+/// Value-producing, so a multi-value grammar can be composed.
 private struct DecimalDigit: Parser.Bidirectional {
     typealias Input = Substring
     typealias Output = Int
@@ -13,8 +15,8 @@ private struct DecimalDigit: Parser.Bidirectional {
 
     func parse(_ input: inout Substring) throws(Parser.Match.Error) -> Int {
         guard let character = input.first,
-              ("0"..."9").contains(character),
-              let digit = character.wholeNumberValue
+            ("0"..."9").contains(character),
+            let digit = character.wholeNumberValue
         else {
             throw .predicateFailed(description: "expected decimal digit")
         }
@@ -51,17 +53,20 @@ extension `Parser.Take.Two.Map`.`Printing Boundary` {
     /// ``Parser/Take/Two`` nesting plus a ``Parser/Conversion/Memberwise``
     /// reshape (the `.map(conversion)` bidirectional seam), rather than the
     /// implicit `@Parser.Builder` variadic flatten that routes through the
-    /// parse-only `Parser.Take.Two.Map`. This is the consumer-side resolution
-    /// documented on `Parser.Take.Two.Map`.
+    /// parse-only `Parser.Take.Two.Map`.
+    ///
+    /// This is the consumer-side resolution documented on `Parser.Take.Two.Map`.
     @Test
     func `three-value grammar round-trips through explicit Take.Two + conversion`() throws(any Swift.Error) {
         let grammar = Parser.Take.Two(Parser.Take.Two(DecimalDigit(), DecimalDigit()), DecimalDigit())
-            .map(.memberwise(
-                { (values: ((Int, Int), Int)) in
-                    Triple(a: values.0.0, b: values.0.1, c: values.1)
-                },
-                { (triple: Triple) in ((triple.a, triple.b), triple.c) }
-            ))
+            .map(
+                .memberwise(
+                    { (values: ((Int, Int), Int)) in
+                        Triple(a: values.0.0, b: values.0.1, c: values.1)
+                    },
+                    { (triple: Triple) in ((triple.a, triple.b), triple.c) }
+                )
+            )
 
         var input: Substring = "123"
         let parsed = try grammar.parse(&input)
