@@ -51,23 +51,3 @@ extension Parser.Optionally: Parser.`Protocol` {
         }
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.Optionally: Parser.Printer
-where Wrapped: Parser.Printer {
-    /// Prints the wrapped output when present, silently discarding any printer error.
-    @inlinable
-    public func print(_ output: Wrapped.Output?, into input: inout Input) throws(Failure) {
-        guard let output else { return }
-        // WORKAROUND: Silently swallow printer errors
-        // WHY: Optionally is infallible (Failure == Never) so we cannot propagate
-        //   Wrapped.Failure. The type system prevents expressing partial failure here.
-        // WHEN TO REMOVE: When Parser.Printer supports a separate Failure type from
-        //   the parser's Failure, allowing the printer to throw independently.
-        // TRACKING: Parser.Printer ABI — no upstream Swift Evolution proposal yet.
-        do throws(Wrapped.Failure) {
-            try wrapped.print(output, into: &input)
-        } catch {}
-    }
-}

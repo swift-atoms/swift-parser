@@ -40,14 +40,3 @@ extension Parser.First.Element: Parser.`Protocol` {
         return try! input.advance()
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.First.Element: Parser.Printer
-where Input: RangeReplaceableCollection {
-    /// Prints the element by inserting it at the front of the input.
-    @inlinable
-    public func print(_ output: Input.Element, into input: inout Input) {
-        input.insert(output, at: input.startIndex)
-    }
-}

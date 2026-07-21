@@ -109,27 +109,3 @@ extension Parser.Many: Parser.`Protocol` {
         return results
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.Many: Parser.Printer
-where Element: Parser.Printer {
-    /// Prints each element in reverse order into the input.
-    @inlinable
-    public func print(_ output: [Element.Output], into input: inout Input) throws(Failure) {
-        if output.count < minimum {
-            throw .countTooLow(expected: minimum, got: output.count)
-        }
-        if maximum < .max, output.count > maximum {
-            throw .countTooHigh(expected: maximum, got: output.count)
-        }
-
-        for item in output.reversed() {
-            do throws(Element.Failure) {
-                try element.print(item, into: &input)
-            } catch {
-                break
-            }
-        }
-    }
-}

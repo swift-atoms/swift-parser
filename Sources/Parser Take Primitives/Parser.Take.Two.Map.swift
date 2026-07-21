@@ -17,7 +17,7 @@ extension Parser.Take.Two {
     ///
     /// `Take.Two.Map` is **parse-only** — it stores a one-way
     /// `(P0.Output, P1.Output) -> NewOutput` closure with no inverse, so it does
-    /// **not** conform to ``Parser/Printer``. A builder block that captures two
+    /// **not** conform to `Serializer.Protocol` (swift-coder-primitives rows). A builder block that captures two
     /// or more non-`Void` values therefore flattens through this node and loses
     /// printability. This is not additively fixable: an opaque forward closure
     /// cannot be inverted, a `Printer` conformance cannot be made conditional on
@@ -28,10 +28,10 @@ extension Parser.Take.Two {
     /// To retain printability for a multi-value grammar, compose the values
     /// through the bidirectional seam instead of the implicit builder flatten:
     /// build the pair(s) explicitly with ``Parser/Take/Two`` (which **is** a
-    /// ``Parser/Printer`` when its children are) and reshape the nested tuple
+    /// `Serializer.Protocol` (swift-coder-primitives rows) when its children are) and reshape the nested tuple
     /// with a ``Parser/Conversion/Protocol`` via `.map(conversion)` — e.g.
     /// ``Parser/Conversion/Memberwise`` or ``Parser/Conversion/Witness`` — which
-    /// yields a ``Parser/Converted`` that stays ``Parser/Bidirectional``. See the
+    /// yields a ``Parser/Converted`` that stays `Parser.Bidirectional` (the Coder-based form in swift-coder-primitives). See the
     /// `Parser.Take.Two.Map Tests` round-trip for the covered multi-value shape.
     public struct Map<NewOutput> {
         @usableFromInline

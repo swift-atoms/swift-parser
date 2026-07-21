@@ -3,11 +3,10 @@ import Testing
 
 // MARK: - Test Support Types
 
-/// A bidirectional leaf parser-printer for a single ASCII decimal digit over
-/// `Substring`.
+/// A leaf parser for a single ASCII decimal digit over `Substring`.
 ///
 /// Value-producing, so a multi-value grammar can be composed.
-private struct DecimalDigit: Parser.Bidirectional {
+private struct DecimalDigit: Parser.`Protocol` {
     typealias Input = Substring
     typealias Output = Int
     typealias Failure = Parser.Match.Error
@@ -24,12 +23,6 @@ private struct DecimalDigit: Parser.Bidirectional {
         return digit
     }
 
-    func print(_ output: Int, into input: inout Substring) throws(Parser.Match.Error) {
-        guard (0...9).contains(output) else {
-            throw .predicateFailed(description: "digit out of range 0...9")
-        }
-        input.insert(contentsOf: String(output), at: input.startIndex)
-    }
 }
 
 private struct Triple: Equatable {
@@ -42,22 +35,20 @@ private struct Triple: Equatable {
 
 @Suite
 struct `Parser.Take.Two.Map` {
-    @Suite struct `Printing Boundary` {}
+    @Suite struct `Conversion Boundary` {}
 }
 
-// MARK: - Printing Boundary (friction F2)
+// MARK: - Conversion Boundary (friction F2)
 
-extension `Parser.Take.Two.Map`.`Printing Boundary` {
-    /// The covered multi-value shape: a three-value grammar retains
-    /// printability when the values are composed through **explicit**
-    /// ``Parser/Take/Two`` nesting plus a ``Parser/Conversion/Memberwise``
-    /// reshape (the `.map(conversion)` bidirectional seam), rather than the
-    /// implicit `@Parser.Builder` variadic flatten that routes through the
-    /// parse-only `Parser.Take.Two.Map`.
-    ///
-    /// This is the consumer-side resolution documented on `Parser.Take.Two.Map`.
+extension `Parser.Take.Two.Map`.`Conversion Boundary` {
+    /// The covered multi-value shape: a three-value grammar composed through
+    /// **explicit** ``Parser/Take/Two`` nesting plus a
+    /// ``Parser/Conversion/Memberwise`` reshape (the `.map(conversion)`
+    /// bidirectional seam), rather than the implicit `@Parser.Builder`
+    /// variadic flatten that routes through the one-way `Parser.Take.Two.Map`.
+    /// The emission direction of this seam is covered by the coder-side rows.
     @Test
-    func `three-value grammar round-trips through explicit Take.Two + conversion`() throws(any Swift.Error) {
+    func `three-value grammar parses through explicit Take.Two + conversion`() throws(any Swift.Error) {
         let grammar = Parser.Take.Two(Parser.Take.Two(DecimalDigit(), DecimalDigit()), DecimalDigit())
             .map(
                 .memberwise(
@@ -72,9 +63,5 @@ extension `Parser.Take.Two.Map`.`Printing Boundary` {
         let parsed = try grammar.parse(&input)
         #expect(parsed == Triple(a: 1, b: 2, c: 3))
         #expect(input.isEmpty)
-
-        var output: Substring = ""
-        try grammar.print(Triple(a: 1, b: 2, c: 3), into: &output)
-        #expect(output == "123")
     }
 }
