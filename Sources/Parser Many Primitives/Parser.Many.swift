@@ -30,15 +30,14 @@ extension Parser {
     /// this type and adds a `Separator` parameter.
     public struct Many<Input: Input_Primitives.Input.`Protocol`, Element: Parser.`Protocol`>
     where Element.Input == Input {
-        @usableFromInline
-        let element: Element
+        /// The repeated element parser.
+        public let element: Element
 
-        @usableFromInline
-        let minimum: Int
+        /// The minimum accepted element count.
+        public let minimum: Int
 
-        /// `Int.max` means no maximum.
-        @usableFromInline
-        let maximum: Int
+        /// The maximum accepted element count; `Int.max` means no maximum.
+        public let maximum: Int
 
         /// Creates a parser applying the element parser at least the range's lower bound times.
         @inlinable

@@ -37,18 +37,17 @@ extension Parser.Many {
     /// only the `Separator` parameter is added at this nesting level.
     public struct Separated<Separator: Parser.`Protocol`>
     where Separator.Input == Input {
-        @usableFromInline
-        let element: Element
+        /// The repeated element parser.
+        public let element: Element
 
-        @usableFromInline
-        let separator: Separator
+        /// The separator parser between successive elements.
+        public let separator: Separator
 
-        @usableFromInline
-        let minimum: Int
+        /// The minimum accepted element count.
+        public let minimum: Int
 
-        /// `Int.max` means no maximum.
-        @usableFromInline
-        let maximum: Int
+        /// The maximum accepted element count; `Int.max` means no maximum.
+        public let maximum: Int
 
         /// Creates a separated parser requiring at least the range's lower bound elements.
         @inlinable

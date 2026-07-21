@@ -12,11 +12,11 @@ extension Parser.Take {
     /// Created by `Take.Builder` when combining two non-Void parsers.
     public struct Two<P0: Parser.`Protocol`, P1: Parser.`Protocol`>
     where P0.Input == P1.Input {
-        @usableFromInline
-        internal let p0: P0
+        /// The first parser in the sequence.
+        public let p0: P0
 
-        @usableFromInline
-        internal let p1: P1
+        /// The second parser in the sequence.
+        public let p1: P1
 
         /// Creates a parser that runs the two given parsers in sequence.
         @inlinable

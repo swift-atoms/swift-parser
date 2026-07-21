@@ -35,11 +35,11 @@ extension Parser {
         Upstream: Parser.`Protocol`,
         Downstream: Parser.Conversion.`Protocol`
     > where Downstream.Input == Upstream.Output {
-        @usableFromInline
-        internal let upstream: Upstream
+        /// The upstream parser.
+        public let upstream: Upstream
 
-        @usableFromInline
-        internal let downstream: Downstream
+        /// The value conversion.
+        public let downstream: Downstream
 
         /// Wraps the upstream parser, mapping its output through the conversion.
         @inlinable

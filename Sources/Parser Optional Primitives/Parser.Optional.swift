@@ -10,8 +10,8 @@ extension Parser {
     ///
     /// Used by `Take.Builder` for `if` statements without `else`.
     public struct Optional<Wrapped: Parser.`Protocol`> {
-        @usableFromInline
-        let wrapped: Wrapped?
+        /// The wrapped parser, when present.
+        public let wrapped: Wrapped?
 
         /// Creates a parser wrapping an optional parser.
         @inlinable

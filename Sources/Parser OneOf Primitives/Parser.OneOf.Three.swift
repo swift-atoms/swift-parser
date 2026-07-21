@@ -18,14 +18,14 @@ extension Parser.OneOf {
         P1.Output == P2.Output,
         P0.Input: Input_Primitives.Input.`Protocol`
     {
-        @usableFromInline
-        let p0: P0
+        /// The first alternative.
+        public let p0: P0
 
-        @usableFromInline
-        let p1: P1
+        /// The second alternative.
+        public let p1: P1
 
-        @usableFromInline
-        let p2: P2
+        /// The third alternative.
+        public let p2: P2
 
         /// Creates a parser that tries the three parsers in order.
         @inlinable

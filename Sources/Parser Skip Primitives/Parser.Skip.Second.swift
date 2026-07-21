@@ -11,11 +11,11 @@ extension Parser.Skip {
     /// Used when the second parser has `Void` output (like a delimiter).
     public struct Second<P0: Parser.`Protocol`, P1: Parser.`Protocol`>
     where P0.Input == P1.Input, P1.Output == Void {
-        @usableFromInline
-        internal let p0: P0
+        /// The kept first parser.
+        public let p0: P0
 
-        @usableFromInline
-        internal let p1: P1
+        /// The skipped (Void-output) second parser.
+        public let p1: P1
 
         /// Creates a parser that runs both parsers but keeps only the first's output.
         @inlinable
