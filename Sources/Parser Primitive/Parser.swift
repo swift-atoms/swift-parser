@@ -38,11 +38,10 @@
 //
 //  ## Output Protocols
 //
-//  - `Parser.Printer`: Prepends to buffer for parser-printer round-trip symmetry.
-//    Use when you need `parse(print(value)) == value`.
-//
 //  - `Serializer.Protocol` (in swift-serializer-primitives): Appends to buffer for
-//    O(1) amortized performance. Use for one-way serialization.
+//    O(1) amortized performance. `Coder.Protocol` (in swift-coder-primitives)
+//    is the canonical bidirectional conjunction (Parser & Serializer); the
+//    serializer-side emission rows for these combinators live there.
 //
 //  ## Relationship to Binary Module
 //

@@ -59,26 +59,3 @@ extension Parser.OneOf.Two: Parser.`Protocol` {
         }
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.OneOf.Two: Parser.Printer
-where P0: Parser.Printer, P1: Parser.Printer {
-    /// Tries the first printer; on failure, backtracks and tries the second.
-    @inlinable
-    public func print(_ output: Output, into input: inout Input) throws(Failure) {
-        // Try first printer, fall back to second
-        let checkpoint = input.checkpoint
-        do throws(P0.Failure) {
-            try p0.print(output, into: &input)
-            return
-        } catch let error0 {
-            input.restore.to(__unchecked: (), checkpoint)
-            do throws(P1.Failure) {
-                try p1.print(output, into: &input)
-            } catch let error1 {
-                throw Failure(error0, error1)
-            }
-        }
-    }
-}

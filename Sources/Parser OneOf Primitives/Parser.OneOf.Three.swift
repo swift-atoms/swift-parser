@@ -61,33 +61,3 @@ extension Parser.OneOf.Three: Parser.`Protocol` {
         }
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.OneOf.Three: Parser.Printer
-where P0: Parser.Printer, P1: Parser.Printer, P2: Parser.Printer {
-    /// Tries each printer in order, backtracking between attempts, until one succeeds.
-    @inlinable
-    public func print(_ output: Output, into input: inout Input) throws(Failure) {
-        // Try each printer in order, use first that succeeds
-        let checkpoint = input.checkpoint
-
-        do throws(P0.Failure) {
-            try p0.print(output, into: &input)
-            return
-        } catch let error0 {
-            input.restore.to(__unchecked: (), checkpoint)
-            do throws(P1.Failure) {
-                try p1.print(output, into: &input)
-                return
-            } catch let error1 {
-                input.restore.to(__unchecked: (), checkpoint)
-                do throws(P2.Failure) {
-                    try p2.print(output, into: &input)
-                } catch let error2 {
-                    throw Failure(error0, error1, error2)
-                }
-            }
-        }
-    }
-}

@@ -14,7 +14,7 @@ extension Parser {
     /// Parsing runs the upstream parser, then the conversion's
     /// ``Parser/Conversion/Protocol/apply(_:)``. Printing runs the conversion's
     /// ``Parser/Conversion/Protocol/unapply(_:)``, then the upstream printer.
-    /// The result is ``Parser/Bidirectional`` exactly when the upstream is —
+    /// The result is `Parser.Bidirectional` (the Coder-based form in swift-coder-primitives) exactly when the upstream is —
     /// this is the mechanism that lets a bidirectional parser-printer change its
     /// `Output` type without losing printability.
     ///
@@ -74,27 +74,3 @@ extension Parser.Converted: Parser.`Protocol` {
         }
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.Converted: Parser.Printer where Upstream: Parser.Printer {
-    /// Un-applies the conversion, then prints with the upstream printer.
-    @inlinable
-    public func print(_ output: Output, into input: inout Input) throws(Failure) {
-        let upstreamOutput: Upstream.Output
-        do throws(Downstream.Failure) {
-            upstreamOutput = try downstream.unapply(output)
-        } catch {
-            throw .right(error)
-        }
-        do throws(Upstream.Failure) {
-            try upstream.print(upstreamOutput, into: &input)
-        } catch {
-            throw .left(error)
-        }
-    }
-}
-
-// MARK: - Bidirectional Conformance
-
-extension Parser.Converted: Parser.Bidirectional where Upstream: Parser.Bidirectional {}

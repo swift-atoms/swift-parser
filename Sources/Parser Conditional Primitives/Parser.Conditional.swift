@@ -47,28 +47,3 @@ extension Parser.Conditional: Parser.`Protocol` {
         }
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.Conditional: Parser.Printer
-where First: Parser.Printer, Second: Parser.Printer {
-    /// Prints using whichever branch this value holds.
-    @inlinable
-    public func print(_ output: Output, into input: inout Input) throws(Failure) {
-        switch self {
-        case .first(let printer):
-            do throws(First.Failure) {
-                try printer.print(output, into: &input)
-            } catch {
-                throw .left(error)
-            }
-
-        case .second(let printer):
-            do throws(Second.Failure) {
-                try printer.print(output, into: &input)
-            } catch {
-                throw .right(error)
-            }
-        }
-    }
-}

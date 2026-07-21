@@ -32,13 +32,3 @@ extension Parser.End: Parser.`Protocol` {
         }
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.End: Parser.Printer {
-    /// Prints nothing; end of input is a marker with no representation.
-    @inlinable
-    public func print(_ output: Void, into input: inout Input) {
-        // End produces nothing - it's a marker
-    }
-}

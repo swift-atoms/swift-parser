@@ -142,36 +142,3 @@ extension Parser.Many.Separated: Parser.`Protocol` {
         return results
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.Many.Separated: Parser.Printer
-where Element: Parser.Printer, Separator: Parser.Printer, Separator.Output == Void {
-    /// Prints each element in reverse, inserting the separator between successive elements.
-    @inlinable
-    public func print(_ output: [Element.Output], into input: inout Input) throws(Failure) {
-        if output.count < minimum {
-            throw Failure.countTooLow(expected: minimum, got: output.count)
-        }
-        if maximum < .max, output.count > maximum {
-            throw Failure.countTooHigh(expected: maximum, got: output.count)
-        }
-
-        var isFirst = true
-        for item in output.reversed() {
-            if !isFirst {
-                do throws(Separator.Failure) {
-                    try separator.print((), into: &input)
-                } catch {
-                    break
-                }
-            }
-            do throws(Element.Failure) {
-                try element.print(item, into: &input)
-            } catch {
-                break
-            }
-            isFirst = false
-        }
-    }
-}

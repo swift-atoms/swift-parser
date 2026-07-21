@@ -10,7 +10,7 @@ extension Parser {
     ///
     /// A conversion transforms an `Input` value into an `Output` value *and*
     /// transforms an `Output` value back into an `Input` value. Conversions are
-    /// the keystone that lets a ``Parser/Bidirectional`` parser-printer change
+    /// the keystone that lets a `Parser.Bidirectional` (the Coder-based form in swift-coder-primitives) parser-printer change
     /// its `Output` type while preserving printability: parsing runs the
     /// conversion's ``Parser/Conversion/Protocol/apply(_:)`` forward, printing
     /// runs its ``Parser/Conversion/Protocol/unapply(_:)`` in reverse.
@@ -26,7 +26,7 @@ extension Parser {
     ///
     /// Applying a conversion to a parser-printer is spelled `parser.map(conversion)`,
     /// which yields a ``Parser/Converted`` parser that is itself
-    /// ``Parser/Bidirectional`` whenever the upstream is.
+    /// `Parser.Bidirectional` (the Coder-based form in swift-coder-primitives) whenever the upstream is.
     ///
     /// ## Naming precedent
     ///

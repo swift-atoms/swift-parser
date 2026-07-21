@@ -31,13 +31,3 @@ extension Parser.Always: Parser.`Protocol` {
         output
     }
 }
-
-// MARK: - Printer Conformance (Void only)
-
-extension Parser.Always: Parser.Printer where Output == Void {
-    /// Prints nothing; this parser neither consumes nor produces input.
-    @inlinable
-    public func print(_ output: Void, into input: inout Input) {
-        // Always produces value without consuming/producing input
-    }
-}

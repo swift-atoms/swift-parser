@@ -38,15 +38,3 @@ extension Parser.Optional: Parser.`Protocol` {
         return try wrapped.parse(&input)
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.Optional: Parser.Printer
-where Wrapped: Parser.Printer {
-    /// Prints the wrapped output when both the parser and the value are present.
-    @inlinable
-    public func print(_ output: Wrapped.Output?, into input: inout Input) throws(Failure) {
-        guard let wrapped, let output else { return }
-        try wrapped.print(output, into: &input)
-    }
-}

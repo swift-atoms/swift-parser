@@ -63,27 +63,3 @@ extension Parser.Take.Two {
         Map(upstream: self, transform: transform)
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.Take.Two: Parser.Printer
-where P0: Parser.Printer, P1: Parser.Printer {
-    /// Prints both outputs into the input, in reverse order so the buffer builds correctly.
-    @inlinable
-    public func print(
-        _ output: (P0.Output, P1.Output),
-        into input: inout Input
-    ) throws(Failure) {
-        // Print in reverse order to build input correctly
-        do throws(P1.Failure) {
-            try p1.print(output.1, into: &input)
-        } catch {
-            throw .right(error)
-        }
-        do throws(P0.Failure) {
-            try p0.print(output.0, into: &input)
-        } catch {
-            throw .left(error)
-        }
-    }
-}

@@ -2,7 +2,7 @@
 //  Parser.String+Parser.swift
 //  swift-standards
 //
-//  String conformance to Parser and Printer for literal usage.
+//  String conformance to Parser for literal usage.
 //
 
 extension String: Parser.`Protocol` {
@@ -20,13 +20,5 @@ extension String: Parser.`Protocol` {
             throw .literalMismatch(expected: self, found: String(input.prefix(self.count)))
         }
         input = input.dropFirst(self.count)
-    }
-}
-
-extension String: Parser.Printer {
-    /// Prints this string by inserting it at the front of the input.
-    @inlinable
-    public func print(_ output: Void, into input: inout Substring) {
-        input.insert(contentsOf: self, at: input.startIndex)
     }
 }

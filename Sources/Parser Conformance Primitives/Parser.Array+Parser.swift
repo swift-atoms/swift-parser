@@ -2,7 +2,7 @@
 //  Parser.Array+Parser.swift
 //  swift-standards
 //
-//  Array conformance to Parser and Printer for literal usage.
+//  Array conformance to Parser for literal usage.
 //
 
 extension Swift.Array: Parser.`Protocol` where Element: Equatable {
@@ -25,13 +25,5 @@ extension Swift.Array: Parser.`Protocol` where Element: Equatable {
             }
             input = input.dropFirst()
         }
-    }
-}
-
-extension Swift.Array: Parser.Printer where Element: Equatable {
-    /// Prints this array by inserting its elements at the front of the input.
-    @inlinable
-    public func print(_ output: Void, into input: inout ArraySlice<Element>) {
-        input.insert(contentsOf: self, at: input.startIndex)
     }
 }

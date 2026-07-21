@@ -49,24 +49,3 @@ extension Parser.Skip.First: Parser.`Protocol` {
         }
     }
 }
-
-// MARK: - Printer Conformance
-
-extension Parser.Skip.First: Parser.Printer
-where P0: Parser.Printer, P1: Parser.Printer {
-    /// Prints the second parser's output, then the first parser's empty output, in reverse order.
-    @inlinable
-    public func print(_ output: P1.Output, into input: inout Input) throws(Failure) {
-        // Print in reverse order
-        do throws(P1.Failure) {
-            try p1.print(output, into: &input)
-        } catch {
-            throw .right(error)
-        }
-        do throws(P0.Failure) {
-            try p0.print((), into: &input)
-        } catch {
-            throw .left(error)
-        }
-    }
-}

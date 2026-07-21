@@ -13,9 +13,9 @@ extension Parser.`Protocol` {
     /// Where the closure `map` yields a parse-only parser, this overload yields
     /// a ``Parser/Converted`` that parses via the conversion's
     /// ``Parser/Conversion/Protocol/apply(_:)`` and — when this parser is a
-    /// ``Parser/Printer`` — prints via its
+    /// `Serializer.Protocol` (swift-coder-primitives rows) — prints via its
     /// ``Parser/Conversion/Protocol/unapply(_:)``. When this parser is
-    /// ``Parser/Bidirectional``, so is the result.
+    /// `Parser.Bidirectional` (the Coder-based form in swift-coder-primitives), so is the result.
     ///
     /// The conversion overload is distinguished from the closure overloads by
     /// its argument: a conversion is a value, not a function.
