@@ -19,8 +19,8 @@ extension Parser {
     /// ```
     public struct Optionally<Wrapped: Parser.`Protocol`>
     where Wrapped.Input: Input_Primitives.Input.`Protocol` {
-        @usableFromInline
-        internal let wrapped: Wrapped
+        /// The wrapped parser.
+        public let wrapped: Wrapped
 
         /// Creates a parser that backtracks and yields nil when the wrapped parser fails.
         @inlinable
