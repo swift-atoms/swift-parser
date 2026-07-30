@@ -54,7 +54,6 @@ private struct Point: Equatable {
 
 private struct Tag: RawRepresentable, Equatable {
     var rawValue: Int
-    init(rawValue: Int) { self.rawValue = rawValue }
 }
 
 /// A payload-carrying enum used to probe ``Parser/Conversion/Case``: `leaf`

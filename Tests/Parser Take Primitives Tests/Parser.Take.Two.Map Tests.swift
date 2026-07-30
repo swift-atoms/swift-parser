@@ -46,6 +46,7 @@ extension `Parser.Take.Two.Map`.`Conversion Boundary` {
     /// ``Parser/Conversion/Memberwise`` reshape (the `.map(conversion)`
     /// bidirectional seam), rather than the implicit `@Parser.Builder`
     /// variadic flatten that routes through the one-way `Parser.Take.Two.Map`.
+    ///
     /// The emission direction of this seam is covered by the coder-side rows.
     @Test
     func `three-value grammar parses through explicit Take.Two + conversion`() throws(any Swift.Error) {
