@@ -217,7 +217,7 @@ extension `Parser.Invariant`.Algebra {
 
 // MARK: - Error Propagation
 
-// swiftlint:disable:next swift_error_qualification  // reason: bare-word match on the nested test-suite type name `Error Propagation`, not a reference to the Error protocol.
+// swiftlint:disable:next swift_error_qualification - bare-word match on the nested test-suite type name `Error Propagation`, not a reference to the Error protocol
 extension `Parser.Invariant`.`Error Propagation` {
     @Test
     func `FlatMap tags upstream error as left`() {
