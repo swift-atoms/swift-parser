@@ -115,7 +115,10 @@ extension Parser.Builder {
         accumulated: Accumulated,
         next: Next
     ) -> Parser.Skip.First<Accumulated, Next>
-    where Accumulated.Input == Input, Next.Input == Input, Accumulated.Output == Void, Next.Output == Void {
+    where
+        Accumulated.Input == Input, Next.Input == Input, Accumulated.Output == Void,
+        Next.Output == Void
+    {
         Parser.Skip.First(accumulated, next)
     }
 }

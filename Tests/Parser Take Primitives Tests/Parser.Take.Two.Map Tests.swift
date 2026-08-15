@@ -49,16 +49,21 @@ extension `Parser.Take.Two.Map`.`Conversion Boundary` {
     ///
     /// The emission direction of this seam is covered by the coder-side rows.
     @Test
-    func `three-value grammar parses through explicit Take.Two + conversion`() throws(any Swift.Error) {
-        let grammar = Parser.Take.Two(Parser.Take.Two(DecimalDigit(), DecimalDigit()), DecimalDigit())
-            .map(
-                .memberwise(
-                    { (values: ((Int, Int), Int)) in
-                        Triple(a: values.0.0, b: values.0.1, c: values.1)
-                    },
-                    { (triple: Triple) in ((triple.a, triple.b), triple.c) }
-                )
+    func `three-value grammar parses through explicit Take.Two + conversion`() throws(any Swift
+        .Error)
+    {
+        let grammar = Parser.Take.Two(
+            Parser.Take.Two(DecimalDigit(), DecimalDigit()),
+            DecimalDigit()
+        )
+        .map(
+            .memberwise(
+                { (values: ((Int, Int), Int)) in
+                    Triple(a: values.0.0, b: values.0.1, c: values.1)
+                },
+                { (triple: Triple) in ((triple.a, triple.b), triple.c) }
             )
+        )
 
         var input: Substring = "123"
         let parsed = try grammar.parse(&input)
