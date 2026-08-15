@@ -74,7 +74,10 @@ extension `Parser.Many`.`Edge Case` {
         }
         var input = Parser.Test.Input([])
 
-        #expect(throws: Parser.Many<Parser.Test.Input, Parser.First.Element<Parser.Test.Input>>.Error.self) {
+        #expect(
+            throws: Parser.Many<Parser.Test.Input, Parser.First.Element<Parser.Test.Input>>.Error
+                .self
+        ) {
             try parser.parse(&input)
         }
     }

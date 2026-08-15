@@ -25,7 +25,9 @@ extension `Parser.OneOf.Sequence`.`Builder Propagation` {
     /// The emission direction of this wrapper (the serializer-side row) lives
     /// in swift-coder-primitives; only the parse direction is native here.
     @Test
-    func `builder-composed alternation parses through the first matching branch`() throws(any Swift.Error) {
+    func `builder-composed alternation parses through the first matching branch`() throws(any Swift
+        .Error)
+    {
         let alternation = Parser.OneOf.Sequence {
             Parser.Always<Parser.Test.Input, Void>(()).map(.fixed(Choice.a))
             Parser.Always<Parser.Test.Input, Void>(()).map(.fixed(Choice.b))

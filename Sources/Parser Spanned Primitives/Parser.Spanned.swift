@@ -84,7 +84,11 @@ extension Parser.Spanned {
     ///
     /// Boundary overload per [IMPL-010]: pushes `Int(bitPattern:)` to the edge.
     @inlinable
-    public init<Element: ~Copyable & ~Escapable>(_ value: T, start: Index<Element>, end: Index<Element>) {
+    public init<Element: ~Copyable & ~Escapable>(
+        _ value: T,
+        start: Index<Element>,
+        end: Index<Element>
+    ) {
         self.init(value, start: Int(bitPattern: start), end: Int(bitPattern: end))
     }
 }

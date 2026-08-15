@@ -459,7 +459,8 @@ extension BothVoid: Parser.`Protocol` {
     typealias Output = Void
     typealias Failure = Either<Expect<Input>.Error, Expect<Input>.Error>
 
-    var body: some Parser.`Protocol`<Input, Void, Either<Expect<Input>.Error, Expect<Input>.Error>> {
+    var body: some Parser.`Protocol`<Input, Void, Either<Expect<Input>.Error, Expect<Input>.Error>>
+    {
         Expect<Input>(0x2E)
         Expect<Input>(0x2E)
     }
@@ -487,7 +488,12 @@ extension BothVoidThenDigit: Parser.`Protocol` {
     typealias Output = UInt8
     typealias Failure = Either<Either<Expect<Input>.Error, Expect<Input>.Error>, Digit<Input>.Error>
 
-    var body: some Parser.`Protocol`<Input, UInt8, Either<Either<Expect<Input>.Error, Expect<Input>.Error>, Digit<Input>.Error>> {
+    var body:
+        some Parser.`Protocol`<
+            Input, UInt8,
+            Either<Either<Expect<Input>.Error, Expect<Input>.Error>, Digit<Input>.Error>
+        >
+    {
         Expect<Input>(0x2E)
         Expect<Input>(0x2E)
         Digit<Input>()

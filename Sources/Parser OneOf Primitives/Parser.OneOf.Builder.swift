@@ -49,7 +49,11 @@ extension Parser.OneOf.Builder {
 
     /// Combines three alternatives.
     @inlinable
-    public static func buildBlock<P0: Parser.`Protocol`, P1: Parser.`Protocol`, P2: Parser.`Protocol`>(
+    public static func buildBlock<
+        P0: Parser.`Protocol`,
+        P1: Parser.`Protocol`,
+        P2: Parser.`Protocol`
+    >(
         _ p0: P0,
         _ p1: P1,
         _ p2: P2

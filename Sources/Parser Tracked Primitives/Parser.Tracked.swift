@@ -128,7 +128,10 @@ extension Parser.Tracked: Input_Primitives.Input.`Protocol` {
     @inlinable
     public var bounds: ClosedRange<Checkpoint> {
         let baseRange = base.bounds
-        return Checkpoint(baseCheckpoint: baseRange.lowerBound, trackedOffset: .zero)...Checkpoint(baseCheckpoint: baseRange.upperBound, trackedOffset: .zero)
+        return Checkpoint(
+            baseCheckpoint: baseRange.lowerBound,
+            trackedOffset: .zero
+        )...Checkpoint(baseCheckpoint: baseRange.upperBound, trackedOffset: .zero)
     }
 
     /// Restores the underlying input and tracked offset to the given checkpoint.
