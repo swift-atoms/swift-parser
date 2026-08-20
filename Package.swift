@@ -1,15 +1,15 @@
-// swift-tools-version: 6.3.3
+// swift-tools-version: 6.4
 
 import PackageDescription
 
 let package = Package(
     name: "swift-parser-primitives",
     platforms: [
-        .macOS("27"),
-        .iOS("27"),
-        .tvOS("27"),
-        .watchOS("27"),
-        .visionOS("27")
+        .macOS(.v27),
+        .iOS(.v27),
+        .tvOS(.v27),
+        .watchOS(.v27),
+        .visionOS(.v27),
     ],
     products: [
         // MARK: - Namespace
@@ -176,16 +176,46 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-either-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-pair-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-product-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-input-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-array-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-collection-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-text-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-tagged-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-iterator-primitives.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-primitives/swift-either-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-pair-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-product-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-input-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-array-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-collection-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-index-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-text-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-tagged-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-iterator-primitives.git",
+            branch: "main"
+        ),
     ],
     targets: [
         // MARK: - Namespace
@@ -243,7 +273,7 @@ let package = Package(
         .target(
             name: "Parser Witness Primitives",
             dependencies: [
-                "Parser Primitive",
+                "Parser Primitive"
             ]
         ),
 
@@ -272,13 +302,13 @@ let package = Package(
         .target(
             name: "Parser EndOfInput Primitives",
             dependencies: [
-                "Parser Primitive",
+                "Parser Primitive"
             ]
         ),
         .target(
             name: "Parser Constraint Primitives",
             dependencies: [
-                "Parser Primitive",
+                "Parser Primitive"
             ]
         ),
 
@@ -477,13 +507,13 @@ let package = Package(
         .target(
             name: "Parser Always Primitives",
             dependencies: [
-                "Parser Primitive",
+                "Parser Primitive"
             ]
         ),
         .target(
             name: "Parser Fail Primitives",
             dependencies: [
-                "Parser Primitive",
+                "Parser Primitive"
             ]
         ),
         .target(
@@ -507,19 +537,19 @@ let package = Package(
         .target(
             name: "Parser Lazy Primitives",
             dependencies: [
-                "Parser Primitive",
+                "Parser Primitive"
             ]
         ),
         .target(
             name: "Parser Trace Primitives",
             dependencies: [
-                "Parser Primitive",
+                "Parser Primitive"
             ]
         ),
         .target(
             name: "Parser Parse Primitives",
             dependencies: [
-                "Parser Primitive",
+                "Parser Primitive"
             ]
         ),
 
