@@ -74,7 +74,10 @@ extension Parser {
     }
 }
 
-extension Parser.Parse: Copyable where P: Copyable {}
+extension Parser.Parse: Copyable
+where
+    P: Parser.`Protocol`<P.Input, P.Output, P.Failure> & Copyable
+{}
 
 // MARK: - Parser Extension
 
