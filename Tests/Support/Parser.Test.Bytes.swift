@@ -1,5 +1,5 @@
 public import Collection_Primitives
-public import Iterable
+import Iterable
 public import Parser_Primitives
 
 extension Parser.Test {
