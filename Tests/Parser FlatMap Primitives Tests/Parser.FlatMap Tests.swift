@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.FlatMap` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.FlatMap`.Unit {
     @Test
@@ -26,8 +22,6 @@ extension `Parser.FlatMap`.Unit {
         #expect(input.first == 0xFF)
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.FlatMap`.`Edge Case` {
     @Test

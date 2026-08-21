@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Map.Transform` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Map.Transform`.Unit {
     @Test
@@ -34,8 +30,6 @@ extension `Parser.Map.Transform`.Unit {
         #expect(input.first == 0x01)
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.Map.Transform`.`Edge Case` {
     @Test

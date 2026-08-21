@@ -1,28 +1,16 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Builder — var body declarative composition` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
 
-// MARK: - Test Parsers (Leaf)
-
-/// Parses one ASCII digit, returns its integer value.
 struct Digit<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }
 
-// `Digit.Error` is preserved as the error spelling ([API-NAME-001] Nest.Name),
-// but its backing enum is hoisted to module scope so the typed-throws error type
-// is NON-generic. The error never used `Input`; the accidental generality of
-// `Digit<Input>.Error` being parameterised by `Input` is what triggered the
-// FunctionSignatureOpts crash under -O (catalog § A13). The nested `typealias
-// Error` ([API-ERR-007]) keeps every `Digit<Input>.Error` call site working.
-// De-genericizing is behaviour-preserving.
 enum __DigitError: Swift.Error, Sendable, Equatable {
     case expectedDigit
 }
@@ -41,7 +29,6 @@ extension Digit: Parser.`Protocol` {
     }
 }
 
-/// Parses one specific ASCII byte, returns Void.
 struct Expect<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
     let byte: UInt8
@@ -65,7 +52,6 @@ extension Expect: Parser.`Protocol` {
     }
 }
 
-/// Skips ASCII spaces, returns Void, never fails.
 struct Whitespace<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }
@@ -83,9 +69,6 @@ extension Whitespace: Parser.`Protocol` {
     }
 }
 
-/// Consumes all remaining input, returns byte count.
-///
-/// Never fails.
 struct CountRest<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }
@@ -104,19 +87,6 @@ extension CountRest: Parser.`Protocol` {
     }
 }
 
-// MARK: - Declarative Parsers (var body)
-
-// ────────────────────────────────────────────────────────────
-// Pattern 1: Single parser pass-through
-//
-//     var body: some Parser.Protocol<Input, UInt8, Error> {
-//         Digit<Input>()
-//     }
-//
-// The builder sees one expression, passes it through unchanged.
-// Default parse(_:) delegates to body — no explicit func parse.
-// ────────────────────────────────────────────────────────────
-
 struct SingleDigit<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }
@@ -129,18 +99,6 @@ extension SingleDigit: Parser.`Protocol` {
         Digit<Input>()
     }
 }
-
-// ────────────────────────────────────────────────────────────
-// Pattern 2: Two-parser composition with error mapping
-//
-//     Parser.Take.Sequence {
-//         Digit<Input>()    // → UInt8
-//         Digit<Input>()    // → UInt8
-//     }                     // → (UInt8, UInt8) / Either<Digit.Error, Digit.Error>
-//     .error.map { ... }    // → (UInt8, UInt8) / DomainError
-//
-// .error.map converts Either<Left, Right> → concrete domain Error.
-// ────────────────────────────────────────────────────────────
 
 struct TwoDigits<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
@@ -170,19 +128,6 @@ extension TwoDigits: Parser.`Protocol` {
     }
 }
 
-// ────────────────────────────────────────────────────────────
-// Pattern 3: Void-skipping — left side
-//
-//     Parser.Take.Sequence {
-//         Whitespace<Input>()   // → Void (skipped automatically)
-//         Digit<Input>()        // → UInt8
-//     }                         // → UInt8 / Either<Never, Digit.Error>
-//     .error.map { $0.value }   // → UInt8 / Digit.Error
-//
-// When a parser produces Void, the builder uses Skip.First.
-// Either<Never, X>.value eliminates the Never branch (unconditional extraction).
-// ────────────────────────────────────────────────────────────
-
 struct SkipThenDigit<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }
@@ -200,19 +145,6 @@ extension SkipThenDigit: Parser.`Protocol` {
     }
 }
 
-// ────────────────────────────────────────────────────────────
-// Pattern 4: Void-skipping — right side
-//
-//     Parser.Take.Sequence {
-//         Digit<Input>()        // → UInt8
-//         Whitespace<Input>()   // → Void (skipped automatically)
-//     }                         // → UInt8 / Either<Digit.Error, Never>
-//     .error.map { $0.value }   // → UInt8 / Digit.Error
-//
-// When the right parser produces Void, the builder uses Skip.Second.
-// Either<X, Never>.value eliminates the Never branch.
-// ────────────────────────────────────────────────────────────
-
 struct DigitThenSkip<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }
@@ -229,27 +161,6 @@ extension DigitThenSkip: Parser.`Protocol` {
         .error.map { $0.value }
     }
 }
-
-// ────────────────────────────────────────────────────────────
-// Pattern 5: Five-parser composition — tuple flattening + .map + .error.map
-//
-//     Parser.Take.Sequence {
-//         Digit<Input>()            // UInt8
-//         Expect<Input>(0x2E)       // Void (. delimiter)
-//         Digit<Input>()            // UInt8
-//         Expect<Input>(0x2E)       // Void (. delimiter)
-//         Digit<Input>()            // UInt8
-//     }                             // → (UInt8, UInt8, UInt8)
-//     .map { Version($0, $1, $2) }  // → Version
-//     .error.map { ... }            // → Version.Error
-//
-// Voids are skipped. Remaining values flatten via parameter packs.
-// .map transforms the tuple into a domain type.
-// .error.map walks the left-nested Either tree to produce domain errors.
-//
-// Version is non-generic (domain type), Version.Parser<Input> is generic
-// (same pattern as HTTP.MediaType / HTTP.MediaType.Parser<Input>).
-// ────────────────────────────────────────────────────────────
 
 struct Version: Sendable, Equatable {
     let major: UInt8
@@ -294,30 +205,28 @@ extension Version.Parser: Parser_Primitives.Parser.`Protocol` {
             Version(major, minor, patch)
         }
         .error.map { either -> Version.Error in
-            // Left-nested Either tree from 5 parsers (after Void-skipping):
-            //   Either<Either<Either<Either<Digit.E, Expect.E>, Digit.E>, Expect.E>, Digit.E>
-            // Peel from the right — each .right is the Nth parser's error.
+
             switch either {
             case .right:
-                return .expectedPatch  // 5th: Digit
+                return .expectedPatch
 
             case .left(let e4):
                 switch e4 {
                 case .right:
-                    return .expectedDot  // 4th: Expect('.')
+                    return .expectedDot
 
                 case .left(let e3):
                     switch e3 {
                     case .right:
-                        return .expectedMinor  // 3rd: Digit
+                        return .expectedMinor
 
                     case .left(let e2):
                         switch e2 {
                         case .right:
-                            return .expectedDot  // 2nd: Expect('.')
+                            return .expectedDot
 
                         case .left:
-                            return .expectedMajor  // 1st: Digit
+                            return .expectedMajor
                         }
                     }
                 }
@@ -325,25 +234,6 @@ extension Version.Parser: Parser_Primitives.Parser.`Protocol` {
         }
     }
 }
-
-// ────────────────────────────────────────────────────────────
-// Pattern 6: Infallible declarative parser (Failure == Never)
-//
-//     Parser.Take.Sequence {
-//         Whitespace<Input>()   // Void / Never
-//         CountRest<Input>()    // Int  / Never
-//     }                         // → Int / Either<Never, Never>
-//     .error.map { either -> Never in
-//         switch either {
-//         case .left(let n):  switch n {}
-//         case .right(let n): switch n {}
-//         }
-//     }                         // → Int / Never
-//
-// Both sub-parsers have Failure = Never.
-// The builder produces Either<Never, Never> — uninhabited.
-// .error.map proves this to the type system via exhaustive Never switches.
-// ────────────────────────────────────────────────────────────
 
 struct SkipWhitespaceCountRest<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
@@ -367,19 +257,6 @@ extension SkipWhitespaceCountRest: Parser.`Protocol` {
     }
 }
 
-// ────────────────────────────────────────────────────────────
-// Pattern 7: Nested declarative parsers
-//
-//     Parser.Take.Sequence {
-//         Whitespace<Input>()         // Void / Never (skipped)
-//         Version.Parser<Input>()     // Version / Version.Error
-//     }                               // → Version / Either<Never, Version.Error>
-//     .error.map { $0.value }         // → Version / Version.Error
-//
-// A declarative parser can use another declarative parser in its body.
-// The inner parser's Failure (Version.Error) propagates outward.
-// ────────────────────────────────────────────────────────────
-
 struct WhitespaceVersion<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }
@@ -396,20 +273,6 @@ extension WhitespaceVersion: Parser.`Protocol` {
         .error.map { $0.value }
     }
 }
-
-// ────────────────────────────────────────────────────────────
-// Pattern 8: Output mapping — .map transforms the parsed tuple
-//
-//     Parser.Take.Sequence {
-//         Digit<Input>()
-//         Digit<Input>()
-//     }                                                   // → (UInt8, UInt8)
-//     .map { tens, ones in Int(tens) * 10 + Int(ones) }   // → Int
-//     .error.map { _ in .expectedDigit }                   // → Error
-//
-// .map converts (UInt8, UInt8) → Int.
-// .error.map flattens both Either branches to one case.
-// ────────────────────────────────────────────────────────────
 
 struct TwoDigitNumber<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
@@ -434,23 +297,6 @@ extension TwoDigitNumber: Parser.`Protocol` {
     }
 }
 
-// ────────────────────────────────────────────────────────────
-// Pattern 9: Both-Void tiebreaker — two Void parsers, no value
-//
-//     var body: some Parser.Protocol<Input, Void, ...> {
-//         Expect<Input>(0x2E)   // Void
-//         Expect<Input>(0x2E)   // Void
-//     }
-//
-// When BOTH accumulated and next produce Void, the single-Void Skip.First
-// and Skip.Second buildPartialBlock overloads are equally specific — the
-// call was "ambiguous use of buildPartialBlock" until the both-Void overload
-// (strictly more specific) was added. The demand came from swift-stripe-live's
-// AuthenticatedClient router body composing two Void-output parsers
-// (Field("Stripe-Version") + ContentType). Resolves to Skip.First: runs both
-// parsers and emits Void.
-// ────────────────────────────────────────────────────────────
-
 struct BothVoid<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
 }
@@ -465,20 +311,6 @@ extension BothVoid: Parser.`Protocol` {
         Expect<Input>(0x2E)
     }
 }
-
-// ────────────────────────────────────────────────────────────
-// Pattern 10: Both-Void tiebreaker mid-chain, then a value
-//
-//     var body: some Parser.Protocol<Input, UInt8, ...> {
-//         Expect<Input>(0x2E)   // Void   ┐ both-Void tie
-//         Expect<Input>(0x2E)   // Void   ┘ (intermediate accumulation step)
-//         Digit<Input>()        // UInt8  → Skip.First keeps the digit
-//     }
-//
-// The downstream evidence showed the tie relocating into the enclosing
-// builder, so the both-Void overload must also resolve when the pair is an
-// intermediate accumulation step of a longer chain that later takes a value.
-// ────────────────────────────────────────────────────────────
 
 struct BothVoidThenDigit<Input: Collection.Slice.`Protocol`>: Sendable
 where Input: Sendable, Input.Element == UInt8 {
@@ -499,8 +331,6 @@ extension BothVoidThenDigit: Parser.`Protocol` {
         Digit<Input>()
     }
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Builder — var body declarative composition`.Unit {
     @Test
@@ -678,8 +508,6 @@ extension `Parser.Builder — var body declarative composition`.Unit {
         #expect(input.first == UInt8(ascii: "r"))
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.Builder — var body declarative composition`.`Edge Case` {
     @Test

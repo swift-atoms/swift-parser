@@ -1,130 +1,21 @@
-//
-//  Parser.Parser.swift
-//  swift-parser-primitives
-//
-//  Core Parser protocol definition.
-//
-
 extension Parser {
-    /// A type that can parse a value from an input.
-    ///
-    /// Parsers are composable: complex parsers are built from simpler ones using
-    /// combinators like `map`, `flatMap`, `oneOf`, and result builders.
-    ///
-    /// ## Input Mutation
-    ///
-    /// The `parse` method takes `inout Input` and consumes from the front.
-    /// On success, the input is advanced past the consumed portion.
-    /// On failure, the input state is undefined (callers should save/restore if needed).
-    ///
-    /// ## Performance
-    ///
-    /// The protocol is designed for zero-copy, non-allocating parsing:
-    /// - Input types like `Span<UInt8>` provide O(1) slicing
-    /// - Index-based consumption avoids copying data
-    /// - Result builders inline parser composition
-    ///
-    /// ## Error Handling
-    ///
-    /// Parsers use typed throws with a `Failure` associated type for precise,
-    /// domain-specific error propagation. Combinators compose error types:
-    /// - `Map` preserves the upstream `Failure`
-    /// - `FlatMap` produces `Either<Upstream.Failure, Downstream.Failure>`
-    /// - `OneOf` produces `Either<P0.Failure, P1.Failure>`
-    /// - Infallible parsers use `Failure == Never`
-    ///
-    /// ## Declarative Composition
-    ///
-    /// Domain parsers can declare their grammar via ``body-swift.property``,
-    /// composing existing parsers with output and error mapping:
-    ///
-    /// ```swift
-    /// struct MediaTypeParser<Input: Collection.Slice.Protocol>: Parser.Protocol
-    /// where Input: Sendable, Input.Element == UInt8 {
-    ///     typealias Output = MediaType
-    ///     typealias Failure = MediaTypeParser<Input>.Error
-    ///
-    ///     var body: some Parser.Protocol<Input, MediaType, Failure> {
-    ///         Parser.Take.Sequence {
-    ///             OWS<Input>()
-    ///             Token<Input>()
-    ///             Slash<Input>()
-    ///             Token<Input>()
-    ///         }
-    ///         .map { (type, subtype) in MediaType(type, subtype) }
-    ///         .error.map { either -> Failure in ... }
-    ///     }
-    /// }
-    /// ```
-    ///
-    /// The default ``parse(_:)`` delegates to ``body-swift.property``.
-    /// Leaf parsers implement ``parse(_:)`` directly; their ``Body`` is `Never`.
-    ///
-    /// ## Leaf Parser Example
-    ///
-    /// ```swift
-    /// struct IntParser: Parser.`Protocol` {
-    ///     typealias Input = Parser.Bytes.Input
-    ///     typealias Output = Int
-    ///     typealias Failure = Parser.Match.Error
-    ///
-    ///     func parse(_ input: inout Input) throws(Failure) -> Int {
-    ///         var value = 0
-    ///         var consumed = false
-    ///
-    ///         while let byte = input.first, byte >= 0x30, byte <= 0x39 {
-    ///             value = value * 10 + Int(byte - 0x30)
-    ///             input.removeFirst()
-    ///             consumed = true
-    ///         }
-    ///
-    ///         guard consumed else {
-    ///             throw .predicateFailed(description: "digit")
-    ///         }
-    ///         return value
-    ///     }
-    /// }
-    /// ```
+
     public protocol `Protocol`<Input, Output, Failure>: ~Copyable {
-        /// The input type this parser consumes.
-        ///
-        /// Supports both escapable inputs (collections, cursors) and non-escapable
-        /// inputs like `Span<UInt8>` for zero-copy borrowed parsing.
+
         associatedtype Input: ~Copyable & ~Escapable
 
-        /// The output type this parser produces.
         associatedtype Output
 
-        /// The error type this parser can throw.
-        ///
-        /// Defaults to `Never` for infallible parsers; conformers MAY override
-        /// to a domain-specific `Swift.Error`-conforming type.
         associatedtype Failure: Swift.Error = Never
 
-        /// The type of the composed parser body, or `Never` for leaf parsers.
         associatedtype Body: ~Copyable
 
-        /// The composed parser body.
-        ///
-        /// Override this property to declare a parser declaratively.
-        /// Leaf parsers that implement ``parse(_:)`` directly do not
-        /// override this property — the default returns `Never`.
         @Parser.Builder<Input>
         var body: Body { borrowing get }
 
-        /// Parses a value from the input.
-        ///
-        /// On success, consumes the parsed portion from input and returns the result.
-        /// On failure, throws an error. The input state after failure is undefined.
-        ///
-        /// - Parameter input: The input to parse from. Modified to reflect consumption.
-        /// - Returns: The parsed value.
-        /// - Throws: `Failure` if parsing fails.
         borrowing func parse(_ input: inout Input) throws(Failure) -> Output
     }
 }
-
-// MARK: - Leaf Parser Default (Body == Never)
 
 extension Parser.`Protocol`
 where
@@ -132,7 +23,7 @@ where
     Input: ~Copyable & ~Escapable,
     Body == Never
 {
-    /// Leaf parsers do not have a body.
+
     @inlinable
     public var body: Never {
         borrowing get {
@@ -141,18 +32,14 @@ where
     }
 }
 
-// MARK: - Declarative Parser Default (Body: Parser.Protocol)
-
 extension Parser.`Protocol`
 where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,
-    // `Body: Self` would be invalid: inside a `Parser.Protocol` extension `Self`
-    // is the conforming type, not the protocol. (prefer_self where-clause FP.)
-    // swiftlint:disable:next prefer_self_in_static_references
+
     Body: Parser.`Protocol`<Input, Output, Failure>
 {
-    /// Default parse implementation that delegates to ``body-swift.property``.
+
     @inlinable
     public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
         try body.parse(&input)

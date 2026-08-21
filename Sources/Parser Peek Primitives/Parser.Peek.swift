@@ -1,40 +1,12 @@
-//
-//  Parser.Peek.swift
-//  swift-standards
-//
-//  Lookahead parser that doesn't consume input.
-//
-
 public import Input_Primitives
 
 extension Parser {
-    /// A parser that runs upstream without consuming input.
-    ///
-    /// `Peek` tries to parse, and if successful, restores the input
-    /// to its original state. Useful for lookahead decisions.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Check if next character is a digit without consuming
-    /// let startsWithDigit = Peek(digit)
-    ///
-    /// // Or using extension
-    /// let startsWithDigit = digit.peek()
-    /// ```
-    ///
-    /// ## Behavior
-    ///
-    /// - On success: Returns upstream's output, input is **not** consumed
-    /// - On failure: Throws upstream's error, input is **not** consumed
+
     public struct Peek<Upstream: Parser.`Protocol`>
     where Upstream.Input: Input_Primitives.Input.`Protocol` {
         @usableFromInline
         internal let upstream: Upstream
 
-        /// Creates a peek parser.
-        ///
-        /// - Parameter upstream: The parser to run without consuming.
         @inlinable
         public init(_ upstream: Upstream) {
             self.upstream = upstream
@@ -42,18 +14,14 @@ extension Parser {
     }
 }
 
-// MARK: - Parser Conformance
-
 extension Parser.Peek: Parser.`Protocol` {
-    /// The input type this parser consumes.
+
     public typealias Input = Upstream.Input
-    /// The output type this parser produces, unchanged from the upstream parser.
+
     public typealias Output = Upstream.Output
-    /// The error type this parser can throw, unchanged from the upstream parser.
+
     public typealias Failure = Upstream.Failure
 
-    // on Property.Inout accessor chains (input.restore.to) in multiple control flow paths.
-    /// Runs the upstream parser, then restores the input so nothing is consumed.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let checkpoint = input.checkpoint
@@ -68,27 +36,8 @@ extension Parser.Peek: Parser.`Protocol` {
     }
 }
 
-// MARK: - Parser Extension
-
 extension Parser.`Protocol` where Input: Input_Primitives.Input.`Protocol` {
-    /// Creates a parser that peeks ahead without consuming input.
-    ///
-    /// If this parser succeeds, returns the output but restores
-    /// input to its original position. If it fails, the error
-    /// is thrown and input is still restored.
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// // Peek at next character
-    /// let next = First.Element().peek()
-    ///
-    /// // Decide parsing strategy based on lookahead
-    /// let parser = Take {
-    ///     "<".peek()  // Check for tag start
-    ///     tagParser   // Then actually parse it
-    /// }
-    /// ```
+
     @inlinable
     public func peek() -> Parser.Peek<Self> {
         Parser.Peek(self)

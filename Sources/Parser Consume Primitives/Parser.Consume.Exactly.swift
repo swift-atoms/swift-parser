@@ -1,19 +1,11 @@
-//
-//  Parser.Consume.Exactly.swift
-//  swift-parser-primitives
-//
-//  Consume exactly N elements.
-//
-
 public import Collection_Primitives
 
 extension Parser.Consume {
-    /// A parser that consumes exactly N elements.
+
     public struct Exactly<Input: Collection.Slice.`Protocol`> {
         @usableFromInline
         let count: Int
 
-        /// Creates a parser that consumes the given number of elements.
         @inlinable
         public init(_ count: Int) {
             self.count = count
@@ -22,12 +14,11 @@ extension Parser.Consume {
 }
 
 extension Parser.Consume.Exactly: Parser.`Protocol` {
-    /// The output type this parser produces: the consumed elements.
+
     public typealias Output = Input
-    /// The error type this parser can throw when fewer than the requested elements remain.
+
     public typealias Failure = Parser.Constraint.Error
 
-    /// Consumes exactly the requested number of elements, failing if too few remain.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var endIndex = input.startIndex

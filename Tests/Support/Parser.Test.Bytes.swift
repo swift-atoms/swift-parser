@@ -3,11 +3,7 @@ import Iterable
 public import Parser_Primitives
 
 extension Parser.Test {
-    /// Minimal `Collection.Protocol` conformer wrapping `[UInt8]` for testing.
-    ///
-    /// Standard library `Array` does not conform to `Collection.Protocol`
-    /// from collection-primitives. This wrapper enables
-    /// `Input.Slice<Parser.Test.Bytes>` as a universal byte-oriented test input.
+
     public struct Bytes: Collection.`Protocol`, Sendable {
         public let storage: [UInt8]
 
@@ -31,9 +27,7 @@ extension Parser.Test.Bytes {
     }
 
     public func index(after i: Index) -> Index {
-        // SAFETY: Collection.Protocol contract — index(after:) is only invoked on
-        // indices strictly less than endIndex, so successor.exact() cannot fail.
-        // swiftlint:disable:next force_try
+
         try! i.successor.exact()
     }
 
@@ -41,7 +35,3 @@ extension Parser.Test.Bytes {
         Parser.Test.Iterator(storage)
     }
 }
-
-// Parser.Test.Bytes conforms Iterable via the Collection.Protocol: Iterable refine edge
-// (its makeIterator above is the witness); the previously-explicit `extension Parser.Test.Bytes:
-// Iterable {}` is removed as redundant (it duplicated the now-inherited conformance).

@@ -1,17 +1,7 @@
-//
-//  Parser.First.Where.swift
-//  swift-standards
-//
-//  Parse first element matching predicate.
-//
-
 public import Input_Primitives
 
 extension Parser.First {
-    /// A parser that consumes the first element if it matches a predicate.
-    ///
-    /// This parser only requires `Streaming` capability (no backtracking),
-    /// making it suitable for forward-only input sources.
+
     public struct Where<Input: Input_Primitives.Input.Streaming>
     where Input.Element: Copyable {
         @usableFromInline
@@ -20,7 +10,6 @@ extension Parser.First {
         @usableFromInline
         let expected: String
 
-        /// Creates a parser consuming the first element when it satisfies the predicate.
         @inlinable
         public init(
             expected: String = "matching element",
@@ -33,20 +22,17 @@ extension Parser.First {
 }
 
 extension Parser.First.Where: Parser.`Protocol` {
-    /// The output type this parser produces: the input's element type.
+
     public typealias Output = Input.Element
-    /// The error type this parser can throw on empty input or a failed predicate.
+
     public typealias Failure = Either<Parser.EndOfInput.Error, Parser.Match.Error>
 
-    /// Consumes and returns the first element when it satisfies the predicate.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         guard !input.isEmpty else {
             throw .left(.unexpected(expected: expected))
         }
-        // SAFETY: isEmpty returned false, so advance() cannot throw .empty
-        // swift-format-ignore: NeverUseForceTry
-        // swiftlint:disable:next force_try
+
         let element = try! input.advance()
         guard predicate(element) else {
             throw .right(.predicateFailed(description: expected))

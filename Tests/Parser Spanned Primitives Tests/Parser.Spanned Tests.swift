@@ -1,14 +1,10 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Spanned` {
     @Suite struct Unit {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Spanned`.Unit {
     @Test

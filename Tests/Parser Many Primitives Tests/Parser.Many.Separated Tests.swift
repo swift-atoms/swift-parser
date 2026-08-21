@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Many.Separated` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Many.Separated`.Unit {
     @Test
@@ -43,8 +39,6 @@ extension `Parser.Many.Separated`.Unit {
         #expect(result == [0x42])
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.Many.Separated`.`Edge Case` {
     @Test

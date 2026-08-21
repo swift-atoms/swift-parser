@@ -1,17 +1,5 @@
-//
-//  Parser.Filter.swift
-//  swift-standards
-//
-//  Output validation combinator.
-//
-
 extension Parser {
-    /// A parser that filters output using a predicate.
-    ///
-    /// If the upstream parser succeeds but the predicate returns false,
-    /// parsing fails.
-    ///
-    /// Created via `parser.filter(_:)`.
+
     public struct Filter<Upstream: Parser.`Protocol`> {
         @usableFromInline
         internal let upstream: Upstream
@@ -19,7 +7,6 @@ extension Parser {
         @usableFromInline
         internal let predicate: (Upstream.Output) -> Bool
 
-        /// Creates a parser that validates the upstream output against a predicate.
         @inlinable
         public init(
             upstream: Upstream,
@@ -32,14 +19,13 @@ extension Parser {
 }
 
 extension Parser.Filter: Parser.`Protocol` {
-    /// The input type this parser consumes.
+
     public typealias Input = Upstream.Input
-    /// The output type this parser produces, unchanged from the upstream parser.
+
     public typealias Output = Upstream.Output
-    /// The error type this parser can throw, discriminating upstream from predicate failures.
+
     public typealias Failure = Either<Upstream.Failure, Parser.Constraint.Error>
 
-    /// Parses the upstream value and returns it only when the predicate accepts it.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let output: Upstream.Output

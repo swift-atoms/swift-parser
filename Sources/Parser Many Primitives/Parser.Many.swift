@@ -1,45 +1,16 @@
-//
-//  Parser.Many.swift
-//  swift-parser-primitives
-//
-//  Repetition — repeat a parser zero or more times.
-//
-
 public import Input_Primitives
 
 extension Parser {
-    /// A parser that applies another parser repeatedly (no separator).
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Zero or more digits
-    /// let digits = Parser.Many { Digit() }
-    ///
-    /// // One or more digits
-    /// let digits1 = Parser.Many(1...) { Digit() }
-    ///
-    /// // Exactly 4 digits
-    /// let pin = Parser.Many(4...4) { Digit() }
-    /// ```
-    ///
-    /// ## Separator variant
-    ///
-    /// For repetition with separators between elements, see
-    /// ``Parser/Many/Separated``, which inherits `Input` and `Element` from
-    /// this type and adds a `Separator` parameter.
+
     public struct Many<Input: Input_Primitives.Input.`Protocol`, Element: Parser.`Protocol`>
     where Element.Input == Input {
-        /// The repeated element parser.
+
         public let element: Element
 
-        /// The minimum accepted element count.
         public let minimum: Int
 
-        /// The maximum accepted element count; `Int.max` means no maximum.
         public let maximum: Int
 
-        /// Creates a parser applying the element parser at least the range's lower bound times.
         @inlinable
         public init(
             _ range: PartialRangeFrom<Int>,
@@ -50,7 +21,6 @@ extension Parser {
             self.maximum = .max
         }
 
-        /// Creates a parser applying the element parser a number of times within the given range.
         @inlinable
         public init(
             _ range: ClosedRange<Int>,
@@ -61,7 +31,6 @@ extension Parser {
             self.maximum = range.upperBound
         }
 
-        /// Creates a parser applying the element parser zero or more times.
         @inlinable
         public init(
             @Parser.Take.Builder<Input> element: () -> Element
@@ -74,12 +43,11 @@ extension Parser {
 }
 
 extension Parser.Many: Parser.`Protocol` {
-    /// The output type this parser produces: an array of element outputs.
+
     public typealias Output = [Element.Output]
-    /// The error type this parser can throw when the element count is out of range.
+
     public typealias Failure = Parser.Many<Input, Element>.Error
 
-    /// Applies the element parser until it fails or the maximum is reached, collecting outputs.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var results: [Element.Output] = []

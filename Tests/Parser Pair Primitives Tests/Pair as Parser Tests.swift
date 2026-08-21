@@ -2,14 +2,10 @@ import Parser_Pair_Primitives
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Pair as Parser` {
     @Suite struct `Parity With Take Two` {}
 }
-
-// MARK: - Parity with Parser.Take.Two
 
 extension `Pair as Parser`.`Parity With Take Two` {
     @Test

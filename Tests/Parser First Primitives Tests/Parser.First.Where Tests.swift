@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.First.Where` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.First.Where`.Unit {
     @Test
@@ -25,8 +21,6 @@ extension `Parser.First.Where`.Unit {
         #expect(input.first == 0x41)
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.First.Where`.`Edge Case` {
     @Test
