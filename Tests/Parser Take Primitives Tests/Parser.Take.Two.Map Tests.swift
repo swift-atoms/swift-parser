@@ -1,11 +1,6 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Support Types
-
-/// A leaf parser for a single ASCII decimal digit over `Substring`.
-///
-/// Value-producing, so a multi-value grammar can be composed.
 private struct DecimalDigit: Parser.`Protocol` {
     typealias Input = Substring
     typealias Output = Int
@@ -31,23 +26,13 @@ private struct Triple: Equatable {
     var c: Int
 }
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Take.Two.Map` {
     @Suite struct `Conversion Boundary` {}
 }
 
-// MARK: - Conversion Boundary (friction F2)
-
 extension `Parser.Take.Two.Map`.`Conversion Boundary` {
-    /// The covered multi-value shape: a three-value grammar composed through
-    /// **explicit** ``Parser/Take/Two`` nesting plus a
-    /// ``Parser/Conversion/Memberwise`` reshape (the `.map(conversion)`
-    /// bidirectional seam), rather than the implicit `@Parser.Builder`
-    /// variadic flatten that routes through the one-way `Parser.Take.Two.Map`.
-    ///
-    /// The emission direction of this seam is covered by the coder-side rows.
+
     @Test
     func `three-value grammar parses through explicit Take.Two + conversion`() throws(any Swift
         .Error)

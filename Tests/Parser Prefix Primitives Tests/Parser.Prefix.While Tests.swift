@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Prefix.While` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Prefix.While`.Unit {
     @Test
@@ -17,7 +13,7 @@ extension `Parser.Prefix.While`.Unit {
         let digits = Parser.Prefix.While<Parser.Test.Input> {
             $0 >= 0x30 && $0 <= 0x39
         }
-        // "123abc" as UTF-8 bytes
+
         var input = Parser.Test.Input([0x31, 0x32, 0x33, 0x61, 0x62, 0x63])
 
         let result = try digits.parse(&input)
@@ -38,8 +34,6 @@ extension `Parser.Prefix.While`.Unit {
     }
 }
 
-// MARK: - Edge Case Tests
-
 extension `Parser.Prefix.While`.`Edge Case` {
     @Test
     func `returns empty when predicate immediately fails`() throws(any Swift.Error) {
@@ -56,7 +50,7 @@ extension `Parser.Prefix.While`.`Edge Case` {
         let parser = Parser.Prefix.While<Parser.Test.Input>(minLength: 3) {
             $0 >= 0x30 && $0 <= 0x39
         }
-        // "12x" as UTF-8 bytes
+
         var input = Parser.Test.Input([0x31, 0x32, 0x78])
 
         #expect(throws: Parser.Constraint.Error.self) {

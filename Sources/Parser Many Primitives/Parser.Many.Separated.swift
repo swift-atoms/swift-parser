@@ -1,55 +1,18 @@
-//
-//  Parser.Many.Separated.swift
-//  swift-parser-primitives
-//
-//  Repetition parser with separators.
-//
-
 public import Input_Primitives
 
 extension Parser.Many {
-    /// A parser that applies another parser repeatedly with separators.
-    ///
-    /// `Separated` collects results into an array. It always succeeds (possibly with
-    /// an empty array) unless a minimum count is specified.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Comma-separated values
-    /// let csv = Parser.Many.Separated {
-    ///     Field()
-    /// } separator: {
-    ///     ","
-    /// }
-    ///
-    /// // One or more with separator
-    /// let list = Parser.Many.Separated(1...) {
-    ///     Int.parser()
-    /// } separator: {
-    ///     ","
-    /// }
-    /// ```
-    ///
-    /// ## Shared generics
-    ///
-    /// `Input` and `Element` are inherited from the outer ``Parser/Many``;
-    /// only the `Separator` parameter is added at this nesting level.
+
     public struct Separated<Separator: Parser.`Protocol`>
     where Separator.Input == Input {
-        /// The repeated element parser.
+
         public let element: Element
 
-        /// The separator parser between successive elements.
         public let separator: Separator
 
-        /// The minimum accepted element count.
         public let minimum: Int
 
-        /// The maximum accepted element count; `Int.max` means no maximum.
         public let maximum: Int
 
-        /// Creates a separated parser requiring at least the range's lower bound elements.
         @inlinable
         public init(
             _ range: PartialRangeFrom<Int>,
@@ -62,7 +25,6 @@ extension Parser.Many {
             self.maximum = .max
         }
 
-        /// Creates a separated parser accepting an element count within the given range.
         @inlinable
         public init(
             _ range: ClosedRange<Int>,
@@ -75,7 +37,6 @@ extension Parser.Many {
             self.maximum = range.upperBound
         }
 
-        /// Creates a separated parser accepting zero or more elements.
         @inlinable
         public init(
             @Parser.Take.Builder<Input> element: () -> Element,
@@ -90,12 +51,11 @@ extension Parser.Many {
 }
 
 extension Parser.Many.Separated: Parser.`Protocol` {
-    /// The output type this parser produces: an array of element outputs.
+
     public typealias Output = [Element.Output]
-    /// The error type this parser can throw when the element count is out of range.
+
     public typealias Failure = Parser.Many<Input, Element>.Error
 
-    /// Parses elements separated by the separator, collecting outputs into an array.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var results: [Element.Output] = []

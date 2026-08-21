@@ -12,7 +12,7 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        // MARK: - Namespace
+
         .library(
             name: "Parser Primitive",
             targets: ["Parser Primitive"]
@@ -33,7 +33,7 @@ let package = Package(
             name: "Parser Tagged Primitives",
             targets: ["Parser Tagged Primitives"]
         ),
-        // MARK: - Witness (closure-backed leaf conformer)
+
         .library(
             name: "Parser Witness Primitives",
             targets: ["Parser Witness Primitives"]
@@ -218,17 +218,11 @@ let package = Package(
         ),
     ],
     targets: [
-        // MARK: - Namespace
+
         .target(
             name: "Parser Primitive",
             dependencies: []
         ),
-
-        // MARK: - Core (DEPRECATED transitional shim — L1 core-dissolution sweep 2026-06-23)
-        // Exports-only re-export of the dissolved Core surface (root + the
-        // Remaining/Tagged sub-namespaces that received relocated decls + the
-        // funneled Array / Collection / Input / Sequence modules). Removed in
-        // the cleanup wave once consumers repoint to the umbrella / root.
 
         .target(
             name: "Parser Primitives Core",
@@ -241,8 +235,6 @@ let package = Package(
                 .product(name: "Array Primitives", package: "swift-array-primitives"),
             ]
         ),
-
-        // MARK: - Relocated Core content (external-dep-bearing sub-namespaces)
 
         .target(
             name: "Parser Remaining Primitives",
@@ -259,25 +251,12 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Witness (closure-backed leaf conformer)
-        // Hosted in its OWN target (NOT in "Parser Primitive") so the module that
-        // DEFINES Parser.Protocol contains no `Body == Never` conformer. With an
-        // in-defining-module leaf conformer present, the `@inlinable` leaf-default
-        // `var body: Never` `read` accessor is serialized into Parser_Primitive and
-        // re-emitted BODYLESS into every consumer module conforming a `Body == Never`
-        // type (Trace, Lazy, Parse, …) — a SIL-verification crash on Windows (+Asserts),
-        // Embedded, and any `-sil-verify-all` build. Relocating the only such conformer
-        // (Parser.Witness) out of the defining module is the verified fix; mirrors the
-        // swift-serializer-primitives fix (a652cec). See:
-        //   swift-institute/Issues/swift-issue-noncopyable-assoctype-never-bodyless-witness
         .target(
             name: "Parser Witness Primitives",
             dependencies: [
                 "Parser Primitive"
             ]
         ),
-
-        // MARK: - Error & Match
 
         .target(
             name: "Parser Error Primitives",
@@ -297,8 +276,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Input Errors
-
         .target(
             name: "Parser EndOfInput Primitives",
             dependencies: [
@@ -311,8 +288,6 @@ let package = Package(
                 "Parser Primitive"
             ]
         ),
-
-        // MARK: - Combinators
 
         .target(
             name: "Parser OneOf Primitives",
@@ -403,8 +378,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Consumption
-
         .target(
             name: "Parser Consume Primitives",
             dependencies: [
@@ -423,8 +396,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Prefix
-
         .target(
             name: "Parser Prefix Primitives",
             dependencies: [
@@ -435,8 +406,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Element Access
-
         .target(
             name: "Parser First Primitives",
             dependencies: [
@@ -446,8 +415,6 @@ let package = Package(
                 .product(name: "Input Primitives", package: "swift-input-primitives"),
             ]
         ),
-
-        // MARK: - Position Tracking
 
         .target(
             name: "Parser Tracked Primitives",
@@ -484,8 +451,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Lookahead
-
         .target(
             name: "Parser Peek Primitives",
             dependencies: [
@@ -501,8 +466,6 @@ let package = Package(
                 .product(name: "Input Primitives", package: "swift-input-primitives"),
             ]
         ),
-
-        // MARK: - Terminals
 
         .target(
             name: "Parser Always Primitives",
@@ -532,8 +495,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Utilities
-
         .target(
             name: "Parser Lazy Primitives",
             dependencies: [
@@ -553,8 +514,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Concrete Parsers
-
         .target(
             name: "Parser Conformance Primitives",
             dependencies: [
@@ -562,7 +521,6 @@ let package = Package(
                 "Parser Match Primitives",
             ]
         ),
-        // MARK: - Umbrella
 
         .target(
             name: "Parser Primitives",
@@ -606,8 +564,6 @@ let package = Package(
                 "Parser Conformance Primitives",
             ]
         ),
-
-        // MARK: - Tests
 
         .target(
             name: "Parser Primitives Test Support",

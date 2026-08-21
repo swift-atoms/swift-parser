@@ -1,47 +1,16 @@
-//
-//  Parser.Take.Builder.swift
-//  swift-standards
-//
-//  Result builder for sequential parser composition.
-//
-
 extension Parser.Take {
-    /// A result builder for composing parsers sequentially.
-    ///
-    /// `Builder` enables declarative parser composition using Swift's
-    /// result builder syntax. Parsers are combined sequentially, with their
-    /// outputs collected into tuples.
-    ///
-    /// ## Sequential Composition
-    ///
-    /// Multiple parsers run in sequence. Outputs are combined into tuples:
-    ///
-    /// ```swift
-    /// Parser.Take.Sequence {
-    ///     IntParser()      // Output: Int
-    ///     ","              // Output: Void (discarded)
-    ///     IntParser()      // Output: Int
-    /// }
-    /// // Result: (Int, Int)
-    /// ```
-    ///
-    /// ## Void Skipping
-    ///
-    /// Parsers with `Void` output are automatically skipped in the result tuple.
+
     @resultBuilder
     public struct Builder<Input: ~Copyable & ~Escapable> {}
 }
 
-// MARK: - Empty and Single Block
-
 extension Parser.Take.Builder {
-    /// Builds an empty parser that consumes nothing and returns Void.
+
     @inlinable
     public static func buildBlock() -> Parser.Always<Input, Void> {
         Parser.Always(())
     }
 
-    /// Builds a single parser unchanged.
     @inlinable
     public static func buildBlock<P: Parser.`Protocol`>(
         _ parser: P
@@ -50,10 +19,8 @@ extension Parser.Take.Builder {
     }
 }
 
-// MARK: - Two Parsers
-
 extension Parser.Take.Builder {
-    /// Combines two parsers sequentially.
+
     @inlinable
     public static func buildBlock<P0: Parser.`Protocol`, P1: Parser.`Protocol`>(
         _ p0: P0,
@@ -63,7 +30,6 @@ extension Parser.Take.Builder {
         Parser.Take.Two(p0, p1)
     }
 
-    /// Combines parsers, skipping Void output from first.
     @inlinable
     public static func buildBlock<P0: Parser.`Protocol`, P1: Parser.`Protocol`>(
         _ p0: P0,
@@ -73,7 +39,6 @@ extension Parser.Take.Builder {
         Parser.Skip.First(p0, p1)
     }
 
-    /// Combines parsers, skipping Void output from second.
     @inlinable
     public static func buildBlock<P0: Parser.`Protocol`, P1: Parser.`Protocol`>(
         _ p0: P0,
@@ -84,10 +49,8 @@ extension Parser.Take.Builder {
     }
 }
 
-// MARK: - Partial Block Building
-
 extension Parser.Take.Builder {
-    /// Starts building a partial block.
+
     @inlinable
     public static func buildPartialBlock<P: Parser.`Protocol`>(
         first: P
@@ -95,7 +58,6 @@ extension Parser.Take.Builder {
         first
     }
 
-    /// Accumulates into partial block (general case - two elements).
     @_disfavoredOverload
     @inlinable
     public static func buildPartialBlock<Accumulated: Parser.`Protocol`, Next: Parser.`Protocol`>(
@@ -106,10 +68,6 @@ extension Parser.Take.Builder {
         Parser.Take.Two(accumulated, next)
     }
 
-    /// Accumulates with tuple flattening using parameter packs.
-    ///
-    /// This enables unlimited parser composition by flattening nested tuples:
-    /// `((A, B), C)` becomes `(A, B, C)`.
     @inlinable
     public static func buildPartialBlock<
         Accumulated: Parser.`Protocol`,
@@ -132,7 +90,6 @@ extension Parser.Take.Builder {
             }
     }
 
-    /// Accumulates with Void skipping (accumulated is Void).
     @inlinable
     public static func buildPartialBlock<Accumulated: Parser.`Protocol`, Next: Parser.`Protocol`>(
         accumulated: Accumulated,
@@ -142,7 +99,6 @@ extension Parser.Take.Builder {
         Parser.Skip.First(accumulated, next)
     }
 
-    /// Accumulates with Void skipping (next is Void).
     @inlinable
     public static func buildPartialBlock<Accumulated: Parser.`Protocol`, Next: Parser.`Protocol`>(
         accumulated: Accumulated,
@@ -153,10 +109,8 @@ extension Parser.Take.Builder {
     }
 }
 
-// MARK: - Conditionals
-
 extension Parser.Take.Builder {
-    /// Builds an optional parser from an `if` statement.
+
     @inlinable
     public static func buildIf<P: Parser.`Protocol`>(
         _ parser: P?
@@ -164,7 +118,6 @@ extension Parser.Take.Builder {
         .init(parser)
     }
 
-    /// Builds the first branch of if-else.
     @inlinable
     public static func buildEither<First: Parser.`Protocol`, Second: Parser.`Protocol`>(
         first: First
@@ -173,7 +126,6 @@ extension Parser.Take.Builder {
         Parser.Conditional.first(first)
     }
 
-    /// Builds the second branch of if-else.
     @inlinable
     public static func buildEither<First: Parser.`Protocol`, Second: Parser.`Protocol`>(
         second: Second
@@ -183,10 +135,8 @@ extension Parser.Take.Builder {
     }
 }
 
-// MARK: - Expressions
-
 extension Parser.Take.Builder {
-    /// Wraps an expression in the builder context.
+
     @inlinable
     public static func buildExpression<P: Parser.`Protocol`>(
         _ parser: P
@@ -194,11 +144,3 @@ extension Parser.Take.Builder {
         parser
     }
 }
-
-// Byte-specific buildExpression overloads (string literal → Parser.Literal;
-// byte-array literal → [Byte] passthrough) live in
-// swift-byte-parser-primitives' target `Byte Parser Primitives`. The
-// extraction was performed in Wave 3 of the byte-extraction arc; the
-// remaining byte-array-literal overload moved 2026-05-19 as part of the
-// L1 byte-domain cleanup (Tier B). swift-parser-primitives has no
-// byte-domain dependency.

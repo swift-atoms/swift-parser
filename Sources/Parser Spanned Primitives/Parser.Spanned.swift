@@ -1,55 +1,15 @@
-//
-//  Parser.Spanned.swift
-//  swift-standards
-//
-//  Value wrapper with source span.
-//
-
 public import Index_Primitives
 
 extension Parser {
-    /// A value with its source span.
-    ///
-    /// `Spanned` wraps any parsed value with its start and end offsets,
-    /// enabling source mapping and AST node location tracking.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // A parsed identifier with its location
-    /// let identifier: Spanned<String> = ...
-    /// print("'\(identifier.value)' at \(identifier.start)..<\(identifier.end)")
-    ///
-    /// // Highlight in source
-    /// let source = originalInput[identifier.start..<identifier.end]
-    /// ```
-    ///
-    /// ## AST Nodes
-    ///
-    /// Use `Spanned` for AST nodes that need source location:
-    /// ```swift
-    /// struct FunctionDecl {
-    ///     let name: Spanned<String>
-    ///     let parameters: [Spanned<Parameter>]
-    ///     let body: Spanned<Block>
-    /// }
-    /// ```
+
     public struct Spanned<T> {
-        /// The wrapped value.
+
         public let value: T
 
-        /// Byte offset where this value starts in the input.
         public let start: Int
 
-        /// Byte offset where this value ends in the input.
         public let end: Int
 
-        /// Creates a spanned value.
-        ///
-        /// - Parameters:
-        ///   - value: The parsed value.
-        ///   - start: Start offset in input.
-        ///   - end: End offset in input.
         @inlinable
         public init(_ value: T, start: Int, end: Int) {
             self.value = value
@@ -60,29 +20,22 @@ extension Parser {
 }
 
 extension Parser.Spanned {
-    /// The length of this span in bytes.
+
     @inlinable
     public var length: Int {
         end - start
     }
 
-    /// The range of this span.
     @inlinable
     public var range: Range<Int> {
         start..<end
     }
 }
 
-// MARK: - Sendable
-
 extension Parser.Spanned: Sendable where T: Sendable {}
 
-// MARK: - Typed Boundary Overload
-
 extension Parser.Spanned {
-    /// Creates a spanned value from typed index offsets.
-    ///
-    /// Boundary overload per [IMPL-010]: pushes `Int(bitPattern:)` to the edge.
+
     @inlinable
     public init<Element: ~Copyable & ~Escapable>(
         _ value: T,
@@ -93,28 +46,20 @@ extension Parser.Spanned {
     }
 }
 
-// MARK: - Equatable
-
 extension Parser.Spanned: Equatable where T: Equatable {}
-
-// MARK: - Hashable
 
 extension Parser.Spanned: Hashable where T: Hashable {}
 
-// MARK: - Mapping
-
 extension Parser.Spanned {
-    /// Maps the value while preserving the span.
+
     @inlinable
     public func map<U>(_ transform: (T) -> U) -> Parser.Spanned<U> {
         Parser.Spanned<U>(transform(value), start: start, end: end)
     }
 }
 
-// MARK: - CustomStringConvertible
-
 extension Parser.Spanned: CustomStringConvertible where T: CustomStringConvertible {
-    /// A textual description showing the value and its span.
+
     public var description: String {
         "\(value) [\(start)..<\(end)]"
     }

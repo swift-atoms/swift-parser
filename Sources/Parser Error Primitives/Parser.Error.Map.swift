@@ -1,12 +1,5 @@
-//
-//  Parser.Error.Map.swift
-//  swift-parser-primitives
-//
-//  Error type transformation.
-//
-
 extension Parser.Error {
-    /// A parser that transforms the failure type of an upstream parser.
+
     public struct Map<Upstream: Parser.`Protocol`, NewFailure: Swift.Error> {
         @usableFromInline
         let upstream: Upstream
@@ -26,14 +19,13 @@ extension Parser.Error {
 }
 
 extension Parser.Error.Map: Parser.`Protocol` {
-    /// The input type this parser consumes.
+
     public typealias Input = Upstream.Input
-    /// The output type this parser produces, unchanged from the upstream parser.
+
     public typealias Output = Upstream.Output
-    /// The error type this parser can throw after transformation.
+
     public typealias Failure = NewFailure
 
-    /// Parses the upstream value, mapping any failure through the transform.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         do throws(Upstream.Failure) {
@@ -45,17 +37,7 @@ extension Parser.Error.Map: Parser.`Protocol` {
 }
 
 extension Parser.Error.Transform {
-    /// Transforms errors from the upstream parser.
-    ///
-    /// - Parameter transform: Closure converting upstream errors to new type.
-    /// - Returns: A parser with the transformed failure type.
-    ///
-    /// ## Example
-    /// ```swift
-    /// enum MyError: Error { case invalid }
-    ///
-    /// let parser = intParser.error.map { _ in MyError.invalid }
-    /// ```
+
     @inlinable
     public func map<NewFailure: Swift.Error>(
         _ transform: @escaping (Upstream.Failure) -> NewFailure

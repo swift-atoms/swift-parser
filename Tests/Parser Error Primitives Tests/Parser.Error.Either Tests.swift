@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Error.Either Tests` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Error.Either Tests`.Unit {
     typealias E = Either<Parser.EndOfInput.Error, Parser.Match.Error>
@@ -47,8 +43,6 @@ extension `Parser.Error.Either Tests`.Unit {
         #expect(a != c)
     }
 }
-
-// MARK: - Edge Case Tests — Never Elimination
 
 extension `Parser.Error.Either Tests`.`Edge Case` {
     @Test

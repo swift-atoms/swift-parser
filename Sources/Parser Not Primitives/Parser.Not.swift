@@ -1,45 +1,12 @@
-//
-//  Parser.Not.swift
-//  swift-standards
-//
-//  Negative lookahead parser.
-//
-
 public import Input_Primitives
 
 extension Parser {
-    /// A parser that succeeds if upstream fails.
-    ///
-    /// `Not` is the inverse of its upstream parser. It succeeds (with `Void`)
-    /// when upstream fails, and fails when upstream succeeds.
-    /// Neither case consumes input.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Match characters that are NOT quotes
-    /// let notQuote = Not("\"")
-    ///
-    /// // Parse until we hit a reserved word
-    /// let identifier = Take {
-    ///     Not(reservedWord)
-    ///     word
-    /// }
-    /// ```
-    ///
-    /// ## Behavior
-    ///
-    /// - Upstream succeeds → `Not` fails with `.unexpectedMatch`
-    /// - Upstream fails → `Not` succeeds with `Void`
-    /// - Input is **never** consumed
+
     public struct Not<Upstream: Parser.`Protocol`>
     where Upstream.Input: Input_Primitives.Input.`Protocol` {
         @usableFromInline
         internal let upstream: Upstream
 
-        /// Creates a negative lookahead parser.
-        ///
-        /// - Parameter upstream: The parser that should fail.
         @inlinable
         public init(_ upstream: Upstream) {
             self.upstream = upstream
@@ -47,70 +14,39 @@ extension Parser {
     }
 }
 
-// MARK: - Error
-
 extension Parser.Not {
-    /// Error thrown when the upstream parser unexpectedly succeeds.
+
     public enum Error: Swift.Error, Sendable, Hashable {
-        /// The upstream parser matched when it shouldn't have.
+
         case unexpectedMatch
     }
 }
 
-// MARK: - Parser Conformance
-
 extension Parser.Not: Parser.`Protocol` {
-    /// The input type this parser consumes.
+
     public typealias Input = Upstream.Input
-    /// This parser produces no value.
+
     public typealias Output = Void
-    /// The error type this parser can throw when the upstream parser unexpectedly matches.
+
     public typealias Failure = Parser.Not<Upstream>.Error
 
-    // on Property.Inout accessor chains (input.restore.to) in multiple control flow paths.
-    /// Succeeds without consuming input when the upstream parser fails; fails when it matches.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) {
         let checkpoint = input.checkpoint
-        // Negative lookahead semantics: we need the bool success/failure of
-        // upstream, not the typed error. `try?` IS the canonical idiom here —
-        // the error is intentionally discarded because lookahead does not
-        // propagate upstream failures, it inverts them. [IMPL-108]-compliant.
-        // swiftlint:disable:next no_try_optional
+
         if (try? upstream.parse(&input)) != nil {
-            // Upstream succeeded - restore and fail
+
             input.restore.to(__unchecked: (), checkpoint)
             throw .unexpectedMatch
         } else {
-            // Upstream failed - restore and succeed
+
             input.restore.to(__unchecked: (), checkpoint)
         }
     }
 }
 
-// MARK: - Parser Extension
-
 extension Parser.`Protocol` where Input: Input_Primitives.Input.`Protocol` {
-    /// Creates a parser that succeeds when this parser fails.
-    ///
-    /// Useful for negative lookahead - ensuring input does NOT
-    /// match a pattern before proceeding.
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// // Parse word that isn't a keyword
-    /// let identifier = Take {
-    ///     keyword.not()
-    ///     word
-    /// }
-    ///
-    /// // Match anything except closing delimiter
-    /// let content = Many {
-    ///     "-->".not()
-    ///     First.Element()
-    /// }
-    /// ```
+
     @inlinable
     public func not() -> Parser.Not<Self> {
         Parser.Not(self)

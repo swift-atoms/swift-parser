@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Fail` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Fail`.Unit {
     @Test
@@ -24,8 +20,6 @@ extension `Parser.Fail`.Unit {
         }
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.Fail`.`Edge Case` {
     @Test

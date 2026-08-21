@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Take.Two` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Take.Two`.Unit {
     @Test
@@ -40,8 +36,6 @@ extension `Parser.Take.Two`.Unit {
         #expect(result == 3)
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.Take.Two`.`Edge Case` {
     @Test

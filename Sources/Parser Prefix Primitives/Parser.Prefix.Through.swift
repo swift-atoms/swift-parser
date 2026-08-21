@@ -1,25 +1,13 @@
-//
-//  Parser.Prefix.Through.swift
-//  swift-parser-primitives
-//
-//  Prefix parser that consumes through (including) delimiter.
-//
-
 public import Collection_Primitives
 
 extension Parser.Prefix {
-    /// A parser that consumes through (including) a delimiter sequence.
-    ///
-    /// Like `UpTo` but includes the delimiter in the consumed portion.
+
     public struct Through<Input: Collection.Slice.`Protocol`>
-    // Element: Copyable is structural (the delimiter is stored as an Array)
-    // and stated explicitly: on toolchains where Equatable is generalized
-    // to ~Copyable it no longer follows from Equatable.
+
     where Input.Element: Equatable, Input.Element: Copyable {
         @usableFromInline
         let delimiter: [Input.Element]
 
-        /// Creates a parser consuming input through the given delimiter sequence.
         @inlinable
         public init(_ delimiter: [Input.Element]) {
             self.delimiter = delimiter
@@ -28,12 +16,11 @@ extension Parser.Prefix {
 }
 
 extension Parser.Prefix.Through: Parser.`Protocol` {
-    /// The output type this parser produces: the consumed prefix.
+
     public typealias Output = Input
-    /// The error type this parser can throw when the delimiter is not found.
+
     public typealias Failure = Parser.Match.Error
 
-    /// Consumes input through, and including, the delimiter sequence, failing if it is absent.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         var endIndex = input.startIndex
@@ -50,7 +37,7 @@ extension Parser.Prefix.Through: Parser.`Protocol` {
                 }
                 input.formIndex(after: &checkIndex)
             }
-            // Found delimiter - include it in result
+
             let result = input[input.startIndex..<checkIndex]
             input = input[checkIndex...]
             return result

@@ -1,12 +1,6 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Support Types
-
-/// A leaf parser for a single ASCII decimal digit over `Substring`.
-///
-/// Used to build value-producing grammars for the conversion-seam probes.
-/// (The serializer-side emission rows live in swift-coder-primitives.)
 private struct Digit: Parser.`Protocol` {
     typealias Input = Substring
     typealias Output = Int
@@ -26,10 +20,6 @@ private struct Digit: Parser.`Protocol` {
 
 }
 
-/// A leaf that consumes the first character of a `Substring` as a `Substring`.
-///
-/// Used to exercise the `.string` conversion (`Substring -> String`) through
-/// the `.map(conversion)` seam.
 private struct Head: Parser.`Protocol` {
     typealias Input = Substring
     typealias Output = Substring
@@ -56,15 +46,10 @@ private struct Tag: RawRepresentable, Equatable {
     var rawValue: Int
 }
 
-/// A payload-carrying enum used to probe ``Parser/Conversion/Case``: `leaf`
-/// carries an `Int` payload, `empty` is the wrong case that makes `unapply`
-/// (extract) fail.
 private enum Node: Equatable {
     case leaf(Int)
     case empty
 }
-
-// MARK: - Test Suite Structure
 
 @Suite
 struct `Parser.Conversion` {
@@ -72,8 +57,6 @@ struct `Parser.Conversion` {
     @Suite struct `Parser Map` {}
     @Suite struct `Builder Propagation` {}
 }
-
-// MARK: - Conversion Combinator Round-Trips
 
 extension `Parser.Conversion`.`Combinator` {
     @Test
@@ -94,7 +77,7 @@ extension `Parser.Conversion`.`Combinator` {
     func `fixed injects and verifies the constant`() throws(any Swift.Error) {
         let conversion = Parser.Conversion.Fixed(42)
         #expect(conversion.apply(()) == 42)
-        try conversion.unapply(42)  // matches — no throw
+        try conversion.unapply(42)
         #expect(throws: Parser.Conversion.Error.mismatch) {
             try conversion.unapply(41)
         }
@@ -128,11 +111,11 @@ extension `Parser.Conversion`.`Combinator` {
             embed: Node.leaf,
             extract: { if case .leaf(let value) = $0 { value } else { nil } }
         )
-        // apply embeds the payload into its case.
+
         #expect(conversion.apply(7) == .leaf(7))
-        // unapply extracts the payload from the matching case.
+
         #expect(try conversion.unapply(.leaf(7)) == 7)
-        // unapply throws on the wrong case.
+
         #expect(throws: Parser.Conversion.Error.absentCase) {
             try conversion.unapply(.empty)
         }
@@ -147,15 +130,13 @@ extension `Parser.Conversion`.`Combinator` {
 
     @Test
     func `map composes two conversions`() throws(any Swift.Error) {
-        // Int --Identity--> Int --RawValue--> Tag
+
         let conversion = Parser.Conversion.Identity<Int>()
             .map(Parser.Conversion.RawValue<Tag>())
         #expect(try conversion.apply(9) == Tag(rawValue: 9))
         #expect(try conversion.unapply(Tag(rawValue: 9)) == 9)
     }
 }
-
-// MARK: - .map(conversion) on a Parser
 
 extension `Parser.Conversion`.`Parser Map` {
     @Test
@@ -176,8 +157,7 @@ extension `Parser.Conversion`.`Parser Map` {
 
     @Test
     func `string lifts a Substring parser to a String parser`() throws(any Swift.Error) {
-        // `.string` resolves to Parser.Conversion.String: parse copies out a
-        // String; the emission direction lives on the coder-side rows.
+
         let grammar = Head().map(.string)
 
         var input: Substring = "x"
@@ -195,9 +175,7 @@ extension `Parser.Conversion`.`Parser Map` {
 
     @Test
     func `converted parser embeds into an enum case`() throws(any Swift.Error) {
-        // Digit parses an Int payload; `.case` embeds it into `Node.leaf`,
-        // exercising the `.map(conversion)` seam through
-        // Parser.Conversion.Case.
+
         let grammar = Digit().map(
             .case(
                 embed: Node.leaf,
@@ -210,12 +188,8 @@ extension `Parser.Conversion`.`Parser Map` {
     }
 }
 
-// MARK: - Builder-Propagation Acceptance Probe
-
 extension `Parser.Conversion`.`Builder Propagation` {
-    /// The acceptance probe: a grammar composed through the `Take.Builder`
-    /// result builder (`Parser.Take.Sequence { … }`) parses through a
-    /// `Conversion`.
+
     @Test
     func `builder-composed grammar parses through a conversion`() throws(any Swift.Error) {
         let grammar = Parser.Take.Sequence {

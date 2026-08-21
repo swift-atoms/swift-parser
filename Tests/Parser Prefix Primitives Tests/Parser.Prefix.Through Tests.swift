@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Prefix.Through` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Prefix.Through`.Unit {
     @Test
@@ -33,8 +29,6 @@ extension `Parser.Prefix.Through`.Unit {
         #expect(result == Parser.Test.Input(utf8: "header\r\n"))
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.Prefix.Through`.`Edge Case` {
     @Test

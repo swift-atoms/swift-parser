@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Peek` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.Peek`.Unit {
     @Test
@@ -35,8 +31,6 @@ extension `Parser.Peek`.Unit {
         #expect(first == 0xFF)
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.Peek`.`Edge Case` {
     @Test

@@ -1,15 +1,11 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.First.Element` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
 }
-
-// MARK: - Unit Tests
 
 extension `Parser.First.Element`.Unit {
     @Test
@@ -34,8 +30,6 @@ extension `Parser.First.Element`.Unit {
         #expect(input.isEmpty)
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Parser.First.Element`.`Edge Case` {
     @Test

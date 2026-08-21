@@ -1,8 +1,6 @@
 import Parser_Primitives_Test_Support
 import Testing
 
-// MARK: - Test Suite Structure
-
 @Suite
 struct `Parser.Invariant` {
     @Suite struct `Input Position` {}
@@ -11,8 +9,6 @@ struct `Parser.Invariant` {
     @Suite struct `Checkpoint Restore` {}
     @Suite struct Boundary {}
 }
-
-// MARK: - Input Position: Non-Consuming Parsers
 
 extension `Parser.Invariant`.`Input Position` {
     @Test
@@ -72,8 +68,6 @@ extension `Parser.Invariant`.`Input Position` {
         #expect(input.checkpoint == checkpoint)
     }
 
-    // MARK: - Input Position: Consuming Parsers
-
     @Test
     func `First.Element advances exactly one position`() throws(any Swift.Error) {
         let parser = Parser.First.Element<Parser.Test.Input>()
@@ -115,8 +109,6 @@ extension `Parser.Invariant`.`Input Position` {
         #expect(input.isEmpty)
     }
 
-    // MARK: - Input Position: Backtracking
-
     @Test
     func `OneOf restores position on failed first branch`() throws(any Swift.Error) {
         let parser = Parser.OneOf.Two(
@@ -143,8 +135,6 @@ extension `Parser.Invariant`.`Input Position` {
         #expect(input.checkpoint == checkpoint)
     }
 }
-
-// MARK: - Parser Algebra Laws
 
 extension `Parser.Invariant`.Algebra {
     @Test
@@ -215,9 +205,6 @@ extension `Parser.Invariant`.Algebra {
     }
 }
 
-// MARK: - Error Propagation
-
-// swiftlint:disable:next swift_error_qualification - bare-word match on the nested test-suite type name `Error Propagation`, not a reference to the Error protocol
 extension `Parser.Invariant`.`Error Propagation` {
     @Test
     func `FlatMap tags upstream error as left`() {
@@ -295,8 +282,6 @@ extension `Parser.Invariant`.`Error Propagation` {
     }
 }
 
-// MARK: - Checkpoint/Restore
-
 extension `Parser.Invariant`.`Checkpoint Restore` {
     @Test
     func `OneOf.Two restores position on first-branch failure`() throws(any Swift.Error) {
@@ -348,8 +333,6 @@ extension `Parser.Invariant`.`Checkpoint Restore` {
         #expect(input.checkpoint == before)
     }
 }
-
-// MARK: - Boundary Conditions
 
 extension `Parser.Invariant`.Boundary {
     @Test

@@ -1,24 +1,12 @@
-//
-//  Parser.Take.Two.swift
-//  swift-standards
-//
-//  Two-parser sequential combinator.
-//
-
 extension Parser.Take {
-    /// A parser that runs two parsers in sequence and collects both outputs.
-    ///
-    /// The outputs are combined into a tuple `(P0.Output, P1.Output)`.
-    /// Created by `Take.Builder` when combining two non-Void parsers.
+
     public struct Two<P0: Parser.`Protocol`, P1: Parser.`Protocol`>
     where P0.Input == P1.Input {
-        /// The first parser in the sequence.
+
         public let p0: P0
 
-        /// The second parser in the sequence.
         public let p1: P1
 
-        /// Creates a parser that runs the two given parsers in sequence.
         @inlinable
         public init(_ p0: P0, _ p1: P1) {
             self.p0 = p0
@@ -28,14 +16,13 @@ extension Parser.Take {
 }
 
 extension Parser.Take.Two: Parser.`Protocol` {
-    /// The input type this parser consumes.
+
     public typealias Input = P0.Input
-    /// The output type this parser produces: a tuple of both parsers' outputs.
+
     public typealias Output = (P0.Output, P1.Output)
-    /// The error type this parser can throw, discriminating which parser failed.
+
     public typealias Failure = Either<P0.Failure, P1.Failure>
 
-    /// Runs the first parser then the second, returning both outputs as a tuple.
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let o0: P0.Output
@@ -55,7 +42,7 @@ extension Parser.Take.Two: Parser.`Protocol` {
 }
 
 extension Parser.Take.Two {
-    /// Maps the output of this parser using the given transform.
+
     @inlinable
     public func map<NewOutput>(
         _ transform: @escaping (P0.Output, P1.Output) -> NewOutput
