@@ -1,11 +1,9 @@
 extension Parser.Error {
 
     public struct Map<Upstream: Parser.`Protocol`, NewFailure: Swift.Error> {
-        @usableFromInline
-        let upstream: Upstream
+        public let upstream: Upstream
 
-        @usableFromInline
-        let transform: (Upstream.Failure) -> NewFailure
+        public let transform: (Upstream.Failure) -> NewFailure
 
         @inlinable
         package init(
