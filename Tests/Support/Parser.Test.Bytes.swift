@@ -1,6 +1,6 @@
-public import Collection_Primitives
+public import Collection
 import Iterable
-public import Parser_Primitives
+public import Parser
 
 extension Parser.Test {
 
@@ -14,7 +14,7 @@ extension Parser.Test {
 }
 
 extension Parser.Test.Bytes {
-    public typealias Index = Index_Primitives.Index<UInt8>
+    public typealias Index = Index.Index<UInt8>
 
     public var startIndex: Index { .zero }
 

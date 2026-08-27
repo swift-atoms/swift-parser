@@ -1,9 +1,9 @@
-public import Input_Primitives
-public import Parser_Primitives
+public import Input
+public import Parser
 
 extension Parser.Test {
 
-    public typealias Input = Input_Primitives.Input.Slice<Parser.Test.Bytes>
+    public typealias Input = Input.Input.Slice<Parser.Test.Bytes>
 }
 
 extension Input.Slice: @retroactive ExpressibleByArrayLiteral

@@ -1,0 +1,39 @@
+public import Collection
+
+extension Parser.Consume {
+
+    public struct Exactly<Input: Collection.Slice.`Protocol`> {
+        @usableFromInline
+        let count: Int
+
+        @inlinable
+        public init(_ count: Int) {
+            self.count = count
+        }
+    }
+}
+
+extension Parser.Consume.Exactly: Parser.`Protocol` {
+
+    public typealias Output = Input
+
+    public typealias Failure = Parser.Constraint.Error
+
+    @inlinable
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
+        var endIndex = input.startIndex
+        var actualCount = 0
+        while actualCount < count, endIndex < input.endIndex {
+            endIndex = input.index(after: endIndex)
+            actualCount += 1
+        }
+
+        guard actualCount == count else {
+            throw .countTooLow(expected: count, got: actualCount)
+        }
+
+        let result = input[input.startIndex..<endIndex]
+        input = input[endIndex...]
+        return result
+    }
+}

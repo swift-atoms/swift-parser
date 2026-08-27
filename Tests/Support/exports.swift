@@ -1,3 +1,3 @@
-@_exported public import Array_Primitives_Test_Support
-@_exported public import Input_Primitives_Test_Support
-@_exported public import Parser_Primitives
+@_exported public import Array_Test_Support
+@_exported public import Input_Test_Support
+@_exported public import Parser

@@ -1,6 +1,6 @@
-public import Collection_Primitives
-public import Iterator_Chunk_Primitives
-public import Parser_Primitives
+public import Collection
+public import Iterator_Chunk
+public import Parser
 
 extension Parser.Test {
 
