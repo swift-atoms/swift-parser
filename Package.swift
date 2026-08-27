@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-parser-primitives",
+    name: "swift-parser",
     platforms: [
         .macOS(.v27),
         .iOS(.v27),
@@ -18,202 +18,202 @@ let package = Package(
             targets: ["Parser Primitive"]
         ),
         .library(
-            name: "Parser Primitives",
-            targets: ["Parser Primitives"]
+            name: "Parser",
+            targets: ["Parser"]
         ),
         .library(
-            name: "Parser Primitives Core",
-            targets: ["Parser Primitives Core"]
+            name: "Parser Core",
+            targets: ["Parser Core"]
         ),
         .library(
-            name: "Parser Remaining Primitives",
-            targets: ["Parser Remaining Primitives"]
+            name: "Parser Remaining",
+            targets: ["Parser Remaining"]
         ),
         .library(
-            name: "Parser Tagged Primitives",
-            targets: ["Parser Tagged Primitives"]
+            name: "Parser Tagged",
+            targets: ["Parser Tagged"]
         ),
 
         .library(
-            name: "Parser Witness Primitives",
-            targets: ["Parser Witness Primitives"]
+            name: "Parser Witness",
+            targets: ["Parser Witness"]
         ),
         .library(
-            name: "Parser Error Primitives",
-            targets: ["Parser Error Primitives"]
+            name: "Parser Error",
+            targets: ["Parser Error"]
         ),
         .library(
-            name: "Parser Match Primitives",
-            targets: ["Parser Match Primitives"]
+            name: "Parser Match",
+            targets: ["Parser Match"]
         ),
         .library(
-            name: "Parser EndOfInput Primitives",
-            targets: ["Parser EndOfInput Primitives"]
+            name: "Parser EndOfInput",
+            targets: ["Parser EndOfInput"]
         ),
         .library(
-            name: "Parser Constraint Primitives",
-            targets: ["Parser Constraint Primitives"]
+            name: "Parser Constraint",
+            targets: ["Parser Constraint"]
         ),
         .library(
-            name: "Parser OneOf Primitives",
-            targets: ["Parser OneOf Primitives"]
+            name: "Parser OneOf",
+            targets: ["Parser OneOf"]
         ),
         .library(
-            name: "Parser Map Primitives",
-            targets: ["Parser Map Primitives"]
+            name: "Parser Map",
+            targets: ["Parser Map"]
         ),
         .library(
-            name: "Parser Conversion Primitives",
-            targets: ["Parser Conversion Primitives"]
+            name: "Parser Conversion",
+            targets: ["Parser Conversion"]
         ),
         .library(
-            name: "Parser FlatMap Primitives",
-            targets: ["Parser FlatMap Primitives"]
+            name: "Parser FlatMap",
+            targets: ["Parser FlatMap"]
         ),
         .library(
-            name: "Parser Filter Primitives",
-            targets: ["Parser Filter Primitives"]
+            name: "Parser Filter",
+            targets: ["Parser Filter"]
         ),
         .library(
-            name: "Parser Conditional Primitives",
-            targets: ["Parser Conditional Primitives"]
+            name: "Parser Conditional",
+            targets: ["Parser Conditional"]
         ),
         .library(
-            name: "Parser Optional Primitives",
-            targets: ["Parser Optional Primitives"]
+            name: "Parser Optional",
+            targets: ["Parser Optional"]
         ),
         .library(
-            name: "Parser Skip Primitives",
-            targets: ["Parser Skip Primitives"]
+            name: "Parser Skip",
+            targets: ["Parser Skip"]
         ),
         .library(
-            name: "Parser Many Primitives",
-            targets: ["Parser Many Primitives"]
+            name: "Parser Many",
+            targets: ["Parser Many"]
         ),
         .library(
-            name: "Parser Take Primitives",
-            targets: ["Parser Take Primitives"]
+            name: "Parser Take",
+            targets: ["Parser Take"]
         ),
         .library(
-            name: "Parser Pair Primitives",
-            targets: ["Parser Pair Primitives"]
+            name: "Parser Pair",
+            targets: ["Parser Pair"]
         ),
         .library(
-            name: "Parser Consume Primitives",
-            targets: ["Parser Consume Primitives"]
+            name: "Parser Consume",
+            targets: ["Parser Consume"]
         ),
         .library(
-            name: "Parser Discard Primitives",
-            targets: ["Parser Discard Primitives"]
+            name: "Parser Discard",
+            targets: ["Parser Discard"]
         ),
         .library(
-            name: "Parser Prefix Primitives",
-            targets: ["Parser Prefix Primitives"]
+            name: "Parser Prefix",
+            targets: ["Parser Prefix"]
         ),
         .library(
-            name: "Parser First Primitives",
-            targets: ["Parser First Primitives"]
+            name: "Parser First",
+            targets: ["Parser First"]
         ),
         .library(
-            name: "Parser Tracked Primitives",
-            targets: ["Parser Tracked Primitives"]
+            name: "Parser Tracked",
+            targets: ["Parser Tracked"]
         ),
         .library(
-            name: "Parser Spanned Primitives",
-            targets: ["Parser Spanned Primitives"]
+            name: "Parser Spanned",
+            targets: ["Parser Spanned"]
         ),
         .library(
-            name: "Parser Span Primitives",
-            targets: ["Parser Span Primitives"]
+            name: "Parser Span",
+            targets: ["Parser Span"]
         ),
         .library(
-            name: "Parser Locate Primitives",
-            targets: ["Parser Locate Primitives"]
+            name: "Parser Locate",
+            targets: ["Parser Locate"]
         ),
         .library(
-            name: "Parser Peek Primitives",
-            targets: ["Parser Peek Primitives"]
+            name: "Parser Peek",
+            targets: ["Parser Peek"]
         ),
         .library(
-            name: "Parser Not Primitives",
-            targets: ["Parser Not Primitives"]
+            name: "Parser Not",
+            targets: ["Parser Not"]
         ),
         .library(
-            name: "Parser Always Primitives",
-            targets: ["Parser Always Primitives"]
+            name: "Parser Always",
+            targets: ["Parser Always"]
         ),
         .library(
-            name: "Parser Fail Primitives",
-            targets: ["Parser Fail Primitives"]
+            name: "Parser Fail",
+            targets: ["Parser Fail"]
         ),
         .library(
-            name: "Parser Rest Primitives",
-            targets: ["Parser Rest Primitives"]
+            name: "Parser Rest",
+            targets: ["Parser Rest"]
         ),
         .library(
-            name: "Parser End Primitives",
-            targets: ["Parser End Primitives"]
+            name: "Parser End",
+            targets: ["Parser End"]
         ),
         .library(
-            name: "Parser Lazy Primitives",
-            targets: ["Parser Lazy Primitives"]
+            name: "Parser Lazy",
+            targets: ["Parser Lazy"]
         ),
         .library(
-            name: "Parser Trace Primitives",
-            targets: ["Parser Trace Primitives"]
+            name: "Parser Trace",
+            targets: ["Parser Trace"]
         ),
         .library(
-            name: "Parser Parse Primitives",
-            targets: ["Parser Parse Primitives"]
+            name: "Parser Parse",
+            targets: ["Parser Parse"]
         ),
         .library(
-            name: "Parser Conformance Primitives",
-            targets: ["Parser Conformance Primitives"]
+            name: "Parser Conformance",
+            targets: ["Parser Conformance"]
         ),
         .library(
-            name: "Parser Primitives Test Support",
-            targets: ["Parser Primitives Test Support"]
+            name: "Parser Test Support",
+            targets: ["Parser Test Support"]
         ),
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-primitives/swift-either-primitives.git",
+            url: "https://github.com/swift-molecules/swift-either.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-pair-primitives.git",
+            url: "https://github.com/swift-molecules/swift-pair.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-product-primitives.git",
+            url: "https://github.com/swift-molecules/swift-product.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-input-primitives.git",
+            url: "https://github.com/swift-molecules/swift-input.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-array-primitives.git",
+            url: "https://github.com/swift-molecules/swift-array.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-collection-primitives.git",
+            url: "https://github.com/swift-molecules/swift-collection.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-index-primitives.git",
+            url: "https://github.com/swift-molecules/swift-index.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-text-primitives.git",
+            url: "https://github.com/swift-molecules/swift-text.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-tagged-primitives.git",
+            url: "https://github.com/swift-molecules/swift-tagged.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-iterator-primitives.git",
+            url: "https://github.com/swift-molecules/swift-iterator.git",
             branch: "main"
         ),
     ],
@@ -225,442 +225,442 @@ let package = Package(
         ),
 
         .target(
-            name: "Parser Primitives Core",
+            name: "Parser Core",
             dependencies: [
                 "Parser Primitive",
-                "Parser Remaining Primitives",
-                "Parser Tagged Primitives",
-                "Parser Witness Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-                .product(name: "Array Primitives", package: "swift-array-primitives"),
+                "Parser Remaining",
+                "Parser Tagged",
+                "Parser Witness",
+                .product(name: "Input", package: "swift-input"),
+                .product(name: "Array", package: "swift-array"),
             ]
         ),
 
         .target(
-            name: "Parser Remaining Primitives",
+            name: "Parser Remaining",
             dependencies: [
                 "Parser Primitive",
-                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
+                .product(name: "Collection", package: "swift-collection"),
             ]
         ),
         .target(
-            name: "Parser Tagged Primitives",
+            name: "Parser Tagged",
             dependencies: [
                 "Parser Primitive",
-                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
+                .product(name: "Tagged", package: "swift-tagged"),
             ]
         ),
 
         .target(
-            name: "Parser Witness Primitives",
+            name: "Parser Witness",
             dependencies: [
                 "Parser Primitive"
             ]
         ),
 
         .target(
-            name: "Parser Error Primitives",
+            name: "Parser Error",
             dependencies: [
                 "Parser Primitive",
-                .product(name: "Either Primitives", package: "swift-either-primitives"),
-                .product(name: "Text Primitives", package: "swift-text-primitives"),
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Either", package: "swift-either"),
+                .product(name: "Text", package: "swift-text"),
+                .product(name: "Index", package: "swift-index"),
             ]
         ),
         .target(
-            name: "Parser Match Primitives",
+            name: "Parser Match",
             dependencies: [
                 "Parser Primitive",
-                "Parser Remaining Primitives",
-                "Parser Error Primitives",
+                "Parser Remaining",
+                "Parser Error",
             ]
         ),
 
         .target(
-            name: "Parser EndOfInput Primitives",
+            name: "Parser EndOfInput",
             dependencies: [
                 "Parser Primitive"
             ]
         ),
         .target(
-            name: "Parser Constraint Primitives",
-            dependencies: [
-                "Parser Primitive"
-            ]
-        ),
-
-        .target(
-            name: "Parser OneOf Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-                .product(name: "Product Primitives", package: "swift-product-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Map Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-            ]
-        ),
-        .target(
-            name: "Parser Conversion Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-            ]
-        ),
-        .target(
-            name: "Parser FlatMap Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-            ]
-        ),
-        .target(
-            name: "Parser Filter Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Constraint Primitives",
-                "Parser Error Primitives",
-            ]
-        ),
-        .target(
-            name: "Parser Conditional Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-            ]
-        ),
-        .target(
-            name: "Parser Optional Primitives",
-            dependencies: [
-                "Parser Primitive",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Skip Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-            ]
-        ),
-        .target(
-            name: "Parser Many Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Take Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Take Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-                "Parser Skip Primitives",
-                "Parser Conditional Primitives",
-                "Parser Optional Primitives",
-                "Parser Always Primitives",
-                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Pair Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-                .product(name: "Pair Primitives", package: "swift-pair-primitives"),
-            ]
-        ),
-
-        .target(
-            name: "Parser Consume Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Constraint Primitives",
-                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Discard Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Constraint Primitives",
-                "Parser Consume Primitives",
-                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
-            ]
-        ),
-
-        .target(
-            name: "Parser Prefix Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Constraint Primitives",
-                "Parser Match Primitives",
-                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
-            ]
-        ),
-
-        .target(
-            name: "Parser First Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Match Primitives",
-                "Parser EndOfInput Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-
-        .target(
-            name: "Parser Tracked Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Spanned Primitives",
-            dependencies: [
-                "Parser Primitive",
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Span Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-                "Parser Tracked Primitives",
-                "Parser Spanned Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Locate Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Error Primitives",
-                "Parser Tracked Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-
-        .target(
-            name: "Parser Peek Primitives",
-            dependencies: [
-                "Parser Primitive",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser Not Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Match Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-            ]
-        ),
-
-        .target(
-            name: "Parser Always Primitives",
-            dependencies: [
-                "Parser Primitive"
-            ]
-        ),
-        .target(
-            name: "Parser Fail Primitives",
-            dependencies: [
-                "Parser Primitive"
-            ]
-        ),
-        .target(
-            name: "Parser Rest Primitives",
-            dependencies: [
-                "Parser Primitive",
-                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
-            ]
-        ),
-        .target(
-            name: "Parser End Primitives",
-            dependencies: [
-                "Parser Primitive",
-                "Parser Remaining Primitives",
-                "Parser Match Primitives",
-            ]
-        ),
-
-        .target(
-            name: "Parser Lazy Primitives",
-            dependencies: [
-                "Parser Primitive"
-            ]
-        ),
-        .target(
-            name: "Parser Trace Primitives",
-            dependencies: [
-                "Parser Primitive"
-            ]
-        ),
-        .target(
-            name: "Parser Parse Primitives",
+            name: "Parser Constraint",
             dependencies: [
                 "Parser Primitive"
             ]
         ),
 
         .target(
-            name: "Parser Conformance Primitives",
+            name: "Parser OneOf",
             dependencies: [
                 "Parser Primitive",
-                "Parser Match Primitives",
+                "Parser Error",
+                .product(name: "Input", package: "swift-input"),
+                .product(name: "Product", package: "swift-product"),
+            ]
+        ),
+        .target(
+            name: "Parser Map",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+            ]
+        ),
+        .target(
+            name: "Parser Conversion",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+            ]
+        ),
+        .target(
+            name: "Parser FlatMap",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+            ]
+        ),
+        .target(
+            name: "Parser Filter",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Constraint",
+                "Parser Error",
+            ]
+        ),
+        .target(
+            name: "Parser Conditional",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+            ]
+        ),
+        .target(
+            name: "Parser Optional",
+            dependencies: [
+                "Parser Primitive",
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+        .target(
+            name: "Parser Skip",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+            ]
+        ),
+        .target(
+            name: "Parser Many",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Take",
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+        .target(
+            name: "Parser Take",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+                "Parser Skip",
+                "Parser Conditional",
+                "Parser Optional",
+                "Parser Always",
+                .product(name: "Collection", package: "swift-collection"),
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+        .target(
+            name: "Parser Pair",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+                .product(name: "Pair", package: "swift-pair"),
             ]
         ),
 
         .target(
-            name: "Parser Primitives",
+            name: "Parser Consume",
             dependencies: [
                 "Parser Primitive",
-                "Parser Remaining Primitives",
-                "Parser Tagged Primitives",
-                "Parser Witness Primitives",
-                "Parser Error Primitives",
-                "Parser Match Primitives",
-                "Parser EndOfInput Primitives",
-                "Parser Constraint Primitives",
-                "Parser OneOf Primitives",
-                "Parser Map Primitives",
-                "Parser Conversion Primitives",
-                "Parser FlatMap Primitives",
-                "Parser Filter Primitives",
-                "Parser Conditional Primitives",
-                "Parser Optional Primitives",
-                "Parser Skip Primitives",
-                "Parser Many Primitives",
-                "Parser Take Primitives",
-                "Parser Pair Primitives",
-                "Parser Consume Primitives",
-                "Parser Discard Primitives",
-                "Parser Prefix Primitives",
-                "Parser First Primitives",
-                "Parser Tracked Primitives",
-                "Parser Spanned Primitives",
-                "Parser Span Primitives",
-                "Parser Locate Primitives",
-                "Parser Peek Primitives",
-                "Parser Not Primitives",
-                "Parser Always Primitives",
-                "Parser Fail Primitives",
-                "Parser Rest Primitives",
-                "Parser End Primitives",
-                "Parser Lazy Primitives",
-                "Parser Trace Primitives",
-                "Parser Parse Primitives",
-                "Parser Conformance Primitives",
+                "Parser Constraint",
+                .product(name: "Collection", package: "swift-collection"),
+            ]
+        ),
+        .target(
+            name: "Parser Discard",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Constraint",
+                "Parser Consume",
+                .product(name: "Collection", package: "swift-collection"),
             ]
         ),
 
         .target(
-            name: "Parser Primitives Test Support",
+            name: "Parser Prefix",
             dependencies: [
-                "Parser Primitives",
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-                .product(name: "Input Primitives Test Support", package: "swift-input-primitives"),
-                .product(name: "Array Primitives Test Support", package: "swift-array-primitives"),
-                .product(name: "Iterator Chunk Primitives", package: "swift-iterator-primitives"),
-                .product(name: "Iterable", package: "swift-iterator-primitives"),
+                "Parser Primitive",
+                "Parser Constraint",
+                "Parser Match",
+                .product(name: "Collection", package: "swift-collection"),
+            ]
+        ),
+
+        .target(
+            name: "Parser First",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Match",
+                "Parser EndOfInput",
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+
+        .target(
+            name: "Parser Tracked",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+        .target(
+            name: "Parser Spanned",
+            dependencies: [
+                "Parser Primitive",
+                .product(name: "Index", package: "swift-index"),
+            ]
+        ),
+        .target(
+            name: "Parser Span",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+                "Parser Tracked",
+                "Parser Spanned",
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+        .target(
+            name: "Parser Locate",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Error",
+                "Parser Tracked",
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+
+        .target(
+            name: "Parser Peek",
+            dependencies: [
+                "Parser Primitive",
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+        .target(
+            name: "Parser Not",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Match",
+                .product(name: "Input", package: "swift-input"),
+            ]
+        ),
+
+        .target(
+            name: "Parser Always",
+            dependencies: [
+                "Parser Primitive"
+            ]
+        ),
+        .target(
+            name: "Parser Fail",
+            dependencies: [
+                "Parser Primitive"
+            ]
+        ),
+        .target(
+            name: "Parser Rest",
+            dependencies: [
+                "Parser Primitive",
+                .product(name: "Collection", package: "swift-collection"),
+            ]
+        ),
+        .target(
+            name: "Parser End",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Remaining",
+                "Parser Match",
+            ]
+        ),
+
+        .target(
+            name: "Parser Lazy",
+            dependencies: [
+                "Parser Primitive"
+            ]
+        ),
+        .target(
+            name: "Parser Trace",
+            dependencies: [
+                "Parser Primitive"
+            ]
+        ),
+        .target(
+            name: "Parser Parse",
+            dependencies: [
+                "Parser Primitive"
+            ]
+        ),
+
+        .target(
+            name: "Parser Conformance",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Match",
+            ]
+        ),
+
+        .target(
+            name: "Parser",
+            dependencies: [
+                "Parser Primitive",
+                "Parser Remaining",
+                "Parser Tagged",
+                "Parser Witness",
+                "Parser Error",
+                "Parser Match",
+                "Parser EndOfInput",
+                "Parser Constraint",
+                "Parser OneOf",
+                "Parser Map",
+                "Parser Conversion",
+                "Parser FlatMap",
+                "Parser Filter",
+                "Parser Conditional",
+                "Parser Optional",
+                "Parser Skip",
+                "Parser Many",
+                "Parser Take",
+                "Parser Pair",
+                "Parser Consume",
+                "Parser Discard",
+                "Parser Prefix",
+                "Parser First",
+                "Parser Tracked",
+                "Parser Spanned",
+                "Parser Span",
+                "Parser Locate",
+                "Parser Peek",
+                "Parser Not",
+                "Parser Always",
+                "Parser Fail",
+                "Parser Rest",
+                "Parser End",
+                "Parser Lazy",
+                "Parser Trace",
+                "Parser Parse",
+                "Parser Conformance",
+            ]
+        ),
+
+        .target(
+            name: "Parser Test Support",
+            dependencies: [
+                "Parser",
+                .product(name: "Input", package: "swift-input"),
+                .product(name: "Input Test Support", package: "swift-input"),
+                .product(name: "Array Test Support", package: "swift-array"),
+                .product(name: "Iterator Chunk", package: "swift-iterator"),
+                .product(name: "Iterable", package: "swift-iterator"),
             ],
             path: "Tests/Support"
         ),
 
         .testTarget(
-            name: "Parser Always Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Always Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Consume Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Consume Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser End Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser End Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Error Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Error Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Fail Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Fail Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Filter Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Filter Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser First Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser First Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser FlatMap Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser FlatMap Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Many Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Many Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Map Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Map Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Conversion Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Conversion Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Not Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Not Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser OneOf Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser OneOf Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Optional Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Optional Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Peek Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Peek Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Prefix Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Prefix Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Rest Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Rest Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Spanned Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Spanned Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Take Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Take Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Pair Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Pair Tests",
+            dependencies: ["Parser Test Support"]
         ),
         .testTarget(
-            name: "Parser Invariant Primitives Tests",
-            dependencies: ["Parser Primitives Test Support"]
+            name: "Parser Invariant Tests",
+            dependencies: ["Parser Test Support"]
         ),
     ],
     swiftLanguageModes: [.v6]

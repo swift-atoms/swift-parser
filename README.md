@@ -1,4 +1,4 @@
-# Parser Primitives
+# Parser
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
@@ -10,7 +10,7 @@ Add the dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-parser-primitives.git", branch: "main")
+    .package(url: "https://github.com/swift-molecules/swift-parser.git", branch: "main")
 ]
 ```
 
@@ -22,12 +22,12 @@ Add the umbrella product to your target (re-exports every module):
 .target(
     name: "YourTarget",
     dependencies: [
-        .product(name: "Parser Primitives", package: "swift-parser-primitives")
+        .product(name: "Parser", package: "swift-parser")
     ]
 )
 ```
 
-For narrower compile-time surface, depend on individual variant products such as `Parser Match Primitives`, `Parser Span Primitives`, or `Parser Constraint Primitives`. The full product list is in [Package.swift](Package.swift).
+For narrower compile-time surface, depend on individual variant products such as `Parser Match`, `Parser Span`, or `Parser Constraint`. The full product list is in [Package.swift](Package.swift).
 
 Requires Swift 6.2+.
 
