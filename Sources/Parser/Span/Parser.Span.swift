@@ -2,7 +2,7 @@ public import Input
 
 extension Parser {
 
-    public struct Span<Base: Input.Input.`Protocol`, Upstream: Parser.`Protocol`>
+    public struct Span<Base: __ParserInput.`Protocol`, Upstream: Parser.`Protocol`>
     where Upstream.Input == Base {
         @usableFromInline
         let upstream: Upstream
@@ -29,7 +29,7 @@ extension Parser.Span: Parser.`Protocol` {
     }
 }
 
-extension Parser.`Protocol` where Input: Input.Input.`Protocol` & Copyable {
+extension Parser.`Protocol` where Input: __ParserInput.`Protocol` & Copyable {
 
     @inlinable
     public func spanned() -> Parser.Span<Input, Self> {

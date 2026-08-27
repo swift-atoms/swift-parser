@@ -1,8 +1,9 @@
 public import Input
+public import Either
 
 extension Parser.First {
 
-    public struct Where<Input: Input.Input.Streaming>
+    public struct Where<Input: __ParserInput.Streaming>
     where Input.Element: Copyable {
         @usableFromInline
         let predicate: (Input.Element) -> Bool

@@ -3,7 +3,7 @@ public import Input
 extension Parser {
 
     public struct Peek<Upstream: Parser.`Protocol`>
-    where Upstream.Input: Input.Input.`Protocol` {
+    where Upstream.Input: __ParserInput.`Protocol` {
         @usableFromInline
         internal let upstream: Upstream
 
@@ -27,16 +27,16 @@ extension Parser.Peek: Parser.`Protocol` {
         let checkpoint = input.checkpoint
         do throws(Upstream.Failure) {
             let result = try upstream.parse(&input)
-            input.restore.to(__unchecked: (), checkpoint)
+            input.seek(to: checkpoint)
             return result
         } catch {
-            input.restore.to(__unchecked: (), checkpoint)
+            input.seek(to: checkpoint)
             throw error
         }
     }
 }
 
-extension Parser.`Protocol` where Input: Input.Input.`Protocol` {
+extension Parser.`Protocol` where Input: __ParserInput.`Protocol` {
 
     @inlinable
     public func peek() -> Parser.Peek<Self> {

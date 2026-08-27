@@ -1,3 +1,5 @@
+public import Either
+
 extension Parser.Take.Two {
 
     public struct Map<NewOutput> {

@@ -1,5 +1,4 @@
-import Either
-public import Text
+public import Either
 
 public protocol _EitherChain {
     associatedtype _Left
@@ -77,7 +76,7 @@ extension Either: Parser.Error.Located.`Protocol`
 where Left: Parser.Error.Located.`Protocol`, Right: Parser.Error.Located.`Protocol` {
 
     @inlinable
-    public var offset: Text.Position {
+    public var offset: Parser.Position {
         switch self {
         case .left(let e): return e.offset
         case .right(let e): return e.offset
@@ -89,7 +88,7 @@ extension Either
 where Left: Parser.Error.Located.`Protocol`, Right: Parser.Error.Located.`Protocol` {
 
     @inlinable
-    public var earliestOffset: Text.Position {
+    public var earliestOffset: Parser.Position {
         offset
     }
 }

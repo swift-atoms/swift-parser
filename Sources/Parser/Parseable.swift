@@ -1,6 +1,6 @@
 public protocol Parseable {
 
-    associatedtype Parser: Parser.Parser.`Protocol`
+    associatedtype Parser: __Parser.`Protocol`
 
     static var parser: Parser { get }
 }

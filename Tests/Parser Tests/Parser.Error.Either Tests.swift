@@ -1,3 +1,4 @@
+import Either
 import Parser
 import Testing
 
@@ -34,13 +35,15 @@ extension `Parser.Error.Either Tests`.Unit {
     }
 
     @Test
-    func `equatable conformance`() {
+    func `case payload access distinguishes values`() {
         let a = E.left(.unexpected(expected: "x"))
         let b = E.left(.unexpected(expected: "x"))
         let c = E.right(.expectedEnd(remaining: 1))
 
-        #expect(a == b)
-        #expect(a != c)
+        #expect(a.left == b.left)
+        #expect(a.right == nil)
+        #expect(c.left == nil)
+        #expect(c.right != nil)
     }
 }
 

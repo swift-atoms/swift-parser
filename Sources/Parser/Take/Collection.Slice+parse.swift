@@ -1,7 +1,7 @@
 public import Collection
 public import Input
 
-extension Collection.Slice.`Protocol` where Self: Input.Input.Streaming {
+extension Collection.Slice.`Protocol` where Self: __ParserInput.Streaming {
 
     @inlinable
     public mutating func parse<Body: Parser.`Protocol`>(

@@ -2,7 +2,7 @@ public import Input
 
 extension Parser {
 
-    public struct Many<Input: Input.Input.`Protocol`, Element: Parser.`Protocol`>
+    public struct Many<Input: __ParserInput.`Protocol`, Element: Parser.`Protocol`>
     where Element.Input == Input {
 
         public let element: Element
@@ -64,7 +64,7 @@ extension Parser.Many: Parser.`Protocol` {
                 let next = try element.parse(&input)
                 results.append(next)
             } catch {
-                input.restore.to(__unchecked: (), checkpoint)
+                input.seek(to: checkpoint)
                 break
             }
         }

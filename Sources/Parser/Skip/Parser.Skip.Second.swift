@@ -1,3 +1,5 @@
+public import Either
+
 extension Parser.Skip {
 
     public struct Second<P0: Parser.`Protocol`, P1: Parser.`Protocol`>
