@@ -3,7 +3,7 @@ public import Input
 extension Parser {
 
     public struct Not<Upstream: Parser.`Protocol`>
-    where Upstream.Input: Input.Input.`Protocol` {
+    where Upstream.Input: __ParserInput.`Protocol` {
         @usableFromInline
         internal let upstream: Upstream
 
@@ -36,16 +36,16 @@ extension Parser.Not: Parser.`Protocol` {
 
         if (try? upstream.parse(&input)) != nil {
 
-            input.restore.to(__unchecked: (), checkpoint)
+            input.seek(to: checkpoint)
             throw .unexpectedMatch
         } else {
 
-            input.restore.to(__unchecked: (), checkpoint)
+            input.seek(to: checkpoint)
         }
     }
 }
 
-extension Parser.`Protocol` where Input: Input.Input.`Protocol` {
+extension Parser.`Protocol` where Input: __ParserInput.`Protocol` {
 
     @inlinable
     public func not() -> Parser.Not<Self> {

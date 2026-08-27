@@ -2,22 +2,22 @@ public import Input
 
 extension Parser {
 
-    public struct Tracked<Base: Input.Input.`Protocol`> {
+    public struct Tracked<Base: __ParserInput.`Protocol`> {
 
         @usableFromInline
         internal var base: Base
 
         @usableFromInline
-        internal var offset: Index<Element>
+        internal var offset: Int
 
         @inlinable
         public init(_ base: Base) {
             self.base = base
-            self.offset = .zero
+            self.offset = 0
         }
 
         @inlinable
-        public init(_ base: Base, offset: Index<Element>) {
+        public init(_ base: Base, offset: Int) {
             self.base = base
             self.offset = offset
         }
@@ -30,10 +30,10 @@ extension Parser.Tracked {
     public var input: Base { base }
 
     @inlinable
-    public var currentOffset: Index<Element> { offset }
+    public var currentOffset: Int { offset }
 }
 
-extension Parser.Tracked: Input.Input.`Protocol` {
+extension Parser.Tracked: __ParserInput.`Protocol` {
 
     public typealias Element = Base.Element
 
@@ -42,10 +42,10 @@ extension Parser.Tracked: Input.Input.`Protocol` {
         let baseCheckpoint: Base.Checkpoint
 
         @usableFromInline
-        let trackedOffset: Index<Element>
+        let trackedOffset: Int
 
         @inlinable
-        package init(baseCheckpoint: Base.Checkpoint, trackedOffset: Index<Element>) {
+        package init(baseCheckpoint: Base.Checkpoint, trackedOffset: Int) {
             self.baseCheckpoint = baseCheckpoint
             self.trackedOffset = trackedOffset
         }
@@ -57,7 +57,7 @@ extension Parser.Tracked: Input.Input.`Protocol` {
     }
 
     @inlinable
-    public var count: Index<Element>.Count {
+    public var count: Int {
         base.count
     }
 
@@ -71,8 +71,8 @@ extension Parser.Tracked: Input.Input.`Protocol` {
         let baseRange = base.bounds
         return Checkpoint(
             baseCheckpoint: baseRange.lowerBound,
-            trackedOffset: .zero
-        )...Checkpoint(baseCheckpoint: baseRange.upperBound, trackedOffset: .zero)
+            trackedOffset: 0
+        )...Checkpoint(baseCheckpoint: baseRange.upperBound, trackedOffset: 0)
     }
 
     @inlinable
@@ -84,12 +84,13 @@ extension Parser.Tracked: Input.Input.`Protocol` {
     @inlinable
     @discardableResult
     public mutating func advance() throws(Input.Stream.Error) -> Element {
-        offset += .one
-        return try base.advance()
+        let element = try base.advance()
+        offset += 1
+        return element
     }
 
     @inlinable
-    public mutating func advance(by count: Index<Element>.Count) {
+    public mutating func advance(by count: Int) {
         offset += count
         base.advance(by: count)
     }
@@ -115,7 +116,7 @@ extension Parser.Tracked {
     @inlinable
     public mutating func parseTracked<P: Parser.`Protocol`>(
         _ parser: P
-    ) throws(Parser.Error.Located<P.Failure>) -> (output: P.Output, start: Index<Element>)
+    ) throws(Parser.Error.Located<P.Failure>) -> (output: P.Output, start: Int)
     where P.Input == Base {
         let start = currentOffset
         let countBefore = base.count
@@ -125,7 +126,7 @@ extension Parser.Tracked {
         } catch {
             throw Parser.Error.Located(error, at: start)
         }
-        offset += countBefore.subtract.saturating(base.count)
+        offset += countBefore - base.count
         return (value, start)
     }
 }
@@ -133,12 +134,12 @@ extension Parser.Tracked {
 extension Parser.Tracked {
 
     @inlinable
-    public func savepoint() -> (base: Base, offset: Index<Element>) {
+    public func savepoint() -> (base: Base, offset: Int) {
         (base, offset)
     }
 
     @inlinable
-    public mutating func restore(to savepoint: (base: Base, offset: Index<Element>)) {
+    public mutating func restore(to savepoint: (base: Base, offset: Int)) {
         self.base = savepoint.base
         self.offset = savepoint.offset
     }

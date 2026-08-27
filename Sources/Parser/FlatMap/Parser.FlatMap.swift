@@ -1,3 +1,5 @@
+public import Either
+
 extension Parser {
 
     public struct FlatMap<Upstream: Parser.`Protocol`, Downstream: Parser.`Protocol`>

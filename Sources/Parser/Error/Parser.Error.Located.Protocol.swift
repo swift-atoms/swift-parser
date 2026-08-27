@@ -1,8 +1,6 @@
-public import Text
-
 public protocol __ParserErrorLocatedProtocol: Swift.Error {
 
-    var offset: Text.Position { get }
+    var offset: Parser.Position { get }
 }
 
 extension Parser.Error.Located {

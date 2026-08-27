@@ -1,3 +1,5 @@
+public import Either
+
 extension Parser {
 
     public struct Filter<Upstream: Parser.`Protocol`> {

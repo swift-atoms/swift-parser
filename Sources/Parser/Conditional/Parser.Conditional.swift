@@ -1,3 +1,5 @@
+public import Either
+
 extension Parser {
 
     public enum Conditional<First: Parser.`Protocol`, Second: Parser.`Protocol`>

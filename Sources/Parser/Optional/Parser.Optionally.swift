@@ -3,7 +3,7 @@ public import Input
 extension Parser {
 
     public struct Optionally<Wrapped: Parser.`Protocol`>
-    where Wrapped.Input: Input.Input.`Protocol` {
+    where Wrapped.Input: __ParserInput.`Protocol` {
 
         public let wrapped: Wrapped
 
@@ -28,7 +28,7 @@ extension Parser.Optionally: Parser.`Protocol` {
         do throws(Wrapped.Failure) {
             return try wrapped.parse(&input)
         } catch {
-            input.restore.to(__unchecked: (), checkpoint)
+            input.seek(to: checkpoint)
             return nil
         }
     }

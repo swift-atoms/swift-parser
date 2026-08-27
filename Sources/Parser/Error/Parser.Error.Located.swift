@@ -1,5 +1,7 @@
-public import Index
-public import Text
+extension Parser {
+
+    public typealias Position = Int
+}
 
 extension Parser.Error {
 
@@ -7,21 +9,13 @@ extension Parser.Error {
 
         public let error: E
 
-        public let offset: Text.Position
+        public let offset: Parser.Position
 
         @inlinable
-        public init(_ error: E, at offset: Text.Position) {
+        public init(_ error: E, at offset: Parser.Position) {
             self.error = error
             self.offset = offset
         }
-    }
-}
-
-extension Parser.Error.Located {
-
-    @inlinable
-    public init<Element: ~Copyable & ~Escapable>(_ error: E, at offset: Index<Element>) {
-        self.init(error, at: offset.retag(Text.self))
     }
 }
 

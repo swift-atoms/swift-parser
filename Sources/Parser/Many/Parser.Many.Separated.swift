@@ -81,7 +81,7 @@ extension Parser.Many.Separated: Parser.`Protocol` {
             do throws(Separator.Failure) {
                 _ = try separator.parse(&input)
             } catch {
-                input.restore.to(__unchecked: (), checkpoint)
+                input.seek(to: checkpoint)
                 break
             }
 
@@ -89,7 +89,7 @@ extension Parser.Many.Separated: Parser.`Protocol` {
                 let next = try element.parse(&input)
                 results.append(next)
             } catch {
-                input.restore.to(__unchecked: (), checkpoint)
+                input.seek(to: checkpoint)
                 break
             }
         }

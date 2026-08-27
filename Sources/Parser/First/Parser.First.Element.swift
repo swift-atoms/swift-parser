@@ -2,7 +2,7 @@ public import Input
 
 extension Parser.First {
 
-    public struct Element<Input: Input.Input.Streaming>
+    public struct Element<Input: __ParserInput.Streaming>
     where Input.Element: Copyable {
 
         @inlinable

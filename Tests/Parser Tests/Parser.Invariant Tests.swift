@@ -1,3 +1,4 @@
+import Either
 import Parser
 import Testing
 
@@ -52,7 +53,7 @@ extension `Parser.Invariant`.`Input Position` {
         var input = Parser.Test.Input([0x01, 0x02])
         let checkpoint = input.checkpoint
 
-        try parser.parse(&input)
+        _ = try parser.parse(&input)
 
         #expect(input.checkpoint == checkpoint)
     }
@@ -117,7 +118,7 @@ extension `Parser.Invariant`.`Input Position` {
         )
         var input = Parser.Test.Input([0x42, 0x43])
 
-        try parser.parse(&input)
+        _ = try parser.parse(&input)
 
         #expect(input.first == 0x43)
     }

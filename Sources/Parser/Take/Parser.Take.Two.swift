@@ -1,3 +1,5 @@
+public import Either
+
 extension Parser.Take {
 
     public struct Two<P0: Parser.`Protocol`, P1: Parser.`Protocol`>

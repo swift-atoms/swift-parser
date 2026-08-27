@@ -1,5 +1,3 @@
-public import Index
-
 extension Parser {
 
     public struct Spanned<T> {
@@ -33,18 +31,6 @@ extension Parser.Spanned {
 }
 
 extension Parser.Spanned: Sendable where T: Sendable {}
-
-extension Parser.Spanned {
-
-    @inlinable
-    public init<Element: ~Copyable & ~Escapable>(
-        _ value: T,
-        start: Index<Element>,
-        end: Index<Element>
-    ) {
-        self.init(value, start: Int(bitPattern: start), end: Int(bitPattern: end))
-    }
-}
 
 extension Parser.Spanned: Equatable where T: Equatable {}
 

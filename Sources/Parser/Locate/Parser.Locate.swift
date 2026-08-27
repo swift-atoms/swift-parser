@@ -2,7 +2,7 @@ public import Input
 
 extension Parser {
 
-    public struct Locate<Base: Input.Input.`Protocol`, Upstream: Parser.`Protocol`>
+    public struct Locate<Base: __ParserInput.`Protocol`, Upstream: Parser.`Protocol`>
     where Upstream.Input == Base {
         @usableFromInline
         let upstream: Upstream
@@ -28,7 +28,7 @@ extension Parser.Locate: Parser.`Protocol` {
     }
 }
 
-extension Parser.`Protocol` where Input: Input.Input.`Protocol` & Copyable {
+extension Parser.`Protocol` where Input: __ParserInput.`Protocol` & Copyable {
 
     @inlinable
     public func located() -> Parser.Locate<Input, Self> {

@@ -31,23 +31,11 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-product.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/swift-atoms/swift-input.git",
             branch: "main"
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-collection.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-index.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-text.git",
             branch: "main"
         ),
     ],
@@ -56,11 +44,8 @@ let package = Package(
             name: "Parser",
             dependencies: [
                 .product(name: "Either", package: "swift-either"),
-                .product(name: "Product", package: "swift-product"),
                 .product(name: "Input", package: "swift-input"),
                 .product(name: "Collection", package: "swift-collection"),
-                .product(name: "Index", package: "swift-index"),
-                .product(name: "Text", package: "swift-text"),
             ]
         ),
         .target(
@@ -76,7 +61,13 @@ let package = Package(
         ),
         .testTarget(
             name: "Parser Tests",
-            dependencies: ["Parser"],
+            dependencies: [
+                "Parser",
+                "Parser Standard Library Integration",
+                .product(name: "Collection", package: "swift-collection"),
+                .product(name: "Either", package: "swift-either"),
+                .product(name: "Input", package: "swift-input"),
+            ],
             path: "Tests/Parser Tests"
         ),
     ],

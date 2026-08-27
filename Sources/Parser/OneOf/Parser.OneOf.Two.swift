@@ -1,5 +1,4 @@
 public import Input
-public import Product
 
 extension Parser.OneOf {
 
@@ -7,7 +6,7 @@ extension Parser.OneOf {
     where
         P0.Input == P1.Input,
         P0.Output == P1.Output,
-        P0.Input: Input.Input.`Protocol`
+        P0.Input: __ParserInput.`Protocol`
     {
 
         public let p0: P0
@@ -22,13 +21,29 @@ extension Parser.OneOf {
     }
 }
 
+extension Parser.OneOf.Two {
+
+    public struct Error: Swift.Error {
+
+        public let first: P0.Failure
+
+        public let second: P1.Failure
+
+        @inlinable
+        public init(_ first: P0.Failure, _ second: P1.Failure) {
+            self.first = first
+            self.second = second
+        }
+    }
+}
+
 extension Parser.OneOf.Two: Parser.`Protocol` {
 
     public typealias Input = P0.Input
 
     public typealias Output = P0.Output
 
-    public typealias Failure = Product<P0.Failure, P1.Failure>
+    public typealias Failure = Error
 
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
@@ -37,7 +52,7 @@ extension Parser.OneOf.Two: Parser.`Protocol` {
         do throws(P0.Failure) {
             return try p0.parse(&input)
         } catch let error0 {
-            input.restore.to(__unchecked: (), checkpoint)
+            input.seek(to: checkpoint)
             do throws(P1.Failure) {
                 return try p1.parse(&input)
             } catch let error1 {
