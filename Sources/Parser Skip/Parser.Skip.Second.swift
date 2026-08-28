@@ -15,7 +15,8 @@ extension Parser.Skip {
     }
 }
 
-extension Parser.Skip.Second: Parser.`Protocol` {
+extension Parser.Skip.Second: Parser.`Protocol`
+where P0.Output: Escapable {
 
     public typealias Input = P0.Input
 

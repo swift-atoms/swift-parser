@@ -1,31 +1,54 @@
 extension Parser {
 
-    public struct Map<Upstream: Parser.`Protocol`, Output> {
+    @frozen
+    public struct Map<
+        Upstream: Parser.`Protocol` & ~Copyable,
+        Output: ~Copyable & Escapable,
+        Failure: Swift.Error
+    >: ~Copyable {
         @usableFromInline
         internal let upstream: Upstream
 
         @usableFromInline
-        internal let transform: (Upstream.Output) -> Output
+        internal let transform:
+            (consuming Upstream.Output) throws(Failure) -> Output
+
+        @usableFromInline
+        internal let failure: (Upstream.Failure) -> Failure
 
         @inlinable
         public init(
-            upstream: Upstream,
-            transform: @escaping (Upstream.Output) -> Output
+            upstream: consuming Upstream,
+            transform: @escaping
+                (consuming Upstream.Output) throws(Failure) -> Output,
+            failure: @escaping (Upstream.Failure) -> Failure
         ) {
             self.upstream = upstream
             self.transform = transform
+            self.failure = failure
         }
     }
 }
 
-extension Parser.Map: Parser.`Protocol` {
+extension Parser.Map: Copyable
+where Upstream: Copyable, Output: ~Copyable & Escapable
+{}
+
+extension Parser.Map: Parser.`Protocol`
+where Output: ~Copyable & Escapable {
 
     public typealias Input = Upstream.Input
 
-    public typealias Failure = Upstream.Failure
-
     @inlinable
-    public func parse(_ input: inout Input) throws(Failure) -> Output {
-        transform(try upstream.parse(&input))
+    public borrowing func parse(
+        _ input: inout Input
+    ) throws(Failure) -> Output {
+        let value: Upstream.Output
+        do throws(Upstream.Failure) {
+            value = try upstream.parse(&input)
+        } catch {
+            throw failure(error)
+        }
+        return try transform(value)
     }
 }

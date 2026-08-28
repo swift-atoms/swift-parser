@@ -2,7 +2,7 @@
 # Triaged by AI-assisted bulk pass (2026-04-29).
 description: "Byte-oriented parser combinators split into narrow, independently importable modules for Swift."
 topics:
-  - molecules
+  - primitives
   - parser
 homepage: "https://swift-institute.org"
 readme:

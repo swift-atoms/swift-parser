@@ -11,7 +11,7 @@ extension Parser.Take {
         @inlinable
         public init(
             _ transform: @escaping (BodyOutput) -> Output,
-            @Parser.Take.Builder<Input> _ build: () -> Body
+            @Parser.Builder<Input> _ build: () -> Body
         ) {
             self.body = build()
             self.transform = transform

@@ -1,4 +1,5 @@
-import Parser_Test_Support
+import Parser_Fail
+import Parser_Match
 import Testing
 
 @Suite
@@ -10,10 +11,10 @@ struct `Parser.Fail` {
 extension `Parser.Fail`.Unit {
     @Test
     func `always throws the provided error`() {
-        let parser = Parser.Fail<Parser.Test.Input, Int, Parser.Match.Error>(
+        let parser = Parser.Fail<[UInt8], Int, Parser.Match.Error>(
             .predicateFailed(description: "test error")
         )
-        var input = Parser.Test.Input([0x01, 0x02])
+        var input: [UInt8] = [0x01, 0x02]
 
         #expect(throws: Parser.Match.Error.self) {
             try parser.parse(&input)
@@ -24,13 +25,17 @@ extension `Parser.Fail`.Unit {
 extension `Parser.Fail`.`Edge Case` {
     @Test
     func `throws on empty input without consuming`() {
-        let parser = Parser.Fail<Parser.Test.Input, Void, Parser.Constraint.Error>(
-            .countTooLow(expected: 1, got: 0)
+        let parser = Parser.Fail<[UInt8], Void, TestError>(
+            .expectedInput
         )
-        var input = Parser.Test.Input([])
+        var input: [UInt8] = []
 
-        #expect(throws: Parser.Constraint.Error.self) {
+        #expect(throws: TestError.self) {
             try parser.parse(&input)
         }
     }
+}
+
+private enum TestError: Error {
+    case expectedInput
 }

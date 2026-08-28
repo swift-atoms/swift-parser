@@ -25,6 +25,7 @@ extension Parser.Error.Map: Parser.`Protocol` {
     public typealias Failure = NewFailure
 
     @inlinable
+    @_lifetime(borrow self, &input)
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         do throws(Upstream.Failure) {
             return try upstream.parse(&input)

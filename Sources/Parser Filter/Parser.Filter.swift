@@ -1,6 +1,7 @@
 extension Parser {
 
-    public struct Filter<Upstream: Parser.`Protocol`> {
+    public struct Filter<Upstream: Parser.`Protocol`>
+    where Upstream.Output: Copyable & Escapable {
         @usableFromInline
         internal let upstream: Upstream
 
@@ -18,13 +19,14 @@ extension Parser {
     }
 }
 
-extension Parser.Filter: Parser.`Protocol` {
+extension Parser.Filter: Parser.`Protocol`
+where Upstream.Output: Copyable & Escapable {
 
     public typealias Input = Upstream.Input
 
     public typealias Output = Upstream.Output
 
-    public typealias Failure = Either<Upstream.Failure, Parser.Constraint.Error>
+    public typealias Failure = Either<Upstream.Failure, Parser.Filter<Upstream>.Error>
 
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Output {
