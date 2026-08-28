@@ -1,0 +1,65 @@
+import Parser_Test_Support
+import Testing
+
+@Suite
+struct `Parser.Consume.Exactly` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+}
+
+extension `Parser.Consume.Exactly`.Unit {
+    @Test
+    func `consumes exactly N elements`() throws(any Swift.Error) {
+        let parser = Parser.Consume.Exactly<Parser.Test.Input>(3)
+        var input: Parser.Test.Input = [0x01, 0x02, 0x03, 0x04, 0x05]
+
+        let result = try parser.parse(&input)
+
+        #expect(result == [0x01, 0x02, 0x03])
+        #expect(!input.isEmpty)
+    }
+
+    @Test
+    func `consumes all when count equals input length`() throws(any Swift.Error) {
+        let parser = Parser.Consume.Exactly<Parser.Test.Input>(3)
+        var input: Parser.Test.Input = [0x0A, 0x0B, 0x0C]
+
+        let result = try parser.parse(&input)
+
+        #expect(result == [0x0A, 0x0B, 0x0C])
+        #expect(input.isEmpty)
+    }
+}
+
+extension `Parser.Consume.Exactly`.`Edge Case` {
+    @Test
+    func `fails when input has fewer elements than requested`() {
+        let parser = Parser.Consume.Exactly<Parser.Test.Input>(5)
+        var input: Parser.Test.Input = [0x01, 0x02]
+
+        #expect(throws: Parser.Constraint.Error.self) {
+            try parser.parse(&input)
+        }
+    }
+
+    @Test
+    func `zero count succeeds without consuming`() throws(any Swift.Error) {
+        let parser = Parser.Consume.Exactly<Parser.Test.Input>(0)
+        var input: Parser.Test.Input = [0x01]
+
+        let result = try parser.parse(&input)
+
+        #expect(result.isEmpty)
+        #expect(!input.isEmpty)
+    }
+
+    @Test
+    func `zero count succeeds on empty input`() throws(any Swift.Error) {
+        let parser = Parser.Consume.Exactly<Parser.Test.Input>(0)
+        var input: Parser.Test.Input = []
+
+        let result = try parser.parse(&input)
+
+        #expect(result.isEmpty)
+    }
+}
