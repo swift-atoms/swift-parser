@@ -16,7 +16,7 @@ extension Parser {
     }
 }
 
-extension Parser.Lazy: Parser.`Protocol` {
+extension Parser.Lazy: Parser.`Protocol` where P.Output: Escapable {
 
     public typealias Input = P.Input
 

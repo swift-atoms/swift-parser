@@ -7,7 +7,7 @@ extension Parser.Take {
 
         @inlinable
         public init(
-            @Parser.Take.Builder<Input> _ build: () -> Body
+            @Parser.Builder<Input> _ build: () -> Body
         ) {
             self.body = build()
         }

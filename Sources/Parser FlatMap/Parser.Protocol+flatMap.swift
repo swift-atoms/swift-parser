@@ -2,9 +2,9 @@ extension Parser.`Protocol` {
 
     @inlinable
     public func flatMap<P: Parser.`Protocol`>(
-        _ transform: @escaping (Output) -> P
+        _ transform: @escaping (consuming Output) -> P
     ) -> Parser.FlatMap<Self, P>
-    where P.Input == Input {
+    where P.Input == Input, P.Output: Escapable {
         .init(upstream: self, transform: transform)
     }
 

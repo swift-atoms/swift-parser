@@ -1,5 +1,5 @@
 import Parser
-import Parser_Test_Support
+import Parser_Always
 import Testing
 
 @Suite
@@ -11,8 +11,8 @@ struct `Parser.Always` {
 extension `Parser.Always`.Unit {
     @Test
     func `returns provided value without consuming input`() {
-        let parser = Parser.Always<Parser.Test.Input, Int>(42)
-        var input = Parser.Test.Input([0x01, 0x02, 0x03])
+        let parser = Parser.Always<[UInt8], Int>(42)
+        var input: [UInt8] = [0x01, 0x02, 0x03]
 
         let result = parser.parse(&input)
 
@@ -22,8 +22,8 @@ extension `Parser.Always`.Unit {
 
     @Test
     func `produces Void output`() {
-        let parser = Parser.Always<Parser.Test.Input, Void>(())
-        var input = Parser.Test.Input([0xFF])
+        let parser = Parser.Always<[UInt8], Void>(())
+        var input: [UInt8] = [0xFF]
 
         parser.parse(&input)
 
@@ -34,8 +34,8 @@ extension `Parser.Always`.Unit {
 extension `Parser.Always`.`Edge Case` {
     @Test
     func `succeeds on empty input`() {
-        let parser = Parser.Always<Parser.Test.Input, String>("hello")
-        var input = Parser.Test.Input([])
+        let parser = Parser.Always<[UInt8], String>("hello")
+        var input: [UInt8] = []
 
         let result = parser.parse(&input)
 

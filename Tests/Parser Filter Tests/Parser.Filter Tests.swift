@@ -1,45 +1,54 @@
-import Parser_Test_Support
+import Either
+import Parser
+import Parser_Filter
 import Testing
 
 @Suite
 struct `Parser.Filter` {
-    @Suite struct Unit {}
-    @Suite struct `Edge Case` {}
-}
 
-extension `Parser.Filter`.Unit {
     @Test
-    func `passes when predicate returns true`() throws(any Swift.Error) {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-            .filter { $0 > 0x00 }
-        var input = Parser.Test.Input([0x42])
+    func `passes output satisfying its predicate`() throws(any Swift.Error) {
+        var input: Void = ()
+        let parser = Value(3).filter { $0 > 0 }
 
-        let result = try parser.parse(&input)
+        let output = try parser.parse(&input)
 
-        #expect(result == 0x42)
-    }
-}
-
-extension `Parser.Filter`.`Edge Case` {
-    @Test
-    func `fails when predicate returns false`() {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-            .filter { $0 == 0x00 }
-        var input = Parser.Test.Input([0xFF])
-
-        #expect(throws: (any Swift.Error).self) {
-            try parser.parse(&input)
-        }
+        #expect(output == 3)
     }
 
     @Test
-    func `upstream failure propagates through filter`() {
-        let parser = Parser.First.Element<Parser.Test.Input>()
-            .filter { _ in true }
-        var input = Parser.Test.Input([])
+    func `owns predicate validation failure`() {
+        var input: Void = ()
+        let parser = Value(-1).filter { $0 > 0 }
 
-        #expect(throws: (any Swift.Error).self) {
-            try parser.parse(&input)
+        do {
+            _ = try parser.parse(&input)
+            Issue.record("Expected the filter predicate to fail")
+        } catch {
+            switch error {
+            case .left:
+                Issue.record("A Never upstream failure is unreachable")
+            case .right(.validationFailed(let value, let reason)):
+                #expect(value == "-1")
+                #expect(reason == "filter predicate")
+            }
         }
+    }
+}
+
+private struct Value: Parser.`Protocol` {
+    typealias Input = Void
+    typealias Output = Int
+    typealias Failure = Never
+    typealias Body = Never
+
+    let value: Int
+
+    init(_ value: Int) {
+        self.value = value
+    }
+
+    borrowing func parse(_ input: inout Void) -> Int {
+        value
     }
 }

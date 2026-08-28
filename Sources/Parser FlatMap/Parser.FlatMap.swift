@@ -1,17 +1,20 @@
 extension Parser {
 
     public struct FlatMap<Upstream: Parser.`Protocol`, Downstream: Parser.`Protocol`>
-    where Upstream.Input == Downstream.Input {
+    where
+        Upstream.Input == Downstream.Input,
+        Downstream.Output: Escapable
+    {
         @usableFromInline
         let upstream: Upstream
 
         @usableFromInline
-        let transform: (Upstream.Output) -> Downstream
+        let transform: (consuming Upstream.Output) -> Downstream
 
         @inlinable
         public init(
             upstream: Upstream,
-            transform: @escaping (Upstream.Output) -> Downstream
+            transform: @escaping (consuming Upstream.Output) -> Downstream
         ) {
             self.upstream = upstream
             self.transform = transform
@@ -19,7 +22,7 @@ extension Parser {
     }
 }
 
-extension Parser.FlatMap: Parser.`Protocol` {
+extension Parser.FlatMap: Parser.`Protocol` where Downstream.Output: Escapable {
 
     public typealias Input = Upstream.Input
 

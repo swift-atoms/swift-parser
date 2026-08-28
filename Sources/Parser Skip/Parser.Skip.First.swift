@@ -24,6 +24,7 @@ extension Parser.Skip.First: Parser.`Protocol` {
     public typealias Failure = Either<P0.Failure, P1.Failure>
 
     @inlinable
+    @_lifetime(borrow self, &input)
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         do throws(P0.Failure) {
             _ = try p0.parse(&input)

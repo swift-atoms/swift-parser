@@ -23,7 +23,8 @@ extension Parser {
     }
 }
 
-extension Parser.Trace: Parser.`Protocol` {
+extension Parser.Trace: Parser.`Protocol`
+where Upstream.Output: Copyable & Escapable {
 
     public typealias Input = Upstream.Input
 
@@ -45,7 +46,7 @@ extension Parser.Trace: Parser.`Protocol` {
     }
 }
 
-extension Parser.`Protocol` {
+extension Parser.`Protocol` where Output: Copyable & Escapable {
 
     @inlinable
     public func trace(

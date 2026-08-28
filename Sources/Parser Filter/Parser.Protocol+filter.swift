@@ -1,4 +1,4 @@
-extension Parser.`Protocol` {
+extension Parser.`Protocol` where Output: Copyable & Escapable {
 
     @inlinable
     public func filter(
