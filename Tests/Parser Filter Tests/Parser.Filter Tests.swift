@@ -1,6 +1,7 @@
 import Either
 import Parser
 import Parser_Filter
+import Predicate
 import Testing
 
 @Suite
@@ -14,6 +15,36 @@ struct `Parser.Filter` {
         let output = try parser.parse(&input)
 
         #expect(output == 3)
+    }
+
+    @Test
+    func `accepts a domain Predicate`() throws(any Swift.Error) {
+        var input: Void = ()
+        let parser = Value(3).filter(.greater.than(0))
+
+        let output = try parser.parse(&input)
+
+        #expect(output == 3)
+    }
+
+    @Test
+    func `composes Predicate algebra at the filter site`() {
+        var input: Void = ()
+        let positive = Predicate<Int> { $0 > 0 }
+        let even = Predicate<Int> { $0.isMultiple(of: 2) }
+        let parser = Value(3).filter(positive && even)
+
+        do {
+            _ = try parser.parse(&input)
+            Issue.record("Expected the composed predicate to fail")
+        } catch {
+            switch error {
+            case .left:
+                Issue.record("A Never upstream failure is unreachable")
+            case .right(.validationFailed(let value, _)):
+                #expect(value == "3")
+            }
+        }
     }
 
     @Test
