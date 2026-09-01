@@ -1,6 +1,6 @@
 extension Parser {
 
-    public protocol `Protocol`: ~Copyable {
+    public protocol `Protocol`<Input, Output, Failure>: ~Copyable {
 
         associatedtype Input: ~Copyable & ~Escapable
 
