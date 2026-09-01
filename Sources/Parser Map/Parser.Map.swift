@@ -10,8 +10,7 @@ extension Parser {
         internal let upstream: Upstream
 
         @usableFromInline
-        internal let transform:
-            (consuming Upstream.Output) throws(Failure) -> Output
+        internal let transform: (consuming Upstream.Output) throws(Failure) -> Output
 
         @usableFromInline
         internal let failure: (Upstream.Failure) -> Failure
@@ -19,8 +18,7 @@ extension Parser {
         @inlinable
         public init(
             upstream: consuming Upstream,
-            transform: @escaping
-                (consuming Upstream.Output) throws(Failure) -> Output,
+            transform: @escaping (consuming Upstream.Output) throws(Failure) -> Output,
             failure: @escaping (Upstream.Failure) -> Failure
         ) {
             self.upstream = upstream
