@@ -16,15 +16,12 @@ let package = Package(
         .library(name: "Parser Witness", targets: ["Parser Witness"]),
         .library(name: "Parser Error", targets: ["Parser Error"]),
         .library(name: "Parser Match", targets: ["Parser Match"]),
-        .library(name: "Either Parser", targets: ["Either Parser"]),
         .library(name: "Parser Map", targets: ["Parser Map"]),
         .library(name: "Parser FlatMap", targets: ["Parser FlatMap"]),
         .library(name: "Parser Filter", targets: ["Parser Filter"]),
         .library(name: "Parser Skip", targets: ["Parser Skip"]),
         .library(name: "Parser Take", targets: ["Parser Take"]),
-        .library(name: "Parser Always", targets: ["Parser Always"]),
         .library(name: "Parser Fail", targets: ["Parser Fail"]),
-        .library(name: "Parser Lazy", targets: ["Parser Lazy"]),
         .library(name: "Parser Trace", targets: ["Parser Trace"]),
         .library(
             name: "Parser Standard Library Integration",
@@ -34,6 +31,10 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/swift-atoms/swift-either.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-predicate.git",
             branch: "main"
         ),
     ],
@@ -50,13 +51,6 @@ let package = Package(
         .target(
             name: "Parser Match",
             dependencies: [.target(name: "Parser")]
-        ),
-        .target(
-            name: "Either Parser",
-            dependencies: [
-                .target(name: "Parser"),
-                .product(name: "Either", package: "swift-either"),
-            ]
         ),
         .target(
             name: "Parser Map",
@@ -77,6 +71,7 @@ let package = Package(
             dependencies: [
                 .target(name: "Parser"),
                 .product(name: "Either", package: "swift-either"),
+                .product(name: "Predicate", package: "swift-predicate"),
             ]
         ),
         .target(
@@ -91,15 +86,7 @@ let package = Package(
             dependencies: [.target(name: "Parser")]
         ),
         .target(
-            name: "Parser Always",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .target(
             name: "Parser Fail",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .target(
-            name: "Parser Lazy",
             dependencies: [.target(name: "Parser")]
         ),
         .target(
@@ -118,21 +105,6 @@ let package = Package(
             dependencies: [.target(name: "Parser")]
         ),
         .testTarget(
-            name: "Either Parser Tests",
-            dependencies: [
-                .target(name: "Either Parser"),
-                .target(name: "Parser"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .testTarget(
-            name: "Parser Always Tests",
-            dependencies: [
-                .target(name: "Parser"),
-                .target(name: "Parser Always"),
-            ]
-        ),
-        .testTarget(
             name: "Parser Map Tests",
             dependencies: [
                 .target(name: "Parser"),
@@ -147,6 +119,7 @@ let package = Package(
                 .target(name: "Parser"),
                 .target(name: "Parser Filter"),
                 .product(name: "Either", package: "swift-either"),
+                .product(name: "Predicate", package: "swift-predicate"),
             ]
         ),
         .testTarget(

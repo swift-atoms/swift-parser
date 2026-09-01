@@ -6,15 +6,23 @@ extension Parser {
         internal let upstream: Upstream
 
         @usableFromInline
-        internal let predicate: (Upstream.Output) -> Bool
+        internal let predicate: Predicate<Upstream.Output>
+
+        @inlinable
+        public init(
+            upstream: Upstream,
+            predicate: Predicate<Upstream.Output>
+        ) {
+            self.upstream = upstream
+            self.predicate = predicate
+        }
 
         @inlinable
         public init(
             upstream: Upstream,
             predicate: @escaping (Upstream.Output) -> Bool
         ) {
-            self.upstream = upstream
-            self.predicate = predicate
+            self.init(upstream: upstream, predicate: Predicate(predicate))
         }
     }
 }
