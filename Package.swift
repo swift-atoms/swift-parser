@@ -15,14 +15,11 @@ let package = Package(
         .library(name: "Parser", targets: ["Parser"]),
         .library(name: "Parser Witness", targets: ["Parser Witness"]),
         .library(name: "Parser Error", targets: ["Parser Error"]),
-        .library(name: "Parser Match", targets: ["Parser Match"]),
         .library(name: "Parser Map", targets: ["Parser Map"]),
         .library(name: "Parser FlatMap", targets: ["Parser FlatMap"]),
         .library(name: "Parser Filter", targets: ["Parser Filter"]),
         .library(name: "Parser Skip", targets: ["Parser Skip"]),
         .library(name: "Parser Take", targets: ["Parser Take"]),
-        .library(name: "Parser Fail", targets: ["Parser Fail"]),
-        .library(name: "Parser Trace", targets: ["Parser Trace"]),
         .library(
             name: "Parser Standard Library Integration",
             targets: ["Parser Standard Library Integration"]
@@ -46,10 +43,6 @@ let package = Package(
         ),
         .target(
             name: "Parser Error",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .target(
-            name: "Parser Match",
             dependencies: [.target(name: "Parser")]
         ),
         .target(
@@ -86,23 +79,28 @@ let package = Package(
             dependencies: [.target(name: "Parser")]
         ),
         .target(
-            name: "Parser Fail",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .target(
-            name: "Parser Trace",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .target(
             name: "Parser Standard Library Integration",
             dependencies: [
                 .target(name: "Parser"),
-                .target(name: "Parser Match"),
             ]
         ),
         .testTarget(
             name: "Parser Tests",
-            dependencies: [.target(name: "Parser")]
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Skip"),
+                .target(name: "Parser Take"),
+                .product(name: "Either", package: "swift-either"),
+            ]
+        ),
+        .testTarget(
+            name: "Parser Error Tests",
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Error"),
+                .target(name: "Parser Map"),
+                .product(name: "Either", package: "swift-either"),
+            ]
         ),
         .testTarget(
             name: "Parser Map Tests",
@@ -120,13 +118,6 @@ let package = Package(
                 .target(name: "Parser Filter"),
                 .product(name: "Either", package: "swift-either"),
                 .product(name: "Predicate", package: "swift-predicate"),
-            ]
-        ),
-        .testTarget(
-            name: "Parser Fail Tests",
-            dependencies: [
-                .target(name: "Parser Fail"),
-                .target(name: "Parser Match"),
             ]
         ),
         .testTarget(

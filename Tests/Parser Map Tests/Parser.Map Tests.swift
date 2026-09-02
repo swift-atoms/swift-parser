@@ -8,7 +8,7 @@ struct `Parser.Map Tests` {
 
     @Test
     func `nonthrowing stages remain exactly nonthrowing`() {
-        let parser = Succeed().map { $0 + 1 }
+        let parser = Incremented()
         requireFailure(parser, Never.self)
 
         var input = 41
@@ -19,7 +19,7 @@ struct `Parser.Map Tests` {
 
     @Test
     func `fallible upstream with nonthrowing transform preserves upstream failure`() {
-        let parser = Fail().map { $0 + 1 }
+        let parser = IncrementedFallibleUpstream()
         requireFailure(parser, UpstreamFailure.self)
 
         var input = 0
@@ -30,10 +30,7 @@ struct `Parser.Map Tests` {
 
     @Test
     func `nonthrowing upstream with throwing transform exposes only transform failure`() {
-        let parser = Succeed().map {
-            (_: consuming Int) throws(TransformFailure) -> Int in
-            throw .failed
-        }
+        let parser = ThrowingTransform()
         requireFailure(parser, TransformFailure.self)
 
         var input = 0
@@ -44,10 +41,7 @@ struct `Parser.Map Tests` {
 
     @Test
     func `two fallible stages use Either`() {
-        let upstream = Fail().map {
-            (value: consuming Int) throws(TransformFailure) -> Int in
-            value + 1
-        }
+        let upstream = FallibleUpstreamThrowingTransform()
         requireFailure(
             upstream,
             Either<UpstreamFailure, TransformFailure>.self
@@ -64,10 +58,7 @@ struct `Parser.Map Tests` {
             return failure.left == .failed
         }
 
-        let transform = FallibleSucceed().map {
-            (_: consuming Int) throws(TransformFailure) -> Int in
-            throw .failed
-        }
+        let transform = FallibleUpstreamFailingTransform()
         requireFailure(
             transform,
             Either<UpstreamFailure, TransformFailure>.self
@@ -86,11 +77,7 @@ struct `Parser.Map Tests` {
 
     @Test
     func `throws Never transform remains exactly nonthrowing`() {
-        func increment(_ value: consuming Int) throws(Never) -> Int {
-            value + 1
-        }
-
-        let parser = Succeed().map(increment)
+        let parser = IncrementedByNeverThrowingFunction()
         requireFailure(parser, Never.self)
 
         var input = 41
@@ -101,25 +88,18 @@ struct `Parser.Map Tests` {
 
     @Test
     func `fallible upstream with throws Never transform preserves upstream failure`() {
-        func increment(_ value: consuming Int) throws(Never) -> Int {
-            value + 1
-        }
-
-        let parser = Fail().map(increment)
+        let parser = FallibleUpstreamNeverThrowingFunction()
         requireFailure(parser, UpstreamFailure.self)
     }
 
     @Test
     func `constructing a parser with a throwing transform is nonthrowing`() {
-        _ = Succeed().map {
-            (value: consuming Int) throws(TransformFailure) -> Int in
-            value + 1
-        }
+        _ = ThrowingTransform().body
     }
 
     @Test
     func `Map consumes noncopyable nonescapable output`() {
-        let parser = Linear().map { token in token.value + 1 }
+        let parser = IncrementedScopedToken()
         requireFailure(parser, Never.self)
 
         var input = 41
@@ -130,7 +110,7 @@ struct `Parser.Map Tests` {
 
     @Test
     func `Map produces noncopyable output`() {
-        let parser = Succeed().map { LinearResult(value: $0 + 1) }
+        let parser = IncrementedIntoLinearResult()
         requireFailure(parser, Never.self)
 
         var input = 41
@@ -152,6 +132,117 @@ where
     P.Output: ~Copyable & ~Escapable,
     P.Failure == Failure
 {}
+
+private func increment(_ value: consuming Int) throws(Never) -> Int {
+    value + 1
+}
+
+private struct Incremented: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = Never
+
+    var body: some Parser.`Protocol`<Int, Int, Never> {
+        Succeed().map { $0 + 1 }
+    }
+}
+
+private struct IncrementedFallibleUpstream: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = UpstreamFailure
+
+    var body: some Parser.`Protocol`<Int, Int, UpstreamFailure> {
+        Fail().map { $0 + 1 }
+    }
+}
+
+private struct ThrowingTransform: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = TransformFailure
+
+    var body: some Parser.`Protocol`<Int, Int, TransformFailure> {
+        Succeed().map {
+            (_: consuming Int) throws(TransformFailure) -> Int in
+            throw .failed
+        }
+    }
+}
+
+private struct FallibleUpstreamThrowingTransform: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = Either<UpstreamFailure, TransformFailure>
+
+    var body: some Parser.`Protocol`<
+        Int,
+        Int,
+        Either<UpstreamFailure, TransformFailure>
+    > {
+        Fail().map {
+            (value: consuming Int) throws(TransformFailure) -> Int in
+            value + 1
+        }
+    }
+}
+
+private struct FallibleUpstreamFailingTransform: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = Either<UpstreamFailure, TransformFailure>
+
+    var body: some Parser.`Protocol`<
+        Int,
+        Int,
+        Either<UpstreamFailure, TransformFailure>
+    > {
+        FallibleSucceed().map {
+            (_: consuming Int) throws(TransformFailure) -> Int in
+            throw .failed
+        }
+    }
+}
+
+private struct IncrementedByNeverThrowingFunction: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = Never
+
+    var body: some Parser.`Protocol`<Int, Int, Never> {
+        Succeed().map(increment)
+    }
+}
+
+private struct FallibleUpstreamNeverThrowingFunction: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = UpstreamFailure
+
+    var body: some Parser.`Protocol`<Int, Int, UpstreamFailure> {
+        Fail().map(increment)
+    }
+}
+
+private struct IncrementedScopedToken: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = Never
+
+    var body: some Parser.`Protocol`<Int, Int, Never> {
+        Linear().map { token in token.value + 1 }
+    }
+}
+
+private struct IncrementedIntoLinearResult: Parser.`Protocol` {
+    typealias Input = Int
+    typealias Output = LinearResult
+    typealias Failure = Never
+
+    var body: some Parser.`Protocol`<Int, LinearResult, Never> {
+        Succeed().map { LinearResult(value: $0 + 1) }
+    }
+}
 
 private enum UpstreamFailure: Swift.Error, Equatable {
     case failed

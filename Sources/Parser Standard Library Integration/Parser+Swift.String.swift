@@ -1,4 +1,4 @@
-public import Parser_Match
+public import Parser
 
 extension String: Parser::Parser.`Protocol` {
 
@@ -6,12 +6,12 @@ extension String: Parser::Parser.`Protocol` {
 
     public typealias Output = Void
 
-    public typealias Failure = Parser::Parser.Match.Error
+    public typealias Failure = Parser::Parser.Literal.Error
 
     @inlinable
     public func parse(_ input: inout Substring) throws(Failure) {
         guard input.hasPrefix(self) else {
-            throw .literalMismatch(expected: self, found: String(input.prefix(self.count)))
+            throw .mismatch(expected: self, found: String(input.prefix(self.count)))
         }
         input = input.dropFirst(self.count)
     }
