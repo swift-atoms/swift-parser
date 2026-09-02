@@ -146,7 +146,12 @@ private func requireFailure<
 >(
     _ parser: borrowing P,
     _: Failure.Type
-) where P.Failure == Failure {}
+)
+where
+    P.Input: ~Copyable & ~Escapable,
+    P.Output: ~Copyable & ~Escapable,
+    P.Failure == Failure
+{}
 
 private enum UpstreamFailure: Swift.Error, Equatable {
     case failed

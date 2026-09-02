@@ -3,6 +3,9 @@ extension Parser {
     public struct FlatMap<Upstream: Parser.`Protocol`, Downstream: Parser.`Protocol`>
     where
         Upstream.Input == Downstream.Input,
+        Upstream.Input: ~Copyable & ~Escapable,
+        Downstream.Input: ~Copyable & ~Escapable,
+        Upstream.Output: ~Copyable & ~Escapable,
         Downstream.Output: Escapable
     {
         @usableFromInline
@@ -22,7 +25,13 @@ extension Parser {
     }
 }
 
-extension Parser.FlatMap: Parser.`Protocol` where Downstream.Output: Escapable {
+extension Parser.FlatMap: Parser.`Protocol`
+where
+    Upstream.Input: ~Copyable & ~Escapable,
+    Downstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: ~Copyable & ~Escapable,
+    Downstream.Output: Escapable
+{
 
     public typealias Input = Upstream.Input
 

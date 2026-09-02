@@ -5,7 +5,11 @@ extension Parser {
         Upstream: Parser.`Protocol` & ~Copyable,
         Output: ~Copyable & Escapable,
         Failure: Swift.Error
-    >: ~Copyable {
+    >: ~Copyable
+    where
+        Upstream.Input: ~Copyable & ~Escapable,
+        Upstream.Output: ~Copyable & ~Escapable
+    {
         @usableFromInline
         internal let upstream: Upstream
 
@@ -29,11 +33,17 @@ extension Parser {
 }
 
 extension Parser.Map: Copyable
-where Upstream: Copyable, Output: ~Copyable & Escapable
+where
+    Upstream: Parser.`Protocol`<Upstream.Input, Upstream.Output, Upstream.Failure> & Copyable,
+    Output: ~Copyable & Escapable
 {}
 
 extension Parser.Map: Parser.`Protocol`
-where Output: ~Copyable & Escapable {
+where
+    Output: ~Copyable & Escapable,
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: ~Copyable & ~Escapable
+{
 
     public typealias Input = Upstream.Input
 

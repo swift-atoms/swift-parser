@@ -5,7 +5,11 @@ extension Parser {
 
 extension Parser.Error {
 
-    public struct Transform<Upstream: Parser.`Protocol`> {
+    public struct Transform<Upstream: Parser.`Protocol`>
+    where
+        Upstream.Input: ~Copyable & ~Escapable,
+        Upstream.Output: ~Copyable & ~Escapable
+    {
         @usableFromInline
         let upstream: Upstream
 
@@ -16,7 +20,11 @@ extension Parser.Error {
     }
 }
 
-extension Parser.`Protocol` {
+extension Parser.`Protocol`
+where
+    Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & ~Escapable
+{
 
     @inlinable
     public var error: Parser.Error.Transform<Self> {

@@ -1,4 +1,8 @@
-extension Parser.Filter {
+extension Parser.Filter
+where
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: Copyable & Escapable
+{
 
     public enum Error: Swift.Error, Sendable, Equatable {
 

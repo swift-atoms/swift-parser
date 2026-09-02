@@ -1,4 +1,9 @@
-extension Parser.`Protocol` where Self: ~Copyable {
+extension Parser.`Protocol`
+where
+    Self: ~Copyable,
+    Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & ~Escapable
+{
 
     @inlinable
     public consuming func map<NewOutput: ~Copyable & Escapable>(
@@ -37,7 +42,13 @@ extension Parser.`Protocol` where Self: ~Copyable {
     }
 }
 
-extension Parser.`Protocol` where Self: ~Copyable, Failure == Never {
+extension Parser.`Protocol`
+where
+    Self: ~Copyable,
+    Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & ~Escapable,
+    Failure == Never
+{
 
     @inlinable
     public consuming func map<

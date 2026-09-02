@@ -1,6 +1,6 @@
 extension Parser {
 
-    public protocol `Protocol`: ~Copyable {
+    public protocol `Protocol`<Input, Output, Failure>: ~Copyable {
 
         associatedtype Input: ~Copyable & ~Escapable
 
@@ -22,6 +22,7 @@ extension Parser.`Protocol`
 where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & ~Escapable,
     Body == Never
 {
 
@@ -37,12 +38,8 @@ extension Parser.`Protocol`
 where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,
-    Output: Escapable,
-
-    Body: Parser.`Protocol`,
-    Body.Input == Input,
-    Body.Output == Output,
-    Body.Failure == Failure
+    Output: ~Copyable & Escapable,
+    Body: Parser.`Protocol`<Input, Output, Failure>
 {
 
     @inlinable
