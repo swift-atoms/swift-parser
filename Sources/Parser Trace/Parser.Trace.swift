@@ -1,6 +1,10 @@
 extension Parser {
 
-    public struct Trace<Upstream: Parser.`Protocol`> {
+    public struct Trace<Upstream: Parser.`Protocol`>
+    where
+        Upstream.Input: ~Copyable & ~Escapable,
+        Upstream.Output: ~Copyable & ~Escapable
+    {
         @usableFromInline
         let upstream: Upstream
 
@@ -24,7 +28,10 @@ extension Parser {
 }
 
 extension Parser.Trace: Parser.`Protocol`
-where Upstream.Output: Copyable & Escapable {
+where
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: Copyable & Escapable
+{
 
     public typealias Input = Upstream.Input
 

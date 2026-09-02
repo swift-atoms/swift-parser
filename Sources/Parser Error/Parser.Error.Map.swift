@@ -1,6 +1,10 @@
 extension Parser.Error {
 
-    public struct Map<Upstream: Parser.`Protocol`, NewFailure: Swift.Error> {
+    public struct Map<Upstream: Parser.`Protocol`, NewFailure: Swift.Error>
+    where
+        Upstream.Input: ~Copyable & ~Escapable,
+        Upstream.Output: ~Copyable & ~Escapable
+    {
         public let upstream: Upstream
 
         public let transform: (Upstream.Failure) -> NewFailure
@@ -16,7 +20,11 @@ extension Parser.Error {
     }
 }
 
-extension Parser.Error.Map: Parser.`Protocol` {
+extension Parser.Error.Map: Parser.`Protocol`
+where
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: ~Copyable & ~Escapable
+{
 
     public typealias Input = Upstream.Input
 
@@ -35,7 +43,11 @@ extension Parser.Error.Map: Parser.`Protocol` {
     }
 }
 
-extension Parser.Error.Transform {
+extension Parser.Error.Transform
+where
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: ~Copyable & ~Escapable
+{
 
     @inlinable
     public func map<NewFailure: Swift.Error>(

@@ -1,7 +1,10 @@
 extension Parser {
 
     public struct Filter<Upstream: Parser.`Protocol`>
-    where Upstream.Output: Copyable & Escapable {
+    where
+        Upstream.Input: ~Copyable & ~Escapable,
+        Upstream.Output: Copyable & Escapable
+    {
         @usableFromInline
         internal let upstream: Upstream
 
@@ -28,7 +31,10 @@ extension Parser {
 }
 
 extension Parser.Filter: Parser.`Protocol`
-where Upstream.Output: Copyable & Escapable {
+where
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: Copyable & Escapable
+{
 
     public typealias Input = Upstream.Input
 

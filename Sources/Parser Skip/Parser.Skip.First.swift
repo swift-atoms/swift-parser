@@ -1,7 +1,13 @@
 extension Parser.Skip {
 
     public struct First<P0: Parser.`Protocol`, P1: Parser.`Protocol`>
-    where P0.Input == P1.Input, P0.Output == Void {
+    where
+        P0.Input == P1.Input,
+        P0.Input: ~Copyable & ~Escapable,
+        P1.Input: ~Copyable & ~Escapable,
+        P0.Output == Void,
+        P1.Output: ~Copyable & ~Escapable
+    {
 
         public let p0: P0
 
@@ -15,7 +21,12 @@ extension Parser.Skip {
     }
 }
 
-extension Parser.Skip.First: Parser.`Protocol` {
+extension Parser.Skip.First: Parser.`Protocol`
+where
+    P0.Input: ~Copyable & ~Escapable,
+    P1.Input: ~Copyable & ~Escapable,
+    P1.Output: ~Copyable & ~Escapable
+{
 
     public typealias Input = P0.Input
 

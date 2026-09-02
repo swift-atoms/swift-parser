@@ -1,7 +1,10 @@
 extension Parser.Error {
 
     public struct Replace<Upstream: Parser.`Protocol`>
-    where Upstream.Output: Copyable & Escapable {
+    where
+        Upstream.Input: ~Copyable & ~Escapable,
+        Upstream.Output: Copyable & Escapable
+    {
         @usableFromInline
         let upstream: Upstream
 
@@ -17,7 +20,10 @@ extension Parser.Error {
 }
 
 extension Parser.Error.Replace: Parser.`Protocol`
-where Upstream.Output: Copyable & Escapable {
+where
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: Copyable & Escapable
+{
 
     public typealias Input = Upstream.Input
 
@@ -35,7 +41,11 @@ where Upstream.Output: Copyable & Escapable {
     }
 }
 
-extension Parser.Error.Transform where Upstream.Output: Copyable & Escapable {
+extension Parser.Error.Transform
+where
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: Copyable & Escapable
+{
 
     @inlinable
     public func replace(with output: Upstream.Output) -> Parser.Error.Replace<Upstream> {
