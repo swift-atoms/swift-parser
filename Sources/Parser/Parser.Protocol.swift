@@ -8,7 +8,7 @@ extension Parser {
 
         associatedtype Failure: Swift.Error = Never
 
-        associatedtype Body: ~Copyable
+        associatedtype Body: ~Copyable = Never
 
         @Parser.Builder<Input>
         var body: Body { borrowing get }
@@ -29,7 +29,7 @@ where
     @inlinable
     public var body: Never {
         borrowing get {
-            fatalError("\(Self.self) is a leaf parser — implement parse(_:) directly")
+            fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
         }
     }
 }

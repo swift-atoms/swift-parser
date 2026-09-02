@@ -4,10 +4,16 @@ extension Swift.Optional
 where
     Wrapped: Parser::Parser.`Protocol`,
     Wrapped.Input: ~Copyable & ~Escapable,
-    Wrapped.Output: ~Copyable & ~Escapable
+    Wrapped.Output: ~Copyable & Escapable
 {
 
-    public struct Parser {
+    public struct Parser: Parser::Parser.`Protocol` {
+
+        public typealias Input = Wrapped.Input
+
+        public typealias Output = Wrapped.Output?
+
+        public typealias Failure = Wrapped.Failure
 
         public let wrapped: Swift.Optional<Wrapped>
 
@@ -15,27 +21,14 @@ where
         public init(_ wrapped: Swift.Optional<Wrapped>) {
             self.wrapped = wrapped
         }
-    }
-}
 
-extension Swift.Optional.Parser: Parser::Parser.`Protocol`
-where
-    Wrapped.Input: ~Copyable & ~Escapable,
-    Wrapped.Output: Escapable
-{
-
-    public typealias Input = Wrapped.Input
-
-    public typealias Output = Wrapped.Output?
-
-    public typealias Failure = Wrapped.Failure
-
-    @inlinable
-    public func parse(_ input: inout Input) throws(Failure) -> Output {
-        guard let wrapped else {
-            return nil
+        @inlinable
+        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+            guard let wrapped else {
+                return nil
+            }
+            return try wrapped.parse(&input)
         }
-        return try wrapped.parse(&input)
     }
 }
 
@@ -48,7 +41,7 @@ extension Parser::Parser.Builder where Input: ~Copyable & ~Escapable {
     where
         P.Input == Input,
         P.Input: ~Copyable & ~Escapable,
-        P.Output: Escapable
+        P.Output: ~Copyable & Escapable
     {
         .init(parser)
     }

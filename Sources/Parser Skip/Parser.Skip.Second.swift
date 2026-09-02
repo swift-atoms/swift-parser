@@ -1,52 +1,54 @@
+public import Parser
+
 extension Parser.Skip {
 
-    public struct Second<P0: Parser.`Protocol`, P1: Parser.`Protocol`>
+    public struct Second<V: Parser.`Protocol`, S: Parser.`Protocol`, Failure: Swift.Error>: Parser.`Protocol`
     where
-        P0.Input == P1.Input,
-        P0.Input: ~Copyable & ~Escapable,
-        P1.Input: ~Copyable & ~Escapable,
-        P0.Output: ~Copyable & ~Escapable,
-        P1.Output == Void
+        S.Input == V.Input,
+        S.Input: ~Copyable & ~Escapable,
+        V.Input: ~Copyable & ~Escapable,
+        S.Output == Void,
+        V.Output: ~Copyable & Escapable
     {
+        public typealias Input = V.Input
 
-        public let p0: P0
+        public typealias Output = V.Output
 
-        public let p1: P1
+        public let value: V
+
+        public let skipped: S
+
+        public let valueFailure: (V.Failure) -> Failure
+
+        public let skippedFailure: (S.Failure) -> Failure
 
         @inlinable
-        public init(_ p0: P0, _ p1: P1) {
-            self.p0 = p0
-            self.p1 = p1
+        public init(
+            _ value: V,
+            _ skipped: S,
+            _ valueFailure: @escaping (V.Failure) -> Failure,
+            _ skippedFailure: @escaping (S.Failure) -> Failure
+        ) {
+            self.value = value
+            self.skipped = skipped
+            self.valueFailure = valueFailure
+            self.skippedFailure = skippedFailure
         }
-    }
-}
 
-extension Parser.Skip.Second: Parser.`Protocol`
-where
-    P0.Input: ~Copyable & ~Escapable,
-    P1.Input: ~Copyable & ~Escapable,
-    P0.Output: Escapable
-{
-
-    public typealias Input = P0.Input
-
-    public typealias Output = P0.Output
-
-    public typealias Failure = Either<P0.Failure, P1.Failure>
-
-    @inlinable
-    public func parse(_ input: inout Input) throws(Failure) -> Output {
-        let o0: P0.Output
-        do throws(P0.Failure) {
-            o0 = try p0.parse(&input)
-        } catch {
-            throw .left(error)
+        @inlinable
+        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+            let output: V.Output
+            do throws(V.Failure) {
+                output = try value.parse(&input)
+            } catch {
+                throw valueFailure(error)
+            }
+            do throws(S.Failure) {
+                try skipped.parse(&input)
+            } catch {
+                throw skippedFailure(error)
+            }
+            return output
         }
-        do throws(P1.Failure) {
-            _ = try p1.parse(&input)
-        } catch {
-            throw .right(error)
-        }
-        return o0
     }
 }

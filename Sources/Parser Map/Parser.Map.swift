@@ -1,3 +1,6 @@
+import Either
+public import Parser
+
 extension Parser {
 
     @frozen
@@ -5,11 +8,13 @@ extension Parser {
         Upstream: Parser.`Protocol` & ~Copyable,
         Output: ~Copyable & Escapable,
         Failure: Swift.Error
-    >: ~Copyable
+    >: Parser.`Protocol`, ~Copyable
     where
         Upstream.Input: ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable & ~Escapable
     {
+        public typealias Input = Upstream.Input
+
         @usableFromInline
         internal let upstream: Upstream
 
@@ -29,6 +34,17 @@ extension Parser {
             self.transform = transform
             self.failure = failure
         }
+
+        @inlinable
+        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+            let value: Upstream.Output
+            do throws(Upstream.Failure) {
+                value = try upstream.parse(&input)
+            } catch {
+                throw failure(error)
+            }
+            return try transform(value)
+        }
     }
 }
 
@@ -37,26 +53,3 @@ where
     Upstream: Parser.`Protocol`<Upstream.Input, Upstream.Output, Upstream.Failure> & Copyable,
     Output: ~Copyable & Escapable
 {}
-
-extension Parser.Map: Parser.`Protocol`
-where
-    Output: ~Copyable & Escapable,
-    Upstream.Input: ~Copyable & ~Escapable,
-    Upstream.Output: ~Copyable & ~Escapable
-{
-
-    public typealias Input = Upstream.Input
-
-    @inlinable
-    public borrowing func parse(
-        _ input: inout Input
-    ) throws(Failure) -> Output {
-        let value: Upstream.Output
-        do throws(Upstream.Failure) {
-            value = try upstream.parse(&input)
-        } catch {
-            throw failure(error)
-        }
-        return try transform(value)
-    }
-}

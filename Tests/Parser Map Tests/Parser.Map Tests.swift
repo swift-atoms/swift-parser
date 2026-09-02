@@ -256,7 +256,6 @@ private struct Succeed: Parser.`Protocol` {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Never
-    typealias Body = Never
 
     borrowing func parse(_ input: inout Int) -> Int {
         input
@@ -267,7 +266,6 @@ private struct Fail: Parser.`Protocol` {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
-    typealias Body = Never
 
     borrowing func parse(
         _ input: inout Int
@@ -280,7 +278,6 @@ private struct FallibleSucceed: Parser.`Protocol` {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
-    typealias Body = Never
 
     borrowing func parse(
         _ input: inout Int
@@ -301,7 +298,6 @@ private struct Linear: Parser.`Protocol` {
     typealias Input = Int
     typealias Output = ScopedToken
     typealias Failure = Never
-    typealias Body = Never
 
     @_lifetime(&input)
     borrowing func parse(_ input: inout Int) -> ScopedToken {
