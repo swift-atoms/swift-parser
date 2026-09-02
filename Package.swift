@@ -18,7 +18,6 @@ let package = Package(
         .library(name: "Parser Map", targets: ["Parser Map"]),
         .library(name: "Parser FlatMap", targets: ["Parser FlatMap"]),
         .library(name: "Parser Skip", targets: ["Parser Skip"]),
-        .library(name: "Parser Product", targets: ["Parser Product"]),
         .library(name: "Parser Sequence", targets: ["Parser Sequence"]),
         .library(
             name: "Parser Standard Library Integration",
@@ -28,10 +27,6 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/swift-atoms/swift-either.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-pair.git",
             branch: "main"
         ),
     ],
@@ -64,14 +59,6 @@ let package = Package(
             dependencies: [
                 .target(name: "Parser"),
                 .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .target(
-            name: "Parser Product",
-            dependencies: [
-                .target(name: "Parser"),
-                .product(name: "Either", package: "swift-either"),
-                .product(name: "Pair", package: "swift-pair"),
             ]
         ),
         .target(
@@ -125,18 +112,6 @@ let package = Package(
                 .target(name: "Parser"),
                 .target(name: "Parser Skip"),
                 .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .testTarget(
-            name: "Parser Product Tests",
-            dependencies: [
-                .target(name: "Parser"),
-                .target(name: "Parser Map"),
-                .target(name: "Parser Product"),
-                .target(name: "Parser Skip"),
-                .target(name: "Parser Sequence"),
-                .product(name: "Either", package: "swift-either"),
-                .product(name: "Pair", package: "swift-pair"),
             ]
         ),
         .testTarget(
