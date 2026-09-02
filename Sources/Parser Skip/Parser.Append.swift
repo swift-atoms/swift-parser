@@ -2,17 +2,16 @@ public import Parser
 
 extension Parser {
 
-    public struct Skip<A: Parser.`Protocol`, N: Parser.`Protocol`, Failure: Swift.Error>: Parser.`Protocol`
+    public struct Append<A: Parser.`Protocol`, N: Parser.`Protocol`, Failure: Swift.Error, each O>: Parser.`Protocol`
     where
         A.Input == N.Input,
         A.Input: ~Copyable & ~Escapable,
         N.Input: ~Copyable & ~Escapable,
-        A.Output: ~Copyable & Escapable,
-        N.Output == Void
+        A.Output == (repeat each O)
     {
         public typealias Input = A.Input
 
-        public typealias Output = A.Output
+        public typealias Output = (repeat each O, N.Output)
 
         public let accumulated: A
 
@@ -37,18 +36,19 @@ extension Parser {
 
         @inlinable
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-            let output: A.Output
+            let head: (repeat each O)
             do throws(A.Failure) {
-                output = try accumulated.parse(&input)
+                head = try accumulated.parse(&input)
             } catch {
                 throw accumulatedFailure(error)
             }
+            let last: N.Output
             do throws(N.Failure) {
-                try next.parse(&input)
+                last = try next.parse(&input)
             } catch {
                 throw nextFailure(error)
             }
-            return output
+            return (repeat each head, last)
         }
     }
 }
