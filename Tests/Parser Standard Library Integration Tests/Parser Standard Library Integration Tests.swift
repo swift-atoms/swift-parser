@@ -1,6 +1,6 @@
 import Parser
 import Parser_Standard_Library_Integration
-import Parser_Take
+import Parser_Sequence
 import Testing
 
 @Suite
@@ -13,15 +13,6 @@ struct `Parser Standard Library Integration` {
         try "swift".parse(&input)
 
         #expect(input == "-parser")
-    }
-
-    @Test
-    func `Array parses matching elements`() throws(any Swift.Error) {
-        var input: ArraySlice = [1, 2, 3][...]
-
-        try [1, 2].parse(&input)
-
-        #expect(Array(input) == [3])
     }
 
     @Test
@@ -47,9 +38,9 @@ struct `Parser Standard Library Integration` {
     }
 
     @Test
-    func `Parser builder uses Swift Optional Parser for buildIf`() throws(any Swift.Error) {
+    func `a Sequence block uses Swift Optional Parser for buildIf`() throws(any Swift.Error) {
         let includePrefix = true
-        let parser = Parser.Take.Sequence {
+        let parser = Parser.Sequence(Substring.self) {
             if includePrefix {
                 "swift"
             }

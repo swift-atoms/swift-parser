@@ -1,82 +1,137 @@
+public import Either
+public import Parser
+
 extension Parser.Builder where Input: ~Copyable & ~Escapable {
 
     @inlinable
-    public static func buildBlock<P0: Parser.`Protocol`, P1: Parser.`Protocol`>(
-        _ p0: P0,
-        _ p1: P1
-    ) -> Parser.Skip.First<P0, P1>
+    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`>(
+        accumulated: A,
+        next: N
+    ) -> Parser.Skip.First<A, N, Either<A.Failure, N.Failure>>
     where
-        P0.Input == Input,
-        P1.Input == Input,
-        P0.Input: ~Copyable & ~Escapable,
-        P1.Input: ~Copyable & ~Escapable,
-        P0.Output == Void,
-        P1.Output: ~Copyable & ~Escapable
+        A.Input == Input,
+        N.Input == Input,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
+        A.Output == Void,
+        N.Output: ~Copyable & ~Escapable
     {
-        Parser.Skip.First(p0, p1)
+        Parser.Skip.First(accumulated, next, { .left($0) }, { .right($0) })
     }
 
     @inlinable
-    public static func buildBlock<P0: Parser.`Protocol`, P1: Parser.`Protocol`>(
-        _ p0: P0,
-        _ p1: P1
-    ) -> Parser.Skip.Second<P0, P1>
+    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`>(
+        accumulated: A,
+        next: N
+    ) -> Parser.Skip.First<A, N, A.Failure>
     where
-        P0.Input == Input,
-        P1.Input == Input,
-        P0.Input: ~Copyable & ~Escapable,
-        P1.Input: ~Copyable & ~Escapable,
-        P0.Output: ~Copyable & ~Escapable,
-        P1.Output == Void
+        A.Input == Input,
+        N.Input == Input,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
+        A.Output == Void,
+        N.Output: ~Copyable & ~Escapable,
+        A.Failure == N.Failure
     {
-        Parser.Skip.Second(p0, p1)
+        Parser.Skip.First(accumulated, next, { $0 }, { $0 })
     }
 
     @inlinable
-    public static func buildPartialBlock<Accumulated: Parser.`Protocol`, Next: Parser.`Protocol`>(
-        accumulated: Accumulated,
-        next: Next
-    ) -> Parser.Skip.First<Accumulated, Next>
+    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`>(
+        accumulated: A,
+        next: N
+    ) -> Parser.Skip.Second<A, N, Either<A.Failure, N.Failure>>
     where
-        Accumulated.Input == Input,
-        Next.Input == Input,
-        Accumulated.Input: ~Copyable & ~Escapable,
-        Next.Input: ~Copyable & ~Escapable,
-        Accumulated.Output == Void,
-        Next.Output: ~Copyable & ~Escapable
+        A.Input == Input,
+        N.Input == Input,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
+        A.Output: ~Copyable & Escapable,
+        N.Output == Void
     {
-        Parser.Skip.First(accumulated, next)
+        Parser.Skip.Second(accumulated, next, { .left($0) }, { .right($0) })
     }
 
     @inlinable
-    public static func buildPartialBlock<Accumulated: Parser.`Protocol`, Next: Parser.`Protocol`>(
-        accumulated: Accumulated,
-        next: Next
-    ) -> Parser.Skip.Second<Accumulated, Next>
+    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`>(
+        accumulated: A,
+        next: N
+    ) -> Parser.Skip.Second<A, N, A.Failure>
     where
-        Accumulated.Input == Input,
-        Next.Input == Input,
-        Accumulated.Input: ~Copyable & ~Escapable,
-        Next.Input: ~Copyable & ~Escapable,
-        Accumulated.Output: ~Copyable & ~Escapable,
-        Next.Output == Void
+        A.Input == Input,
+        N.Input == Input,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
+        A.Output: ~Copyable & Escapable,
+        N.Output == Void,
+        A.Failure == N.Failure
     {
-        Parser.Skip.Second(accumulated, next)
+        Parser.Skip.Second(accumulated, next, { $0 }, { $0 })
     }
 
     @inlinable
-    public static func buildPartialBlock<Accumulated: Parser.`Protocol`, Next: Parser.`Protocol`>(
-        accumulated: Accumulated,
-        next: Next
-    ) -> Parser.Skip.First<Accumulated, Next>
+    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`>(
+        accumulated: A,
+        next: N
+    ) -> Parser.Skip.First<A, N, Either<A.Failure, N.Failure>>
     where
-        Accumulated.Input == Input,
-        Next.Input == Input,
-        Accumulated.Input: ~Copyable & ~Escapable,
-        Next.Input: ~Copyable & ~Escapable,
-        Accumulated.Output == Void,
-        Next.Output == Void
+        A.Input == Input,
+        N.Input == Input,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
+        A.Output == Void,
+        N.Output == Void
     {
-        Parser.Skip.First(accumulated, next)
+        Parser.Skip.First(accumulated, next, { .left($0) }, { .right($0) })
+    }
+
+    @inlinable
+    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`>(
+        accumulated: A,
+        next: N
+    ) -> Parser.Skip.First<A, N, A.Failure>
+    where
+        A.Input == Input,
+        N.Input == Input,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
+        A.Output == Void,
+        N.Output == Void,
+        A.Failure == N.Failure
+    {
+        Parser.Skip.First(accumulated, next, { $0 }, { $0 })
+    }
+
+    @inlinable
+    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`>(
+        accumulated: A,
+        next: N
+    ) -> Parser.Skip.First<A, N, Either<A.Failure, N.Failure>>
+    where
+        A.Input == Input,
+        N.Input == Input,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
+        A.Output == Void,
+        N.Output: ~Copyable & Escapable
+    {
+        Parser.Skip.First(accumulated, next, { .left($0) }, { .right($0) })
+    }
+
+    @inlinable
+    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`>(
+        accumulated: A,
+        next: N
+    ) -> Parser.Skip.First<A, N, A.Failure>
+    where
+        A.Input == Input,
+        N.Input == Input,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
+        A.Output == Void,
+        N.Output: ~Copyable & Escapable,
+        A.Failure == N.Failure
+    {
+        Parser.Skip.First(accumulated, next, { $0 }, { $0 })
     }
 }

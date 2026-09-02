@@ -9,7 +9,6 @@ struct Source: Parser.`Protocol` {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Never
-    typealias Body = Never
 
     borrowing func parse(_ input: inout Int) -> Int {
         input

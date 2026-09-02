@@ -1,51 +1,53 @@
+public import Parser
+
 extension Parser.Skip {
 
-    public struct First<P0: Parser.`Protocol`, P1: Parser.`Protocol`>
+    public struct First<S: Parser.`Protocol`, V: Parser.`Protocol`, Failure: Swift.Error>: Parser.`Protocol`
     where
-        P0.Input == P1.Input,
-        P0.Input: ~Copyable & ~Escapable,
-        P1.Input: ~Copyable & ~Escapable,
-        P0.Output == Void,
-        P1.Output: ~Copyable & ~Escapable
+        S.Input == V.Input,
+        S.Input: ~Copyable & ~Escapable,
+        V.Input: ~Copyable & ~Escapable,
+        S.Output == Void,
+        V.Output: ~Copyable & ~Escapable
     {
+        public typealias Input = S.Input
 
-        public let p0: P0
+        public typealias Output = V.Output
 
-        public let p1: P1
+        public let skipped: S
+
+        public let value: V
+
+        public let skippedFailure: (S.Failure) -> Failure
+
+        public let valueFailure: (V.Failure) -> Failure
 
         @inlinable
-        public init(_ p0: P0, _ p1: P1) {
-            self.p0 = p0
-            self.p1 = p1
+        public init(
+            _ skipped: S,
+            _ value: V,
+            _ skippedFailure: @escaping (S.Failure) -> Failure,
+            _ valueFailure: @escaping (V.Failure) -> Failure
+        ) {
+            self.skipped = skipped
+            self.value = value
+            self.skippedFailure = skippedFailure
+            self.valueFailure = valueFailure
         }
-    }
-}
 
-extension Parser.Skip.First: Parser.`Protocol`
-where
-    P0.Input: ~Copyable & ~Escapable,
-    P1.Input: ~Copyable & ~Escapable,
-    P1.Output: ~Copyable & ~Escapable
-{
-
-    public typealias Input = P0.Input
-
-    public typealias Output = P1.Output
-
-    public typealias Failure = Either<P0.Failure, P1.Failure>
-
-    @inlinable
-    @_lifetime(borrow self, &input)
-    public func parse(_ input: inout Input) throws(Failure) -> Output {
-        do throws(P0.Failure) {
-            _ = try p0.parse(&input)
-        } catch {
-            throw .left(error)
-        }
-        do throws(P1.Failure) {
-            return try p1.parse(&input)
-        } catch {
-            throw .right(error)
+        @inlinable
+        @_lifetime(borrow self, &input)
+        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+            do throws(S.Failure) {
+                try skipped.parse(&input)
+            } catch {
+                throw skippedFailure(error)
+            }
+            do throws(V.Failure) {
+                return try value.parse(&input)
+            } catch {
+                throw valueFailure(error)
+            }
         }
     }
 }

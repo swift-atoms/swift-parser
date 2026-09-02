@@ -51,27 +51,6 @@ struct `Parser.Error` {
         }
     }
 
-    @Test
-    func `error replace makes a failing parser nonfailing`() {
-        let parser = Replaced()
-        requireFailure(parser, Never.self)
-
-        var input = 0
-        let output = parser.parse(&input)
-
-        #expect(output == -1)
-    }
-
-    @Test
-    func `error replace leaves a successful output untouched`() {
-        let parser = ReplacedSuccess()
-        requireFailure(parser, Never.self)
-
-        var input = 41
-        let output = parser.parse(&input)
-
-        #expect(output == 41)
-    }
 }
 
 private func requireFailure<
@@ -143,26 +122,6 @@ private struct FlattenedTransform: Parser.`Protocol` {
     }
 }
 
-private struct Replaced: Parser.`Protocol` {
-    typealias Input = Int
-    typealias Output = Int
-    typealias Failure = Never
-
-    var body: some Parser.`Protocol`<Int, Int, Never> {
-        Fail().error.replace(with: -1)
-    }
-}
-
-private struct ReplacedSuccess: Parser.`Protocol` {
-    typealias Input = Int
-    typealias Output = Int
-    typealias Failure = Never
-
-    var body: some Parser.`Protocol`<Int, Int, Never> {
-        FallibleSucceed().error.replace(with: -1)
-    }
-}
-
 private enum UpstreamFailure: Swift.Error, Equatable {
     case failed
 }
@@ -180,7 +139,6 @@ private struct Fail: Parser.`Protocol` {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
-    typealias Body = Never
 
     borrowing func parse(_ input: inout Int) throws(UpstreamFailure) -> Int {
         throw .failed
@@ -191,7 +149,6 @@ private struct FallibleSucceed: Parser.`Protocol` {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
-    typealias Body = Never
 
     borrowing func parse(_ input: inout Int) throws(UpstreamFailure) -> Int {
         input

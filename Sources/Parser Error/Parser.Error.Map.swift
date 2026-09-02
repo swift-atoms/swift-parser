@@ -1,10 +1,18 @@
+public import Parser
+
 extension Parser.Error {
 
-    public struct Map<Upstream: Parser.`Protocol`, NewFailure: Swift.Error>
+    public struct Map<Upstream: Parser.`Protocol`, NewFailure: Swift.Error>: Parser.`Protocol`
     where
         Upstream.Input: ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable & ~Escapable
     {
+        public typealias Input = Upstream.Input
+
+        public typealias Output = Upstream.Output
+
+        public typealias Failure = NewFailure
+
         public let upstream: Upstream
 
         public let transform: (Upstream.Failure) -> NewFailure
@@ -17,28 +25,15 @@ extension Parser.Error {
             self.upstream = upstream
             self.transform = transform
         }
-    }
-}
 
-extension Parser.Error.Map: Parser.`Protocol`
-where
-    Upstream.Input: ~Copyable & ~Escapable,
-    Upstream.Output: ~Copyable & ~Escapable
-{
-
-    public typealias Input = Upstream.Input
-
-    public typealias Output = Upstream.Output
-
-    public typealias Failure = NewFailure
-
-    @inlinable
-    @_lifetime(borrow self, &input)
-    public func parse(_ input: inout Input) throws(Failure) -> Output {
-        do throws(Upstream.Failure) {
-            return try upstream.parse(&input)
-        } catch {
-            throw transform(error)
+        @inlinable
+        @_lifetime(borrow self, &input)
+        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+            do throws(Upstream.Failure) {
+                return try upstream.parse(&input)
+            } catch {
+                throw transform(error)
+            }
         }
     }
 }

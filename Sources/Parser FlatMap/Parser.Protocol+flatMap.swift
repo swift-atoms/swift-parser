@@ -1,3 +1,6 @@
+import Either
+public import Parser
+
 extension Parser.`Protocol`
 where
     Input: ~Copyable & ~Escapable,
