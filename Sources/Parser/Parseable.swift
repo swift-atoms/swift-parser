@@ -1,6 +1,6 @@
 public protocol Parseable {
 
-    associatedtype Parser: Parser::Parser.`Protocol`
+    associatedtype Parser: Parsing
     where
         Parser.Input: ~Copyable & ~Escapable,
         Parser.Output: ~Copyable & ~Escapable
