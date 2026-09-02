@@ -304,3 +304,63 @@ private struct Linear: Parser.`Protocol` {
         ScopedToken(value: input)
     }
 }
+
+@Suite
+struct `Parser.Map Nonescapable Input` {
+
+    @Test
+    func `map transforms a value read from a nonescapable cursor`() throws(any Swift.Error) {
+        let bytes: [UInt8] = [41]
+        var cursor = Cursor(bytes.span)
+        let value = try Successor().parse(&cursor)
+        let end = cursor.index
+        #expect(value == 42)
+        #expect(end == 1)
+    }
+}
+
+private struct Successor: Parser.`Protocol` {
+    typealias Failure = ByteMismatch
+
+    var body: some Parser.`Protocol`<Cursor, UInt8, ByteMismatch> {
+        ByteValue().map { $0 &+ 1 }
+    }
+}
+private struct Cursor: ~Escapable {
+    var span: Span<UInt8>
+    var index: Int
+
+    @_lifetime(copy span)
+    init(_ span: Span<UInt8>) {
+        self.span = span
+        self.index = 0
+    }
+}
+
+private enum ByteMismatch: Swift.Error, Equatable {
+    case expected(UInt8)
+    case endOfInput
+}
+
+private struct ByteMarker: Parser.`Protocol` {
+    let expected: UInt8
+
+    init(_ expected: UInt8) {
+        self.expected = expected
+    }
+
+    borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) {
+        guard input.index < input.span.count else { throw .endOfInput }
+        guard input.span[input.index] == expected else { throw .expected(expected) }
+        input.index += 1
+    }
+}
+
+private struct ByteValue: Parser.`Protocol` {
+    borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> UInt8 {
+        guard input.index < input.span.count else { throw .endOfInput }
+        let byte = input.span[input.index]
+        input.index += 1
+        return byte
+    }
+}
