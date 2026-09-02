@@ -7,32 +7,30 @@ extension Parser.Builder where Input: ~Copyable & ~Escapable {
     public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`, each O>(
         accumulated: A,
         next: N
-    ) -> Parser.Skip<A, N, Either<A.Failure, N.Failure>>
+    ) -> Parser.Append<A, N, Either<A.Failure, N.Failure>, repeat each O>
     where
         A.Input == Input,
         N.Input == Input,
         A.Input: ~Copyable & ~Escapable,
         N.Input: ~Copyable & ~Escapable,
-        A.Output == (repeat each O),
-        N.Output == Void
+        A.Output == (repeat each O)
     {
-        Parser.Skip(accumulated, next, { .left($0) }, { .right($0) })
+        Parser.Append(accumulated, next, { .left($0) }, { .right($0) })
     }
 
     @inlinable
     public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`, each O>(
         accumulated: A,
         next: N
-    ) -> Parser.Skip<A, N, A.Failure>
+    ) -> Parser.Append<A, N, A.Failure, repeat each O>
     where
         A.Input == Input,
         N.Input == Input,
         A.Input: ~Copyable & ~Escapable,
         N.Input: ~Copyable & ~Escapable,
         A.Output == (repeat each O),
-        N.Output == Void,
         A.Failure == N.Failure
     {
-        Parser.Skip(accumulated, next, { $0 }, { $0 })
+        Parser.Append(accumulated, next, { $0 }, { $0 })
     }
 }

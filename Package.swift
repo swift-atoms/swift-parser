@@ -110,6 +110,7 @@ let package = Package(
             name: "Parser Skip Tests",
             dependencies: [
                 .target(name: "Parser"),
+                .target(name: "Parser Map"),
                 .target(name: "Parser Skip"),
                 .product(name: "Either", package: "swift-either"),
             ]
