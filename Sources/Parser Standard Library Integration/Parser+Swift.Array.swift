@@ -1,4 +1,4 @@
-public import Parser_Match
+public import Parser
 
 extension Swift.Array: Parser::Parser.`Protocol` where Element: Equatable {
 
@@ -6,16 +6,16 @@ extension Swift.Array: Parser::Parser.`Protocol` where Element: Equatable {
 
     public typealias Output = Void
 
-    public typealias Failure = Parser::Parser.Match.Error
+    public typealias Failure = Parser::Parser.Literal.Error
 
     @inlinable
     public func parse(_ input: inout ArraySlice<Element>) throws(Failure) {
         for expected in self {
             guard let actual = input.first else {
-                throw .literalMismatch(expected: "\(expected)", found: "end of input")
+                throw .mismatch(expected: "\(expected)", found: "end of input")
             }
             guard actual == expected else {
-                throw .literalMismatch(expected: "\(expected)", found: "\(actual)")
+                throw .mismatch(expected: "\(expected)", found: "\(actual)")
             }
             input = input.dropFirst()
         }

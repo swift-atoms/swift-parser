@@ -10,7 +10,7 @@ struct `Parser.Filter` {
     @Test
     func `passes output satisfying its predicate`() throws(any Swift.Error) {
         var input: Void = ()
-        let parser = Value(3).filter { $0 > 0 }
+        let parser = ClosureFiltered()
 
         let output = try parser.parse(&input)
 
@@ -20,7 +20,7 @@ struct `Parser.Filter` {
     @Test
     func `accepts a domain Predicate`() throws(any Swift.Error) {
         var input: Void = ()
-        let parser = Value(3).filter(.greater.than(0))
+        let parser = PredicateFiltered()
 
         let output = try parser.parse(&input)
 
@@ -30,9 +30,7 @@ struct `Parser.Filter` {
     @Test
     func `composes Predicate algebra at the filter site`() {
         var input: Void = ()
-        let positive = Predicate<Int> { $0 > 0 }
-        let even = Predicate<Int> { $0.isMultiple(of: 2) }
-        let parser = Value(3).filter(positive && even)
+        let parser = AlgebraFiltered()
 
         do {
             _ = try parser.parse(&input)
@@ -50,7 +48,7 @@ struct `Parser.Filter` {
     @Test
     func `owns predicate validation failure`() {
         var input: Void = ()
-        let parser = Value(-1).filter { $0 > 0 }
+        let parser = RejectingClosureFiltered()
 
         do {
             _ = try parser.parse(&input)
@@ -64,6 +62,50 @@ struct `Parser.Filter` {
                 #expect(reason == "filter predicate")
             }
         }
+    }
+}
+
+private typealias Validation = Either<Never, Parser.Filter<Value>.Error>
+
+private struct ClosureFiltered: Parser.`Protocol` {
+    typealias Input = Void
+    typealias Output = Int
+    typealias Failure = Validation
+
+    var body: some Parser.`Protocol`<Void, Int, Validation> {
+        Value(3).filter { $0 > 0 }
+    }
+}
+
+private struct PredicateFiltered: Parser.`Protocol` {
+    typealias Input = Void
+    typealias Output = Int
+    typealias Failure = Validation
+
+    var body: some Parser.`Protocol`<Void, Int, Validation> {
+        Value(3).filter(.greater.than(0))
+    }
+}
+
+private struct AlgebraFiltered: Parser.`Protocol` {
+    typealias Input = Void
+    typealias Output = Int
+    typealias Failure = Validation
+
+    var body: some Parser.`Protocol`<Void, Int, Validation> {
+        let positive = Predicate<Int> { $0 > 0 }
+        let even = Predicate<Int> { $0.isMultiple(of: 2) }
+        Value(3).filter(positive && even)
+    }
+}
+
+private struct RejectingClosureFiltered: Parser.`Protocol` {
+    typealias Input = Void
+    typealias Output = Int
+    typealias Failure = Validation
+
+    var body: some Parser.`Protocol`<Void, Int, Validation> {
+        Value(-1).filter { $0 > 0 }
     }
 }
 

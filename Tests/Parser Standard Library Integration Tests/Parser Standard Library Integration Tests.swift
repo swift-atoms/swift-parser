@@ -61,4 +61,40 @@ struct `Parser Standard Library Integration` {
         #expect(output != nil)
         #expect(input == "-parser")
     }
+
+    @Test
+    func `a body uses Swift Optional Parser for buildIf`() throws(any Swift.Error) {
+        let parser = OptionalPrefix(includePrefix: true)
+        var input: Substring = "swift-parser"
+
+        let output: Void? = try parser.parse(&input)
+
+        #expect(output != nil)
+        #expect(input == "-parser")
+    }
+
+    @Test
+    func `a body omits an absent buildIf element`() throws(any Swift.Error) {
+        let parser = OptionalPrefix(includePrefix: false)
+        var input: Substring = "swift-parser"
+
+        let output: Void? = try parser.parse(&input)
+
+        #expect(output == nil)
+        #expect(input == "swift-parser")
+    }
+}
+
+private struct OptionalPrefix: Parser.`Protocol` {
+    typealias Input = Substring
+    typealias Output = Void?
+    typealias Failure = String.Failure
+
+    let includePrefix: Bool
+
+    var body: Swift.Optional<String>.Parser {
+        if includePrefix {
+            "swift"
+        }
+    }
 }
