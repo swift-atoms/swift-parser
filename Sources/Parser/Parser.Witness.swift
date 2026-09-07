@@ -1,4 +1,3 @@
-
 extension Parser {
 
     public struct Witness<Input: ~Copyable & ~Escapable, Output, Failure: Swift.Error>: Parser.`Protocol` {

@@ -1,4 +1,3 @@
-
 extension Parser {
 
     public struct Skip<A: Parser.`Protocol`, N: Parser.`Protocol`, Failure: Swift.Error>: Parser.`Protocol`

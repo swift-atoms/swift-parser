@@ -1,4 +1,3 @@
-
 extension Parser {
 
     public struct Append<A: Parser.`Protocol`, N: Parser.`Protocol`, Failure: Swift.Error, each O>: Parser.`Protocol`

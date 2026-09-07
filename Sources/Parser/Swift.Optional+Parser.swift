@@ -1,5 +1,3 @@
-public import Parser
-
 extension Swift.Optional
 where
     Wrapped: Parser::Parser.`Protocol`,

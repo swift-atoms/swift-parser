@@ -47,8 +47,8 @@ extension Parser {
     }
 }
 
-extension Parser.Map: Copyable
+extension Parser.Map: Swift.Copyable
 where
-    Upstream: Parser.`Protocol`<Upstream.Input, Upstream.Output, Upstream.Failure> & Copyable,
-    Output: ~Copyable & Escapable
+    Upstream: Parser.`Protocol`<Upstream.Input, Upstream.Output, Upstream.Failure> & Swift.Copyable,
+    Output: ~Swift.Copyable & Escapable
 {}

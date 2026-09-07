@@ -13,8 +13,8 @@ let package = Package(
     ],
     products: [
         .library(name: "Parser", targets: ["Parser"]),
-        .library(name: "Parser Standard Library Integration", targets: ["Parser Standard Library Integration"]),
-        .library(name: "Parser Foundation Library Integration", targets: ["Parser Foundation Library Integration"]),
+
+        .library(name: "Parser Foundation Integration", targets: ["Parser Foundation Integration"]),
         .library(name: "Parser Test Support", targets: ["Parser Test Support"]),
     ],
     dependencies: [
@@ -31,20 +31,13 @@ let package = Package(
             ],
             path: "Sources/Parser"
         ),
+        
         .target(
-            name: "Parser Standard Library Integration",
+            name: "Parser Foundation Integration",
             dependencies: [
                 .target(name: "Parser"),
             ],
-            path: "Sources/Parser Standard Library Integration"
-        ),
-        .target(
-            name: "Parser Foundation Library Integration",
-            dependencies: [
-                .target(name: "Parser"),
-                .target(name: "Parser Standard Library Integration"),
-            ],
-            path: "Sources/Parser Foundation Library Integration"
+            path: "Sources/Parser Foundation Integration"
         ),
         .target(
             name: "Parser Test Support",
@@ -58,9 +51,8 @@ let package = Package(
             dependencies: [
                 .target(name: "Parser"),
                 .product(name: "Either", package: "swift-either"),
-                .target(name: "Parser Standard Library Integration"),
                 .target(name: "Parser Test Support"),
-                .target(name: "Parser Foundation Library Integration"),
+                .target(name: "Parser Foundation Integration"),
             ],
             path: "Tests/Parser Tests",
             resources: [.copy("Fixtures")]

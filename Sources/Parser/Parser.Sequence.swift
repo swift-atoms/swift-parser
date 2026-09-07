@@ -1,4 +1,3 @@
-
 extension Parser {
 
     public struct Sequence<Input: ~Copyable & ~Escapable, Body: Parser.`Protocol`>: Parser.`Protocol`

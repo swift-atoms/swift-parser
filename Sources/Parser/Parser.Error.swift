@@ -1,4 +1,3 @@
-
 extension Parser {
 
     public enum Error {}

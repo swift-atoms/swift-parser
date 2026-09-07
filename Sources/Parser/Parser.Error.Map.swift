@@ -1,4 +1,3 @@
-
 extension Parser.Error {
 
     public struct Map<Upstream: Parser.`Protocol`, NewFailure: Swift.Error>: Parser.`Protocol`

@@ -1,5 +1,4 @@
 import Parser
-import Parser_Standard_Library_Integration
 import Testing
 
 @Suite
