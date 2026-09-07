@@ -2,7 +2,7 @@ public import Either
 
 extension Parser {
 
-    public struct FlatMap<Upstream: Parser.`Protocol`, Downstream: Parser.`Protocol`>: Parser.`Protocol`
+    public struct FlatMap<Upstream: Parser.`Protocol` & ~Copyable, Downstream: Parser.`Protocol` & ~Copyable>: Parser.`Protocol`, ~Copyable
     where
         Upstream.Input == Downstream.Input,
         Upstream.Input: ~Copyable & ~Escapable,
@@ -24,7 +24,7 @@ extension Parser {
 
         @inlinable
         public init(
-            upstream: Upstream,
+            upstream: consuming Upstream,
             transform: @escaping (consuming Upstream.Output) -> Downstream
         ) {
             self.upstream = upstream
@@ -48,3 +48,13 @@ extension Parser {
         }
     }
 }
+
+extension Parser.FlatMap: Copyable
+where
+    Upstream: Parser.`Protocol`<Upstream.Input, Upstream.Output, Upstream.Failure> & Copyable,
+    Downstream: Parser.`Protocol`<Downstream.Input, Downstream.Output, Downstream.Failure> & ~Copyable,
+    Upstream.Input: ~Copyable & ~Escapable,
+    Downstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: ~Copyable & ~Escapable,
+    Downstream.Output: ~Copyable & Escapable
+{}

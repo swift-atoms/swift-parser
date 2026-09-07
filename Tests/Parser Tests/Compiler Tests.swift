@@ -2,11 +2,11 @@ import Foundation
 import Testing
 
 @Suite
-private struct `Parser.Map Compiler Tests` {
+private struct `Parser ownership and lifetime constraints survive module emission` {
 
     @Test
     func `stored transform result must be escapable`() throws {
-        let diagnostic = try typecheckFailure(
+        let diagnostic = try emissionFailure(
             named: "Nonescapable Transform Result.swift"
         )
 
@@ -17,7 +17,38 @@ private struct `Parser.Map Compiler Tests` {
         )
     }
 
-    private func typecheckFailure(named name: String) throws -> String {
+    @Test
+    func `linear flat map owners compose over scoped input through the public API`() throws {
+        let result = try emitFixture(named: "Linear FlatMap Composition.swift")
+        #expect(result.status == 0, "\(result.diagnostic)")
+    }
+
+    @Test(arguments: ["Consumed Direct FlatMap Upstream.swift", "Consumed Fluent FlatMap Upstream.swift"])
+    func `transferring an upstream owner prevents its reuse`(_ fixture: String) throws {
+        let diagnostic = try emissionFailure(named: fixture)
+        #expect(diagnostic.contains("'upstream' used after consume"))
+    }
+
+    @Test
+    func `flat map results must remain escapable`() throws {
+        let diagnostic = try emissionFailure(named: "Nonescapable FlatMap Result.swift")
+        #expect(diagnostic.contains("'ScopedResult' conform to 'Escapable'"))
+    }
+
+    @Test
+    func `a flat map with a noncopyable stored upstream cannot be copied`() throws {
+        let diagnostic = try emissionFailure(named: "Noncopyable FlatMap Copyability.swift")
+        #expect(diagnostic.contains("requireCopyable"))
+        #expect(diagnostic.contains("'Owned' conform to 'Copyable'"))
+    }
+
+    private func emissionFailure(named name: String) throws -> String {
+        let result = try emitFixture(named: name)
+        try #require(result.status != 0, "Fixture unexpectedly emitted a module")
+        return result.diagnostic
+    }
+
+    private func emitFixture(named name: String) throws -> (status: Int32, diagnostic: String) {
         var products = URL(fileURLWithPath: Bundle.module.bundlePath)
         for _ in 0..<12 {
             let direct = products.appendingPathComponent(
@@ -47,12 +78,18 @@ private struct `Parser.Map Compiler Tests` {
             .appendingPathComponent("Fixtures")
             .appendingPathComponent(name)
 
+        let output = FileManager.default.temporaryDirectory
+            .appendingPathComponent("parser-emission-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: output) }
+
         let process = Process()
         let standardError = Pipe()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
         process.arguments = [
             "swiftc",
-            "-typecheck",
+            "-emit-module",
+            "-emit-module-path", output.appendingPathComponent("Proof.swiftmodule").path,
             "-swift-version", "6",
             "-strict-memory-safety",
             "-enable-experimental-feature", "Lifetimes",
@@ -63,15 +100,14 @@ private struct `Parser.Map Compiler Tests` {
         ]
         process.standardError = standardError
         try process.run()
-        process.waitUntilExit()
 
         let diagnostic = String(
             decoding: standardError.fileHandleForReading.readDataToEndOfFile(),
             as: UTF8.self
         )
+        process.waitUntilExit()
 
-        #expect(process.terminationStatus != 0, "Fixture unexpectedly typechecked")
         #expect(!diagnostic.contains("no such module"))
-        return diagnostic
+        return (process.terminationStatus, diagnostic)
     }
 }
