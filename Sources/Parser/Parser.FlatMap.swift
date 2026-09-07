@@ -1,5 +1,4 @@
 public import Either
-public import Parser
 
 extension Parser {
 

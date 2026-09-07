@@ -1,7 +1,5 @@
 import Either
 import Parser
-import Parser_Error
-import Parser_Map
 import Testing
 
 @Suite

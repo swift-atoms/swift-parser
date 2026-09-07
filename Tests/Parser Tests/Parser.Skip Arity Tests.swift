@@ -1,5 +1,4 @@
 import Parser
-import Parser_Skip
 import Testing
 
 @Suite

@@ -1,4 +1,3 @@
-public import Parser
 
 extension Parser.Error {
 

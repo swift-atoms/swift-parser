@@ -13,16 +13,9 @@ let package = Package(
     ],
     products: [
         .library(name: "Parser", targets: ["Parser"]),
-        .library(name: "Parser Witness", targets: ["Parser Witness"]),
-        .library(name: "Parser Error", targets: ["Parser Error"]),
-        .library(name: "Parser Map", targets: ["Parser Map"]),
-        .library(name: "Parser FlatMap", targets: ["Parser FlatMap"]),
-        .library(name: "Parser Skip", targets: ["Parser Skip"]),
-        .library(name: "Parser Sequence", targets: ["Parser Sequence"]),
-        .library(
-            name: "Parser Standard Library Integration",
-            targets: ["Parser Standard Library Integration"]
-        ),
+        .library(name: "Parser Standard Library Integration", targets: ["Parser Standard Library Integration"]),
+        .library(name: "Parser Foundation Library Integration", targets: ["Parser Foundation Library Integration"]),
+        .library(name: "Parser Test Support", targets: ["Parser Test Support"]),
     ],
     dependencies: [
         .package(
@@ -31,113 +24,53 @@ let package = Package(
         ),
     ],
     targets: [
-        .target(name: "Parser"),
         .target(
-            name: "Parser Witness",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .target(
-            name: "Parser Error",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .target(
-            name: "Parser Map",
+            name: "Parser",
             dependencies: [
-                .target(name: "Parser"),
                 .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .target(
-            name: "Parser FlatMap",
-            dependencies: [
-                .target(name: "Parser"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .target(
-            name: "Parser Skip",
-            dependencies: [
-                .target(name: "Parser"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .target(
-            name: "Parser Sequence",
-            dependencies: [.target(name: "Parser")]
+            ],
+            path: "Sources/Parser"
         ),
         .target(
             name: "Parser Standard Library Integration",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .testTarget(
-            name: "Parser Tests",
-            dependencies: [.target(name: "Parser")]
-        ),
-        .testTarget(
-            name: "Parser Witness Tests",
             dependencies: [
                 .target(name: "Parser"),
-                .target(name: "Parser Witness"),
-            ]
-        ),
-        .testTarget(
-            name: "Parser Error Tests",
-            dependencies: [
-                .target(name: "Parser"),
-                .target(name: "Parser Error"),
-                .target(name: "Parser Map"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .testTarget(
-            name: "Parser Map Tests",
-            dependencies: [
-                .target(name: "Parser"),
-                .target(name: "Parser Map"),
-                .product(name: "Either", package: "swift-either"),
             ],
-            resources: [.copy("Fixtures")]
+            path: "Sources/Parser Standard Library Integration"
         ),
-        .testTarget(
-            name: "Parser FlatMap Tests",
-            dependencies: [
-                .target(name: "Parser"),
-                .target(name: "Parser FlatMap"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .testTarget(
-            name: "Parser Skip Tests",
-            dependencies: [
-                .target(name: "Parser"),
-                .target(name: "Parser Map"),
-                .target(name: "Parser Skip"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .testTarget(
-            name: "Parser Sequence Tests",
-            dependencies: [
-                .target(name: "Parser"),
-                .target(name: "Parser Sequence"),
-                .target(name: "Parser Skip"),
-                .product(name: "Either", package: "swift-either"),
-            ]
-        ),
-        .testTarget(
-            name: "Parser Standard Library Integration Tests",
+        .target(
+            name: "Parser Foundation Library Integration",
             dependencies: [
                 .target(name: "Parser"),
                 .target(name: "Parser Standard Library Integration"),
-                .target(name: "Parser Sequence"),
-            ]
+            ],
+            path: "Sources/Parser Foundation Library Integration"
+        ),
+        .target(
+            name: "Parser Test Support",
+            dependencies: [
+                .target(name: "Parser"),
+            ],
+            path: "Tests/Support"
+        ),
+        .testTarget(
+            name: "Parser Tests",
+            dependencies: [
+                .target(name: "Parser"),
+                .product(name: "Either", package: "swift-either"),
+                .target(name: "Parser Standard Library Integration"),
+                .target(name: "Parser Test Support"),
+                .target(name: "Parser Foundation Library Integration"),
+            ],
+            path: "Tests/Parser Tests",
+            resources: [.copy("Fixtures")]
         ),
     ],
     swiftLanguageModes: [.v6]
 )
 
-for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    let ecosystem: [SwiftSetting] = [
+for target in package.targets {
+    target.swiftSettings = [
         .strictMemorySafety(),
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
@@ -146,8 +79,4 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableExperimentalFeature("Lifetimes"),
         .enableUpcomingFeature("InferIsolatedConformances"),
     ]
-
-    let package: [SwiftSetting] = []
-
-    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package
 }

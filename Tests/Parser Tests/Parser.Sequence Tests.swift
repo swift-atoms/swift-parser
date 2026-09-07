@@ -1,7 +1,5 @@
 import Either
 import Parser
-import Parser_Sequence
-import Parser_Skip
 import Testing
 
 @Suite

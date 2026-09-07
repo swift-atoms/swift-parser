@@ -1,5 +1,4 @@
 import Parser
-import Parser_Map
 
 struct ScopedResult: ~Copyable, ~Escapable {
     let value: Int
