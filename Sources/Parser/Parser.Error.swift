@@ -5,7 +5,7 @@ extension Parser {
 
 extension Parser.Error {
 
-    public struct Transform<Upstream: Parser.`Protocol`>
+    public struct Transform<Upstream: Parser.`Protocol` & ~Copyable>: ~Copyable
     where
         Upstream.Input: ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable & ~Escapable
@@ -14,7 +14,7 @@ extension Parser.Error {
         let upstream: Upstream
 
         @inlinable
-        package init(_ upstream: Upstream) {
+        public init(_ upstream: consuming Upstream) {
             self.upstream = upstream
         }
     }
@@ -31,3 +31,10 @@ where
         Parser.Error.Transform(self)
     }
 }
+
+extension Parser.Error.Transform: Copyable
+where
+    Upstream: Parser.`Protocol`<Upstream.Input, Upstream.Output, Upstream.Failure> & Copyable,
+    Upstream.Input: ~Copyable & ~Escapable,
+    Upstream.Output: ~Copyable & ~Escapable
+{}
