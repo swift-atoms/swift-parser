@@ -21,11 +21,11 @@ private struct `Parser.Map Compiler Tests` {
         var products = URL(fileURLWithPath: Bundle.module.bundlePath)
         for _ in 0..<12 {
             let direct = products.appendingPathComponent(
-                "Parser_Map.swiftmodule"
+                "Parser.swiftmodule"
             )
             let modules = products
                 .appendingPathComponent("Modules")
-                .appendingPathComponent("Parser_Map.swiftmodule")
+                .appendingPathComponent("Parser.swiftmodule")
             if FileManager.default.fileExists(atPath: direct.path)
                 || FileManager.default.fileExists(atPath: modules.path)
             {
@@ -34,10 +34,10 @@ private struct `Parser.Map Compiler Tests` {
             products.deleteLastPathComponent()
         }
 
-        let direct = products.appendingPathComponent("Parser_Map.swiftmodule")
+        let direct = products.appendingPathComponent("Parser.swiftmodule")
         let modules = products
             .appendingPathComponent("Modules")
-            .appendingPathComponent("Parser_Map.swiftmodule")
+            .appendingPathComponent("Parser.swiftmodule")
         try #require(
             FileManager.default.fileExists(atPath: direct.path)
                 || FileManager.default.fileExists(atPath: modules.path)
