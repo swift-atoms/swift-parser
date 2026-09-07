@@ -13,7 +13,7 @@ where
     where
         P.Input == Input,
         P.Input: ~Copyable & ~Escapable,
-        P.Output: Escapable
+        P.Output: ~Copyable & Escapable
     {
         .init(upstream: self, transform: transform)
     }
