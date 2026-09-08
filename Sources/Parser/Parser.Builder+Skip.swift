@@ -3,9 +3,9 @@ public import Either
 extension Parser.Builder where Input: ~Copyable & ~Escapable {
 
     @inlinable
-    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`, each O>(
-        accumulated: A,
-        next: N
+    public static func buildPartialBlock<A: Parser.`Protocol` & ~Copyable, N: Parser.`Protocol` & ~Copyable, each O>(
+        accumulated: consuming A,
+        next: consuming N
     ) -> Parser.Skip<A, N, Either<A.Failure, N.Failure>>
     where
         A.Input == Input,
@@ -19,9 +19,9 @@ extension Parser.Builder where Input: ~Copyable & ~Escapable {
     }
 
     @inlinable
-    public static func buildPartialBlock<A: Parser.`Protocol`, N: Parser.`Protocol`, each O>(
-        accumulated: A,
-        next: N
+    public static func buildPartialBlock<A: Parser.`Protocol` & ~Copyable, N: Parser.`Protocol` & ~Copyable, each O>(
+        accumulated: consuming A,
+        next: consuming N
     ) -> Parser.Skip<A, N, A.Failure>
     where
         A.Input == Input,

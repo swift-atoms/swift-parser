@@ -1,6 +1,6 @@
 extension Parser {
 
-    public struct Append<A: Parser.`Protocol`, N: Parser.`Protocol`, Failure: Swift.Error, each O>: Parser.`Protocol`
+    public struct Append<A: Parser.`Protocol` & ~Copyable, N: Parser.`Protocol` & ~Copyable, Failure: Swift.Error, each O>: Parser.`Protocol`, ~Copyable
     where
         A.Input == N.Input,
         A.Input: ~Copyable & ~Escapable,
@@ -21,8 +21,8 @@ extension Parser {
 
         @inlinable
         public init(
-            _ accumulated: A,
-            _ next: N,
+            _ accumulated: consuming A,
+            _ next: consuming N,
             _ accumulatedFailure: @escaping (A.Failure) -> Failure,
             _ nextFailure: @escaping (N.Failure) -> Failure
         ) {
@@ -50,3 +50,11 @@ extension Parser {
         }
     }
 }
+
+extension Parser.Append: Copyable
+where
+    A: Parser.`Protocol`<A.Input, A.Output, A.Failure> & Copyable,
+    N: Parser.`Protocol`<N.Input, N.Output, N.Failure> & Copyable,
+    A.Input: ~Copyable & ~Escapable,
+    N.Input: ~Copyable & ~Escapable
+{}

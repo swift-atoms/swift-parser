@@ -39,7 +39,7 @@ where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,
     Output: ~Copyable & Escapable,
-    Body: Parser.`Protocol`<Input, Output, Failure>
+    Body: Parser.`Protocol`<Input, Output, Failure> & ~Copyable
 {
 
     @inlinable

@@ -42,6 +42,25 @@ private struct `Parser ownership and lifetime constraints survive module emissio
         #expect(diagnostic.contains("'Owned' conform to 'Copyable'"))
     }
 
+    @Test
+    func `a sequence builder cannot consume an owner captured from outside`() throws {
+        let diagnostic = try emissionFailure(named: "Captured Sequence Owner.swift")
+        #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
+    }
+
+    @Test
+    func `transferring an owner into append prevents its reuse`() throws {
+        let diagnostic = try emissionFailure(named: "Consumed Append Owner.swift")
+        #expect(diagnostic.contains("'owner' used after consume"))
+    }
+
+    @Test(arguments: ["Noncopyable Sequence Copyability.swift", "Noncopyable Append Copyability.swift"])
+    func `sequential wrappers with noncopyable stored owners cannot be copied`(_ fixture: String) throws {
+        let diagnostic = try emissionFailure(named: fixture)
+        #expect(diagnostic.contains("requireCopyable"))
+        #expect(diagnostic.contains("'Linear' conform to 'Copyable'"))
+    }
+
     private func emissionFailure(named name: String) throws -> String {
         let result = try emitFixture(named: name)
         try #require(result.status != 0, "Fixture unexpectedly emitted a module")

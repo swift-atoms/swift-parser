@@ -1,6 +1,6 @@
 extension Parser {
 
-    public struct Sequence<Input: ~Copyable & ~Escapable, Body: Parser.`Protocol`>: Parser.`Protocol`
+    public struct Sequence<Input: ~Copyable & ~Escapable, Body: Parser.`Protocol` & ~Copyable>: Parser.`Protocol`, ~Copyable
     where
         Body.Input == Input,
         Body.Output: ~Copyable & ~Escapable
@@ -26,3 +26,10 @@ extension Parser {
         }
     }
 }
+
+extension Parser.Sequence: Copyable
+where
+    Input: ~Copyable & ~Escapable,
+    Body: Parser.`Protocol`<Input, Body.Output, Body.Failure> & Copyable,
+    Body.Output: ~Copyable & ~Escapable
+{}
