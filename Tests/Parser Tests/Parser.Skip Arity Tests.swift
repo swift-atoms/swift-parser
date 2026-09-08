@@ -2,7 +2,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser.Skip arity` {
+struct `Parser bodies process twelve elements and stop at the first mismatch` {
 
     @Test
     func `a twelve element body parses every element`() throws(any Swift.Error) {

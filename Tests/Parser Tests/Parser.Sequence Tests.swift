@@ -3,7 +3,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser.Sequence` {
+struct `Parser sequence blocks infer input and preserve body output and failure` {
 
     @Test
     func `a block accepts twelve elements`() throws(any Swift.Error) {
@@ -86,7 +86,7 @@ private struct Literal: Parser.`Protocol` {
 }
 
 @Suite
-struct `Parser.Sequence Nonescapable Input` {
+struct `Parser sequence blocks nest within bodies over nonescapable cursors` {
 
     @Test
     func `a block nests inside a body over a nonescapable cursor`() throws(any Swift.Error) {

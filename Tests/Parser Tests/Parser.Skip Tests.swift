@@ -3,7 +3,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser.Skip and Append` {
+struct `Parser skip and append preserve tuple shape and stage failures` {
 
     @Test
     func `a void then a value is the value`() throws(any Swift.Error) {
@@ -272,7 +272,7 @@ private struct OtherLiteral: Parser.`Protocol` {
 }
 
 @Suite
-struct `Parser.Skip Nonescapable Input` {
+struct `Parser skip and append preserve values and failures over nonescapable cursors` {
 
     @Test
     func `Append and Skip pass a value through a nonescapable cursor`() throws(any Swift.Error) {

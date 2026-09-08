@@ -3,7 +3,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser.Error` {
+struct `Parser error maps transform failure branches and preserve successful outputs` {
 
     @Test
     func `error map rewrites the upstream failure`() {

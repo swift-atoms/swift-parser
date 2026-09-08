@@ -3,7 +3,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser.Map Tests` {
+struct `Parser maps preserve failure types and transfer transformed outputs` {
 
     @Test
     func `nonthrowing stages remain exactly nonthrowing`() {
@@ -305,7 +305,7 @@ private struct Linear: Parser.`Protocol` {
 }
 
 @Suite
-struct `Parser.Map Nonescapable Input` {
+struct `Parser maps transform values read from a nonescapable cursor` {
 
     @Test
     func `map transforms a value read from a nonescapable cursor`() throws(any Swift.Error) {

@@ -2,7 +2,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser.Witness` {
+struct `Parser witnesses execute their closure and preserve typed failure` {
 
     @Test
     func `a witness parses through its closure`() throws(any Swift.Error) {

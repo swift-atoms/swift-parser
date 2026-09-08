@@ -2,7 +2,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser Protocol Tests` {
+struct `Parser leaves bodies and parseable values expose their parsing operations` {
 
     @Test
     func `a leaf declares only parse`() throws(any Swift.Error) {

@@ -2,7 +2,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser Standard Library Integration` {
+struct `Optional parsers preserve present operations and omit absent body elements` {
 
     @Test
     func `Optional Parser parses a present parser`() throws(any Swift.Error) {

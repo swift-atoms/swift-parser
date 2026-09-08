@@ -3,7 +3,7 @@ import Parser
 import Testing
 
 @Suite
-struct `Parser.FlatMap` {
+struct `Parser flat maps select downstream operations and distinguish stage failures` {
 
     @Test
     func `the downstream parser depends on the upstream output`() throws(any Swift.Error) {
