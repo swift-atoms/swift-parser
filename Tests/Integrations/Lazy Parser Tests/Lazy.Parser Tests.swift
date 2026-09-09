@@ -20,7 +20,7 @@ struct `Lazy Parser Tests` {
         #expect(box.built == 0)
 
         var input: Substring = "abc"
-        let output = try lazy.parse(&input)
+        let output = try lazy.parser().parse(&input)
 
         #expect(output == "a")
         #expect(input == "bc")
@@ -40,8 +40,8 @@ struct `Lazy Parser Tests` {
         }
 
         var input: Substring = "aa"
-        _ = try lazy.parse(&input)
-        _ = try lazy.parse(&input)
+        _ = try lazy.parser().parse(&input)
+        _ = try lazy.parser().parse(&input)
 
         #expect(box.built == 2)
         #expect(input.isEmpty)
@@ -53,7 +53,7 @@ struct `Lazy Parser Tests` {
         var input: Substring = "b"
 
         #expect(throws: LiteralError.expected("a")) {
-            try lazy.parse(&input)
+            try lazy.parser().parse(&input)
         }
     }
 }
@@ -80,4 +80,18 @@ private struct Literal: Parsing {
     }
 }
 
+private struct Deferred: Parsing {
+    typealias Failure = LiteralError
+    var body: some Parsing<Substring, Character, LiteralError> {
+        Lazy(Literal("a"))
+    }
+}
+
+extension `Lazy Parser Tests` {
+    @Test func `a body adapts a lazy value`() throws {
+        var input: Substring = "abc"
+        #expect(try Deferred().parse(&input) == "a")
+        #expect(input == "bc")
+    }
+}
 #endif

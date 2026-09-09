@@ -44,7 +44,7 @@ struct `Either Parser` {
 }
 
 @Builder<Substring>
-private func branch(_ useLeft: Bool) -> Either<Literal, Literal> {
+private func branch(_ useLeft: Bool) -> Either<Literal, Literal>.Parser {
     if useLeft {
         Literal("a")
     } else {
@@ -74,4 +74,27 @@ private struct Literal: Parsing {
     }
 }
 
+private struct Selected: Parsing {
+    typealias Failure = Either<LiteralError, LiteralError>
+    let useLeft: Bool
+    var body: some Parsing<Substring, Character, Either<LiteralError, LiteralError>> {
+        if useLeft { Literal("a") } else { Literal("b") }
+    }
+}
+
+extension `Either Parser` {
+    @Test func `a body preserves conditional syntax`() throws {
+        var input: Substring = "abc"
+        #expect(try Selected(useLeft: true).parse(&input) == "a")
+        #expect(try Selected(useLeft: false).parse(&input) == "b")
+        #expect(input == "c")
+    }
+    @Test func `explicit and builder adapters wrap an existing either`() throws {
+        let selected: Either<Literal, Literal> = .left(Literal("a"))
+        var input: Substring = "aab"
+        #expect(try selected.parser().parse(&input) == "a")
+        #expect(try Parser { selected }.parse(&input) == "a")
+        #expect(input == "b")
+    }
+}
 #endif
