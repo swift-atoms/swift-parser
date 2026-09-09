@@ -14,10 +14,12 @@ To read your own UTF-8 files, add their absolute paths under the scheme's
 **Run → Arguments Passed On Launch**. Each file is parsed independently.
 
 Start with `User.Parser.swift`: its `var body` composes name selection, a comma,
-age selection, and a newline with the result builder, then maps the fields with `.map(User.init)`. The `name` and `age`
-definitions are directly below the grammar. A local `text(while:)` helper and
-explicit associated types below them bridge the current library API; these are
-example-local scaffolding, not new public parser APIs. The throwing initializer
+age selection, and a newline with the result builder, constructs the model with `Parser(User.init) { … }`. The `name` and `age`
+definitions are directly below the grammar. A local `text(while:)` helper bridges the current scanning API; it is
+example-local scaffolding, not a new public parser API. `Parsing` infers its
+associated types from the declared body. The inner grammar normalizes syntax
+failures to rejection before construction; invalid ages remain fatal. The mapping
+initializer preserves those failures rather than classifying them. The throwing initializer
 validates the age after the entire record has matched. `UserRecords.swift` repeats that complete parser using `0...` Cardinal
 bounds. `UserRecordsExample.swift` handles files and displays results.
 

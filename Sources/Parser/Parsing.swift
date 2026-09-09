@@ -36,11 +36,13 @@ where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,
     Output: ~Copyable & Escapable,
-    Body: Parsing<Input, Output, Failure> & ~Copyable
+    Body: Parsing & ~Copyable,
+    Body.Input: ~Copyable & ~Escapable,
+    Body.Output: ~Copyable & Escapable
 {
 
     @inlinable
-    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+    public borrowing func parse(_ input: inout Body.Input) throws(Body.Failure) -> Body.Output {
         try body.parse(&input)
     }
 }

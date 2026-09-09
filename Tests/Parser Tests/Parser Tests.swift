@@ -165,3 +165,68 @@ private struct `Parser ownership and lifetime constraints survive module emissio
         #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
     }
 }
+
+#if Map
+@Suite
+private struct `Parser mapping initializers preserve failures` {
+    private enum ConstructionFailure: Error, Equatable { case invalid }
+
+    @Test func `nonthrowing construction preserves parsing failure`() throws {
+        let parser = Parser(String.init) {
+            Parser<Substring, Int, ParseFailure> { input throws(ParseFailure) in
+                guard !input.isEmpty else { throw .empty }
+                return input.count
+            }
+        }
+        requireFailure(parser, ParseFailure.self)
+        var input: Substring = "abc"
+        #expect(try parser.parse(&input) == "3")
+        input = ""
+        #expect(throws: ParseFailure.empty) { try parser.parse(&input) }
+    }
+
+    @Test func `two throwing stages preserve the source of failure`() {
+        let parser = Parser({ (value: consuming Int) throws(ConstructionFailure) -> String in
+            throw .invalid
+        }) {
+            Parser<Substring, Int, ParseFailure> { input throws(ParseFailure) in
+                guard !input.isEmpty else { throw .empty }
+                return input.count
+            }
+        }
+        requireFailure(parser, Either<ParseFailure, ConstructionFailure>.self)
+        var input: Substring = ""
+        #expect(throws: Either<ParseFailure, ConstructionFailure>.left(.empty)) {
+            try parser.parse(&input)
+        }
+        input = "abc"
+        #expect(throws: Either<ParseFailure, ConstructionFailure>.right(.invalid)) {
+            try parser.parse(&input)
+        }
+    }
+
+    @Test func `infallible parsing introduces no Never branch`() {
+        let parser = Parser({ (_: consuming Int) throws(ConstructionFailure) -> String in
+            throw .invalid
+        }) { Parser<Substring, Int, Never> { $0.count } }
+        requireFailure(parser, ConstructionFailure.self)
+        var input: Substring = "abc"
+        #expect(throws: ConstructionFailure.invalid) { try parser.parse(&input) }
+    }
+
+    @Test func `fully infallible construction remains nonthrowing and builds once`() {
+        var builds = 0
+        let parser = Parser(String.init) {
+            let _ = { builds += 1 }()
+            Parser<Substring, Int, Never> { $0.count }
+        }
+        requireFailure(parser, Never.self)
+        var input: Substring = "abc"
+        #expect(parser.parse(&input) == "3")
+        #expect(parser.parse(&input) == "3")
+        #expect(builds == 1)
+    }
+
+    private func requireFailure<I, O, F>(_ parser: Parser<I, O, F>, _: F.Type) {}
+}
+#endif

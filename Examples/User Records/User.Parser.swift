@@ -2,15 +2,13 @@ import Parser
 
 extension User {
     struct Parser: Parsing {
-        var body: some Parsing<Substring, User, Failure> {
-            Parser::Parser {
+        var body: some Parsing<Substring, User, Either<Rejected, Invalid>> {
+            Parser::Parser(User.init) {
                 name
                 ","
                 age
                 "\n"
             }
-            .mapFailure { _ in Rejected.record }
-            .map(User.init)
         }
 
         private var name: some Parsing<Substring, String, Rejected> {
@@ -24,11 +22,6 @@ extension User {
 }
 
 extension User.Parser {
-    // Currently required by Parsing even though body declares these types.
-    typealias Input = Substring
-    typealias Output = User
-    typealias Failure = Either<Rejected, Invalid>
-
     enum Rejected: Error { case record }
     enum Invalid: Error, Equatable { case age(String) }
 

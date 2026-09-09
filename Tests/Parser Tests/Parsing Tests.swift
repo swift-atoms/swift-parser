@@ -48,8 +48,6 @@ private struct Literal: Parsing {
 }
 
 private struct Prefix: Parsing {
-    typealias Failure = LiteralError
-
     var body: some Parsing<Substring, Character, LiteralError> {
         Literal("a")
     }
@@ -92,8 +90,6 @@ private struct Value: ~Copyable, Parsing {
 }
 
 private struct BodyOwner: ~Copyable, Parsing {
-    typealias Failure = Value.Error
-
     let body: Value
 
     init(_ lifetime: Lifetime) {
@@ -102,3 +98,40 @@ private struct BodyOwner: ~Copyable, Parsing {
 }
 
 private func discard<T: ~Copyable>(_ value: consuming T) {}
+
+extension `Parsing forwards expressive bodies to their operations` {
+    @Test
+    func `body inference preserves scoped noncopyable input and typed failure`() throws {
+        let values = [7]
+        var input = ScopedInput(values.span)
+        let parser = ScopedBody()
+
+        #expect(try parser.parse(&input) == 7)
+        do {
+            _ = try parser.parse(&input)
+            Issue.record("Expected exhausted input")
+        } catch {
+            #expect(error == .exhausted)
+        }
+    }
+}
+
+private struct ScopedInput: ~Copyable, ~Escapable {
+    let values: Span<Int>
+    var position = 0
+
+    @_lifetime(copy values)
+    init(_ values: Span<Int>) { self.values = values }
+}
+
+private enum ScopedFailure: Error, Equatable { case exhausted }
+
+private struct ScopedBody: Parsing {
+    var body: some Parsing<ScopedInput, Int, ScopedFailure> {
+        Parser<ScopedInput, Int, ScopedFailure> { input throws(ScopedFailure) in
+            guard input.position < input.values.count else { throw .exhausted }
+            defer { input.position += 1 }
+            return input.values[input.position]
+        }
+    }
+}

@@ -1,3 +1,7 @@
+#if Map
+public import Either
+#endif
+
 /// A parser represented by a typed parsing function.
 public struct Parser<
     Input: ~Copyable & ~Escapable,
@@ -39,3 +43,57 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
         }
     }
 }
+
+#if Map
+extension Parser
+where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
+    /// Builds once and maps the result, preserving the parsing failure.
+    @inlinable
+    public init<P: Parsing & ~Copyable>(
+        _ transform: @escaping (consuming P.Output) -> Output,
+        @Builder<Input> _ build: () -> P
+    ) where P.Input: ~Copyable & ~Escapable,
+            P.Output: ~Copyable & ~Escapable,
+            P.Input == Input, P.Failure == Failure {
+        self.init { build().map(transform) }
+    }
+
+    /// Preserves parsing and construction failures as the left and right branches.
+    @inlinable
+    @_disfavoredOverload
+    public init<P: Parsing & ~Copyable, TransformFailure: Swift.Error>(
+        _ transform: @escaping (consuming P.Output) throws(TransformFailure) -> Output,
+        @Builder<Input> _ build: () -> P
+    ) where P.Input: ~Copyable & ~Escapable,
+            P.Output: ~Copyable & ~Escapable,
+            P.Input == Input, Failure == Either<P.Failure, TransformFailure> {
+        self.init { build().map(transform) }
+    }
+
+    /// With infallible parsing, only construction can fail.
+    @inlinable
+    public init<P: Parsing & ~Copyable>(
+        _ transform: @escaping (consuming P.Output) throws(Failure) -> Output,
+        @Builder<Input> _ build: () -> P
+    ) where P.Input: ~Copyable & ~Escapable,
+            P.Output: ~Copyable & ~Escapable,
+            P.Input == Input, P.Failure == Never {
+        self.init { build().map(transform) }
+    }
+}
+
+extension Parser
+where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable, Failure == Never {
+    /// Infallible parsing and construction remain exactly nonthrowing.
+    @inlinable
+    public init<P: Parsing & ~Copyable>(
+        _ transform: @escaping (consuming P.Output) -> Output,
+        @Builder<Input> _ build: () -> P
+    ) where P.Input: ~Copyable & ~Escapable,
+            P.Output: ~Copyable & ~Escapable,
+            P.Input == Input, P.Failure == Never {
+        self.init { build().map(transform) }
+    }
+}
+
+#endif
