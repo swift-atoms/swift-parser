@@ -16,18 +16,9 @@ let package = Package(
         .library(name: "Parser Foundation Integration", targets: ["Parser Foundation Integration"]),
         .library(name: "Parser Test Support", targets: ["Parser Test Support"]),
     ],
-    dependencies: [
-        .package(
-            url: "https://github.com/swift-atoms/swift-either.git",
-            branch: "main"
-        ),
-    ],
     targets: [
         .target(
             name: "Parser",
-            dependencies: [
-                .product(name: "Either", package: "swift-either"),
-            ],
             path: "Sources/Parser"
         ),
         
@@ -49,7 +40,6 @@ let package = Package(
             name: "Parser Tests",
             dependencies: [
                 .target(name: "Parser"),
-                .product(name: "Either", package: "swift-either"),
                 .target(name: "Parser Test Support"),
                 .target(name: "Parser Foundation Integration"),
             ],

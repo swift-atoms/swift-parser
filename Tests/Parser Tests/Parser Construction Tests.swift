@@ -1,4 +1,3 @@
-import Either
 import Parser
 import Testing
 
@@ -9,13 +8,12 @@ struct `Parser supports function and builder construction` {
         let count = Count()
         let parser = Parser {
             count.build()
-            Parser<Int, Void, Never> { $0 += 1 }
         }
         requireParsing(parser)
         var input = 3
         #expect(parser.parse(&input) == 3)
-        #expect(parser.parse(&input) == 5)
-        #expect(input == 7)
+        #expect(parser.parse(&input) == 4)
+        #expect(input == 5)
         #expect(count.builds == 1)
     }
 

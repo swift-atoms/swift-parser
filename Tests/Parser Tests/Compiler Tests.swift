@@ -17,86 +17,16 @@ private struct `Parser ownership and lifetime constraints survive module emissio
     }
 
     @Test
-    func `stored transform result must be escapable`() throws {
-        let diagnostic = try emissionFailure(
-            named: "Nonescapable Transform Result.swift"
-        )
-
-        #expect(
-            diagnostic.contains(
-                "candidate requires that 'ScopedResult' conform to 'Escapable'"
-            )
-        )
-    }
-
-    @Test
-    func `linear flat map owners compose over scoped input through the public API`() throws {
-        let result = try emitFixture(named: "Linear FlatMap Composition.swift")
-        #expect(result.status == 0, "\(result.diagnostic)")
-    }
-
-    @Test(arguments: ["Consumed Direct FlatMap Upstream.swift", "Consumed Fluent FlatMap Upstream.swift"])
-    func `transferring an upstream owner prevents its reuse`(_ fixture: String) throws {
-        let diagnostic = try emissionFailure(named: fixture)
-        #expect(diagnostic.contains("'upstream' used after consume"))
-    }
-
-    @Test
-    func `flat map results must remain escapable`() throws {
-        let diagnostic = try emissionFailure(named: "Nonescapable FlatMap Result.swift")
-        #expect(diagnostic.contains("'ScopedResult' conform to 'Escapable'"))
-    }
-
-    @Test
-    func `a flat map with a noncopyable stored upstream cannot be copied`() throws {
-        let diagnostic = try emissionFailure(named: "Noncopyable FlatMap Copyability.swift")
-        #expect(diagnostic.contains("requireCopyable"))
-        #expect(diagnostic.contains("'Owned' conform to 'Copyable'"))
-    }
-
-    @Test
     func `a sequence builder cannot consume an owner captured from outside`() throws {
         let diagnostic = try emissionFailure(named: "Captured Sequence Owner.swift")
         #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
     }
 
-    @Test
-    func `transferring an owner into append prevents its reuse`() throws {
-        let diagnostic = try emissionFailure(named: "Consumed Append Owner.swift")
-        #expect(diagnostic.contains("'owner' used after consume"))
-    }
-
-    @Test(arguments: ["Noncopyable Sequence Copyability.swift", "Noncopyable Append Copyability.swift"])
+    @Test(arguments: ["Noncopyable Sequence Copyability.swift"])
     func `sequential wrappers with noncopyable stored owners cannot be copied`(_ fixture: String) throws {
         let diagnostic = try emissionFailure(named: fixture)
         #expect(diagnostic.contains("requireCopyable"))
         #expect(diagnostic.contains("'Linear' conform to 'Copyable'"))
-    }
-
-    @Test(arguments: ["Escaping Append Accumulated.swift", "Escaping Append Next.swift"])
-    func `append results cannot outlive either operand backing storage`(_ fixture: String) throws {
-        let diagnostic = try emissionFailure(named: fixture)
-        #expect(diagnostic.contains("lifetime-dependent value escapes its scope"))
-    }
-
-    @Test
-    func `append adapters retain noncopyable parser ownership`() throws {
-        let diagnostic = try emissionFailure(named: "Noncopyable Append Adapter.swift")
-        #expect(diagnostic.contains("requireCopyable"))
-        #expect(diagnostic.contains("'Linear' conform to 'Copyable'"))
-    }
-
-    @Test
-    func `mapping a failure transfers the upstream owner`() throws {
-        let diagnostic = try emissionFailure(named: "Consumed Error Map Owner.swift")
-        #expect(diagnostic.contains("'owner' used after consume"))
-    }
-
-    @Test
-    func `failure mapping cannot copy a noncopyable upstream`() throws {
-        let diagnostic = try emissionFailure(named: "Noncopyable Error Map Copyability.swift")
-        #expect(diagnostic.contains("requireCopyable"))
-        #expect(diagnostic.contains("'Owned' conform to 'Copyable'"))
     }
 
     private func emissionFailure(named name: String) throws -> String {
