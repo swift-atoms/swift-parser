@@ -38,8 +38,8 @@
 @_exported public import Predicate
 #endif
 
-#if Prefix
-@_exported public import Prefix
+#if Search
+@_exported public import Search
 #endif
 
 #if Iterator
@@ -48,4 +48,13 @@
 
 #if Collection
 @_exported public import Collection
+#endif
+
+#if Repetition
+@_exported public import Repetition
+@_exported public import Cardinal
+#endif
+
+#if Repetition
+@_exported public import Checkpoint
 #endif

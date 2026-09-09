@@ -1,4 +1,4 @@
-#if Append && Skip && Map && Prefix
+#if Append && Skip && Map && Repetition && Collection
 import Parser
 import Testing
 
@@ -7,9 +7,9 @@ struct `Parser traits compose through one import` {
     @Test
     func `prefix recognition sequencing punctuation and mapping compose`() throws {
         let parser = Parser {
-            Prefix.While<Character>.Parser<Substring>(.init(minimum: 1) { $0 != "," })
+            Repetition((Cardinal(1)...), operation: Predicate<Character> { $0 != "," }).parser(for: Substring.self)
             ","
-            Prefix.While<Character>(minimum: 1) { $0 >= "0" && $0 <= "9" }
+            Repetition((Cardinal(1)...), operation: Predicate<Character> { $0 >= "0" && $0 <= "9" }).parser(for: Substring.self)
         }
         .map { (name: Substring, age: Substring) in
             (name: String(name), age: Int(age))

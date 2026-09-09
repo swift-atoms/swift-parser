@@ -1,12 +1,12 @@
-#if Prefix && Collection
-public import Prefix
+#if Search && Collection
+public import Search
 public import Collection
 
-extension Prefix.Through where Delimiter: Swift.Collection, Delimiter.Element: Equatable {
+extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equatable {
     /// Selects before committing, preserving input on selection failure.
     public func parser<Input: Collection.Slice.`Protocol`>(
         forCollection input: Input.Type
-    ) -> Parser::Parser<Input, Input, Error> where Input.Element == Delimiter.Element {
+    ) -> Parser::Parser<Input, Input, Error> where Input.Element == Pattern.Element {
         Parser::Parser { input throws(Error) in
             let end = try self.end(inCollection: input)
             let output = input[input.startIndex..<end]

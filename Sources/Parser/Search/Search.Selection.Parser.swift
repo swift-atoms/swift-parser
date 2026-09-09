@@ -1,15 +1,15 @@
-#if Prefix
-public import Prefix
+#if Search
+public import Search
 
-extension Prefix.UpTo where Delimiter: Swift.Collection, Delimiter.Element: Equatable {
+extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equatable {
     /// Selects a prefix and commits input consumption only after selection succeeds.
     public struct Parser<Input: Swift.Collection>: Parser::Parsing
-    where Input.SubSequence == Input, Input.Element == Delimiter.Element {
+    where Input.SubSequence == Input, Input.Element == Pattern.Element {
         public typealias Output = Input
-        public typealias Failure = Prefix.UpTo<Delimiter>.Error
-        public let wrapped: Prefix.UpTo<Delimiter>
+        public typealias Failure = Search<Pattern>.Error
+        public let wrapped: Search<Pattern>.Selection
 
-        public init(_ wrapped: Prefix.UpTo<Delimiter>) { self.wrapped = wrapped }
+        public init(_ wrapped: Search<Pattern>.Selection) { self.wrapped = wrapped }
 
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Input {
             let end = try wrapped.end(from: input.startIndex, advance: { position in
@@ -27,10 +27,16 @@ extension Prefix.UpTo where Delimiter: Swift.Collection, Delimiter.Element: Equa
             return output
         }
     }
+
+    public func parser<Input: Swift.Collection>(for input: Input.Type) -> Parser<Input>
+    where Input.SubSequence == Input, Input.Element == Pattern.Element {
+        .init(self)
+    }
+
 }
 
 extension Parser::Builder where Input: Swift.Collection, Input.SubSequence == Input {
-    public static func buildExpression<D: Swift.Collection>(_ selection: Prefix.UpTo<D>) -> Prefix.UpTo<D>.Parser<Input>
+    public static func buildExpression<D: Swift.Collection>(_ selection: Search<D>.Selection) -> Search<D>.Selection.Parser<Input>
     where D.Element: Equatable, D.Element == Input.Element {
         .init(selection)
     }

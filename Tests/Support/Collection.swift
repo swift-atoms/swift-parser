@@ -1,4 +1,4 @@
-#if Prefix && Iterator && Collection
+#if Repetition && Iterator && Collection
 package import Collection
 package import Index
 package import Iterator

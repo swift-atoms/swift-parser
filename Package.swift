@@ -16,6 +16,7 @@ let package = Package(
         .library(name: "Parser Test Support", targets: ["Parser Test Support"]),
     ],
     traits: [
+        .trait(name: "Repetition", description: "Range-based repetition", enabledTraits: ["Either"]),
         .trait(
             name: "Append",
             description: "Parsing integration for Append",
@@ -64,8 +65,8 @@ let package = Package(
             description: "Parsing integration for Predicate"
         ),
         .trait(
-            name: "Prefix",
-            description: "Parsing integration for Prefix"
+            name: "Search",
+            description: "Parsing integration for Search"
         ),
         .trait(
             name: "Iterator",
@@ -77,6 +78,7 @@ let package = Package(
         ),
         .default(
             enabledTraits: [
+                "Repetition",
                 "Append",
                 "Either",
                 "Pair",
@@ -87,13 +89,16 @@ let package = Package(
                 "Map",
                 "Optic",
                 "Predicate",
-                "Prefix",
+                "Search",
                 "Iterator",
                 "Collection"
             ]
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-atoms/swift-checkpoint.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-cardinal.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-repetition.git", branch: "main"),
         .package(
             url: "https://github.com/swift-atoms/swift-tagged.git",
             branch: "main"
@@ -147,24 +152,28 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-prefix.git",
+            url: "https://github.com/swift-atoms/swift-search.git",
             branch: "main"
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-iterator.git",
             branch: "main",
-            traits: ["default", "Prefix"]
+            traits: ["default", "Search", "Repetition"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-collection.git",
             branch: "main",
-            traits: ["default", "Prefix"]
+            traits: ["default", "Search", "Repetition"]
         ),
     ],
     targets: [
+        .testTarget(name: "Repetition Parser Tests", dependencies: [.target(name: "Parser")]),
         .target(
             name: "Parser",
             dependencies: [
+                .product(name: "Checkpoint", package: "swift-checkpoint", condition: .when(traits: ["Repetition"])),
+                .product(name: "Repetition", package: "swift-repetition", condition: .when(traits: ["Repetition"])),
+                .product(name: "Cardinal", package: "swift-cardinal", condition: .when(traits: ["Repetition"])),
                 .product(name: "Append", package: "swift-append", condition: .when(traits: ["Append"])),
                 .product(name: "Either", package: "swift-either", condition: .when(traits: ["Either"])),
                 .product(name: "Pair", package: "swift-pair", condition: .when(traits: ["Pair"])),
@@ -175,7 +184,7 @@ let package = Package(
                 .product(name: "Map", package: "swift-map", condition: .when(traits: ["Map"])),
                 .product(name: "Optic", package: "swift-optic", condition: .when(traits: ["Optic"])),
                 .product(name: "Predicate", package: "swift-predicate", condition: .when(traits: ["Predicate"])),
-                .product(name: "Prefix", package: "swift-prefix", condition: .when(traits: ["Prefix"])),
+                .product(name: "Search", package: "swift-search", condition: .when(traits: ["Search"])),
                 .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator"])),
                 .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["Collection"])),
             ]
@@ -186,9 +195,9 @@ let package = Package(
                 .target(name: "Parser"),
                 .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["Collection"])),
                 .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator"])),
-                .product(name: "Index", package: "swift-index", condition: .when(traits: ["Prefix"])),
-                .product(name: "Ordinal", package: "swift-ordinal", condition: .when(traits: ["Prefix"])),
-                .product(name: "Tagged", package: "swift-tagged", condition: .when(traits: ["Prefix"])),
+                .product(name: "Index", package: "swift-index", condition: .when(traits: ["Repetition"])),
+                .product(name: "Ordinal", package: "swift-ordinal", condition: .when(traits: ["Repetition"])),
+                .product(name: "Tagged", package: "swift-tagged", condition: .when(traits: ["Repetition"])),
             ],
             path: "Tests/Support",
             resources: [.copy("Fixtures")]
@@ -264,14 +273,14 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "Prefix Collection Parser Tests",
+            name: "Collection Selection Parser Tests",
             dependencies: [
                 .target(name: "Parser"),
                 .target(name: "Parser Test Support"),
             ]
         ),
         .testTarget(
-            name: "Prefix Parser Tests",
+            name: "Selection Parser Tests",
             dependencies: [
                 .target(name: "Parser"),
                 .target(name: "Parser Test Support"),
