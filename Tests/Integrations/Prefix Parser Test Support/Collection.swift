@@ -1,10 +1,9 @@
 #if Prefix && Iterator && Collection
-package import Prefix
 package import Collection
 package import Index
 package import Iterator
-package import Ordinal
-package import Tagged
+internal import Ordinal
+internal import Tagged
 
 package enum Fixture {}
 
