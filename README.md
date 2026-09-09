@@ -90,3 +90,13 @@ An unrestricted package update hit an unrelated dependency-identity conflict
 between the swift-atoms and swift-molecules URLs. Keeping the workspace's
 resolved dependencies allowed validation without changing mirrors or manifests'
 dependency paths. No experiment changes have been committed or published.
+
+## Restoring this branch with the optic integration
+
+The matching optic changes are saved in
+`Experiments/MappingProperties/optic-integration.patch`. The patch applies on top
+of swift-optic-parser's pre-existing uncommitted method-adapter migration (the
+state restored alongside main). Apply it from that repository with `git apply`
+when revisiting this experiment. A separate optic branch could not be created
+because writes to that repository's Git metadata were blocked. Its earlier
+method-based source edits were preserved on main.
