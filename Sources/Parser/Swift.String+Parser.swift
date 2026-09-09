@@ -5,7 +5,7 @@ extension Swift.String {
         public typealias Output = Void
         public typealias Failure = Error
 
-        public enum Error: Swift.Error, Equatable { case mismatch }
+        public typealias Error = Swift.Slice<Swift.String>.Parser<Input>.Error
 
         public let wrapped: Swift.String
 
@@ -16,7 +16,7 @@ extension Swift.String {
 
         @inlinable
         public borrowing func parse(_ input: inout Substring) throws(Error) {
-            guard matchPrefix(wrapped, in: &input) else { throw .mismatch }
+            try wrapped.parser(for: Input.self).parse(&input)
         }
     }
 }

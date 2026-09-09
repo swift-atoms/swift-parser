@@ -5,7 +5,7 @@ extension Swift.ArraySlice where Element: Equatable {
         public typealias Output = Void
         public typealias Failure = Error
 
-        public enum Error: Swift.Error, Equatable { case mismatch }
+        public typealias Error = Swift.Slice<Swift.ArraySlice<Element>>.Parser<Input>.Error
 
         public let wrapped: Swift.ArraySlice<Element>
 
@@ -16,7 +16,7 @@ extension Swift.ArraySlice where Element: Equatable {
 
         @inlinable
         public borrowing func parse(_ input: inout Input) throws(Error) {
-            guard matchPrefix(wrapped, in: &input) else { throw .mismatch }
+            try wrapped.parser(for: Input.self).parse(&input)
         }
     }
 }

@@ -5,7 +5,7 @@ extension Swift.Substring {
         public typealias Output = Void
         public typealias Failure = Error
 
-        public enum Error: Swift.Error, Equatable { case mismatch }
+        public typealias Error = Swift.Slice<Swift.Substring>.Parser<Input>.Error
 
         public let wrapped: Swift.Substring
 
@@ -16,7 +16,7 @@ extension Swift.Substring {
 
         @inlinable
         public borrowing func parse(_ input: inout Substring) throws(Error) {
-            guard matchPrefix(wrapped, in: &input) else { throw .mismatch }
+            try wrapped.parser(for: Input.self).parse(&input)
         }
     }
 }

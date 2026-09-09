@@ -164,5 +164,4 @@ private struct `Parser ownership and lifetime constraints survive module emissio
         let diagnostic = try Compiler.emissionFailure(named: "Captured Parser Owner.swift")
         #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
     }
-
 }

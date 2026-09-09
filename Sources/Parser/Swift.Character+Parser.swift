@@ -5,7 +5,7 @@ extension Swift.Character {
         public typealias Output = Void
         public typealias Failure = Error
 
-        public enum Error: Swift.Error, Equatable { case mismatch }
+        public typealias Error = Swift.Slice<Swift.CollectionOfOne<Swift.Character>>.Parser<Input>.Error
 
         public let wrapped: Swift.Character
 
@@ -16,7 +16,7 @@ extension Swift.Character {
 
         @inlinable
         public borrowing func parse(_ input: inout Substring) throws(Error) {
-            guard matchPrefix(Swift.CollectionOfOne(wrapped), in: &input) else { throw .mismatch }
+            try Swift.CollectionOfOne(wrapped).parser(for: Input.self).parse(&input)
         }
     }
 }
