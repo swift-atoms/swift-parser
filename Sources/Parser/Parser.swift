@@ -25,7 +25,9 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
     /// Scoped outputs remain supported by direct construction and concrete
     /// Parsing implementations; this initializer requires an escapable output.
     @inlinable
-    public init<P: Parsing & ~Copyable>(@Builder<Input> _ build: () -> P)
+    public init<P: Parsing & ~Copyable>(
+        @Builder<Input> _ build: () -> P
+    )
     where
         P.Input: ~Copyable & ~Escapable,
         P.Output: ~Copyable & Escapable,

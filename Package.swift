@@ -34,7 +34,8 @@ let package = Package(
             dependencies: [
                 .target(name: "Parser"),
             ],
-            path: "Tests/Support"
+            path: "Tests/Support",
+            resources: [.copy("Fixtures")]
         ),
         .testTarget(
             name: "Parser Tests",
@@ -43,8 +44,7 @@ let package = Package(
                 .target(name: "Parser Test Support"),
                 .target(name: "Parser Foundation Integration"),
             ],
-            path: "Tests/Parser Tests",
-            resources: [.copy("Fixtures")]
+            path: "Tests/Parser Tests"
         ),
     ],
     swiftLanguageModes: [.v6]

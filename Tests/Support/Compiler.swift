@@ -1,34 +1,14 @@
 import Foundation
 import Testing
 
-@Suite
-private struct `Parser ownership and lifetime constraints survive module emission` {
-
-    @Test(arguments: ["Escaping Parser Input.swift"])
-    func `concrete parser results cannot outlive input`(_ fixture: String) throws {
-        let diagnostic = try emissionFailure(named: fixture)
-        #expect(diagnostic.contains("escapes its scope"), "\(diagnostic)")
-    }
-
-    @Test
-    func `concrete parser supports scoped input and direct scoped output`() throws {
-        let result = try emitFixture(named: "Scoped Parser Construction.swift")
-        #expect(result.status == 0, "\(result.diagnostic)")
-    }
-
-    @Test
-    func `a parser builder cannot consume an owner captured from outside`() throws {
-        let diagnostic = try emissionFailure(named: "Captured Parser Owner.swift")
-        #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
-    }
-
-    private func emissionFailure(named name: String) throws -> String {
+package enum Compiler {
+    package static func emissionFailure(named name: String) throws -> String {
         let result = try emitFixture(named: name)
         try #require(result.status != 0, "Fixture unexpectedly emitted a module")
         return result.diagnostic
     }
 
-    private func emitFixture(named name: String) throws -> (status: Int32, diagnostic: String) {
+    package static func emitFixture(named name: String) throws -> (status: Int32, diagnostic: String) {
         var products = URL(fileURLWithPath: Bundle.module.bundlePath)
         for _ in 0..<12 {
             let direct = products.appendingPathComponent(

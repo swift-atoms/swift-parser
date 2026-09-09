@@ -22,3 +22,13 @@ func builderScopedInput() {
     var input = Cursor(values.span)
     _ = parser.parse(&input)
 }
+
+func resultScopedOutput() {
+    let parser = Result<Parser<Cursor, Span<Int>, Never>, Never>.Parser(
+        .success(Parser { input in input.values })
+    )
+    let values = [1, 2]
+    var input = Cursor(values.span)
+    let output = parser.parse(&input)
+    _ = output.count
+}

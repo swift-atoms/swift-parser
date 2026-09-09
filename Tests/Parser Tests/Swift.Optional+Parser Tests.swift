@@ -16,6 +16,15 @@ struct `Optional parsers preserve present operations and omit absent body elemen
     }
 
     @Test
+    func `a present parser failure is not treated as absence`() {
+        var input: Substring = "swim"
+        #expect(throws: Mismatch.mismatch) {
+            try OptionalPrefix(includePrefix: true).parse(&input)
+        }
+        #expect(input == "swim")
+    }
+
+    @Test
     func `Optional Parser skips an absent parser`() throws(any Swift.Error) {
         let parser = Swift.Optional<Prefix>.Parser(nil)
         var input: Substring = "swift-parser"
@@ -65,9 +74,7 @@ struct `Optional parsers preserve present operations and omit absent body elemen
     }
 }
 
-private enum Mismatch: Swift.Error, Equatable {
-    case mismatch
-}
+private typealias Mismatch = Swift.String.Parser.Error
 
 private struct Prefix: Parsing {
     let text: String
@@ -76,9 +83,10 @@ private struct Prefix: Parsing {
         self.text = text
     }
 
-    func parse(_ input: inout Substring) throws(Mismatch) {
-        guard input.hasPrefix(text) else { throw .mismatch }
-        input = input.dropFirst(text.count)
+    typealias Failure = Mismatch
+
+    var body: some Parsing<Substring, Void, Mismatch> {
+        text
     }
 }
 
