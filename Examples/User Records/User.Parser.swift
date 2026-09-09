@@ -1,0 +1,57 @@
+import Parser
+
+extension User {
+    struct Parser: Parsing {
+        var body: some Parsing<Substring, User, Failure> {
+            Parser::Parser {
+                name
+                ","
+                age
+                "\n"
+            }
+            .mapFailure { _ in Rejected.record }
+            .map(User.init)
+        }
+
+        private var name: some Parsing<Substring, String, Rejected> {
+            text { $0.isLetter || $0 == " " }
+        }
+
+        private var age: some Parsing<Substring, String, Rejected> {
+            text { $0 >= "0" && $0 <= "9" }
+        }
+    }
+}
+
+extension User.Parser {
+    // Currently required by Parsing even though body declares these types.
+    typealias Input = Substring
+    typealias Output = User
+    typealias Failure = Either<Rejected, Invalid>
+
+    enum Rejected: Error { case record }
+    enum Invalid: Error, Equatable { case age(String) }
+
+    /// One or more matching characters, materialized as a String.
+    private func text(
+        while accepts: @escaping (Character) -> Bool
+    ) -> some Parsing<Substring, String, Rejected> {
+        Repetition(
+            (1...),
+            operation: Predicate<Character> { accepts($0) }
+        )
+        .parser(for: Substring.self)
+        .map { String($0) }
+        .mapFailure { _ in Rejected.record }
+    }
+}
+
+extension User {
+    /// Convert the complete record only after its terminating newline matched.
+    fileprivate init(name: String, age: String) throws(Parser.Invalid) {
+        guard let value = Int(age), (0...130).contains(value) else {
+            throw .age(age)
+        }
+        self.init(name: name, age: value)
+    }
+}

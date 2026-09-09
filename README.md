@@ -3,6 +3,14 @@
 `Parser` provides the parsing protocol, function representation, result builder,
 standard-library adapters, and optional integrations with the algebra packages.
 
+## Executable example
+
+[User records](Examples/User%20Records/README.md) parses text files into `User`
+values with `var body`, result-builder composition, and range-based repetition.
+In `parser.xcworkspace`, select **User Records Example** and press **Cmd+R** to
+run the bundled success, rejection, and fatal-error scenarios, or **Cmd+U** to
+run its integration tests.
+
 ## Package traits
 
 All traits are enabled by default. There is no aggregate composition trait.

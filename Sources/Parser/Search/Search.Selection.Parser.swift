@@ -12,16 +12,20 @@ extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equ
         public init(_ wrapped: Search<Pattern>.Selection) { self.wrapped = wrapped }
 
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Input {
-            let end = try wrapped.end(from: input.startIndex, advance: { position in
-                position == input.endIndex ? nil : input.index(after: position)
-            }, matching: { delimiter, position in
-                var end = position
-                for element in delimiter {
-                    guard end != input.endIndex, input[end] == element else { return nil }
-                    input.formIndex(after: &end)
+            let end = try wrapped.end(
+                from: input.startIndex,
+                advance: { position in
+                    position == input.endIndex ? nil : input.index(after: position)
+                },
+                matching: { delimiter, position in
+                    var end = position
+                    for element in delimiter {
+                        guard end != input.endIndex, input[end] == element else { return nil }
+                        input.formIndex(after: &end)
+                    }
+                    return end
                 }
-                return end
-            })
+            )
             let output = input[..<end]
             input = input[end...]
             return output

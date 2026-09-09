@@ -1,0 +1,426 @@
+// !$*UTF8*$!
+{
+"archiveVersion" = "1";
+"classes" = {
+
+};
+"objectVersion" = "77";
+"objects" = {
+"000000000000000000000001" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "User Records/User.swift";
+"sourceTree" = "<group>";
+};
+"000000000000000000000002" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "User Records/User.Parser.swift";
+"sourceTree" = "<group>";
+};
+"000000000000000000000003" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "User Records/UserRecords.swift";
+"sourceTree" = "<group>";
+};
+"000000000000000000000004" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "User Records/UserRecordsExample.swift";
+"sourceTree" = "<group>";
+};
+"000000000000000000000005" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "User Records Tests/UserRecords Tests.swift";
+"sourceTree" = "<group>";
+};
+"000000000000000000000006" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "folder";
+"path" = "User Records/Samples";
+"sourceTree" = "<group>";
+};
+"000000000000000000000007" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "net.daringfireball.markdown";
+"path" = "User Records/README.md";
+"sourceTree" = "<group>";
+};
+"000000000000000000000008" = {
+"isa" = "PBXFileReference";
+"explicitFileType" = "compiled.mach-o.executable";
+"path" = "user-records";
+"sourceTree" = "BUILT_PRODUCTS_DIR";
+};
+"000000000000000000000009" = {
+"isa" = "PBXFileReference";
+"explicitFileType" = "wrapper.cfbundle";
+"path" = "User Records Tests.xctest";
+"sourceTree" = "BUILT_PRODUCTS_DIR";
+};
+"00000000000000000000000A" = {
+"isa" = "PBXGroup";
+"name" = "Products";
+"children" = (
+"000000000000000000000008",
+"000000000000000000000009",
+);
+"sourceTree" = "<group>";
+};
+"00000000000000000000000B" = {
+"isa" = "PBXGroup";
+"children" = (
+"000000000000000000000001",
+"000000000000000000000002",
+"000000000000000000000003",
+"000000000000000000000004",
+"000000000000000000000005",
+"000000000000000000000006",
+"000000000000000000000007",
+"00000000000000000000000A",
+);
+"sourceTree" = "<group>";
+};
+"00000000000000000000000C" = {
+"isa" = "XCLocalSwiftPackageReference";
+"relativePath" = "..";
+};
+"00000000000000000000000D" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000006";
+};
+"00000000000000000000000E" = {
+"isa" = "PBXCopyFilesBuildPhase";
+"buildActionMask" = "2147483647";
+"dstPath" = "";
+"dstSubfolderSpec" = "16";
+"files" = (
+"00000000000000000000000D",
+);
+"runOnlyForDeploymentPostprocessing" = "0";
+};
+"00000000000000000000000F" = {
+"isa" = "XCSwiftPackageProductDependency";
+"package" = "00000000000000000000000C";
+"productName" = "Parser";
+};
+"000000000000000000000010" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000001";
+};
+"000000000000000000000011" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000002";
+};
+"000000000000000000000012" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000003";
+};
+"000000000000000000000013" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000004";
+};
+"000000000000000000000014" = {
+"isa" = "PBXSourcesBuildPhase";
+"buildActionMask" = "2147483647";
+"files" = (
+"000000000000000000000010",
+"000000000000000000000011",
+"000000000000000000000012",
+"000000000000000000000013",
+);
+"runOnlyForDeploymentPostprocessing" = "0";
+};
+"000000000000000000000015" = {
+"isa" = "PBXBuildFile";
+"productRef" = "00000000000000000000000F";
+};
+"000000000000000000000016" = {
+"isa" = "PBXFrameworksBuildPhase";
+"buildActionMask" = "2147483647";
+"files" = (
+"000000000000000000000015",
+);
+"runOnlyForDeploymentPostprocessing" = "0";
+};
+"000000000000000000000017" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Debug";
+"buildSettings" = {
+"SWIFT_VERSION" = "6.0";
+"MACOSX_DEPLOYMENT_TARGET" = "27.0";
+"SDKROOT" = "macosx";
+"CODE_SIGN_IDENTITY" = "-";
+"SWIFT_STRICT_CONCURRENCY" = "complete";
+"OTHER_SWIFT_FLAGS" = (
+"$(inherited)",
+"-enable-experimental-feature",
+"Lifetimes",
+"-enable-experimental-feature",
+"MoveOnlyTuples",
+);
+"CLANG_ENABLE_MODULES" = "YES";
+"PRODUCT_NAME" = "user-records";
+"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+"ENABLE_TESTABILITY" = "YES";
+};
+};
+"000000000000000000000018" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Release";
+"buildSettings" = {
+"SWIFT_VERSION" = "6.0";
+"MACOSX_DEPLOYMENT_TARGET" = "27.0";
+"SDKROOT" = "macosx";
+"CODE_SIGN_IDENTITY" = "-";
+"SWIFT_STRICT_CONCURRENCY" = "complete";
+"OTHER_SWIFT_FLAGS" = (
+"$(inherited)",
+"-enable-experimental-feature",
+"Lifetimes",
+"-enable-experimental-feature",
+"MoveOnlyTuples",
+);
+"CLANG_ENABLE_MODULES" = "YES";
+"PRODUCT_NAME" = "user-records";
+"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+"ENABLE_TESTABILITY" = "NO";
+};
+};
+"000000000000000000000019" = {
+"isa" = "XCConfigurationList";
+"buildConfigurations" = (
+"000000000000000000000017",
+"000000000000000000000018",
+);
+"defaultConfigurationIsVisible" = "0";
+"defaultConfigurationName" = "Release";
+};
+"00000000000000000000001A" = {
+"isa" = "PBXNativeTarget";
+"name" = "User Records Example";
+"productName" = "User Records Example";
+"productReference" = "000000000000000000000008";
+"productType" = "com.apple.product-type.tool";
+"buildPhases" = (
+"000000000000000000000014",
+"000000000000000000000016",
+"00000000000000000000000E",
+);
+"buildRules" = (
+);
+"dependencies" = (
+);
+"packageProductDependencies" = (
+"00000000000000000000000F",
+);
+"buildConfigurationList" = "000000000000000000000019";
+};
+"00000000000000000000001B" = {
+"isa" = "XCSwiftPackageProductDependency";
+"package" = "00000000000000000000000C";
+"productName" = "Parser";
+};
+"00000000000000000000001C" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000001";
+};
+"00000000000000000000001D" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000002";
+};
+"00000000000000000000001E" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000003";
+};
+"00000000000000000000001F" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000005";
+};
+"000000000000000000000020" = {
+"isa" = "PBXSourcesBuildPhase";
+"buildActionMask" = "2147483647";
+"files" = (
+"00000000000000000000001C",
+"00000000000000000000001D",
+"00000000000000000000001E",
+"00000000000000000000001F",
+);
+"runOnlyForDeploymentPostprocessing" = "0";
+};
+"000000000000000000000021" = {
+"isa" = "PBXBuildFile";
+"productRef" = "00000000000000000000001B";
+};
+"000000000000000000000022" = {
+"isa" = "PBXFrameworksBuildPhase";
+"buildActionMask" = "2147483647";
+"files" = (
+"000000000000000000000021",
+);
+"runOnlyForDeploymentPostprocessing" = "0";
+};
+"000000000000000000000023" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Debug";
+"buildSettings" = {
+"SWIFT_VERSION" = "6.0";
+"MACOSX_DEPLOYMENT_TARGET" = "27.0";
+"SDKROOT" = "macosx";
+"CODE_SIGN_IDENTITY" = "-";
+"SWIFT_STRICT_CONCURRENCY" = "complete";
+"OTHER_SWIFT_FLAGS" = (
+"$(inherited)",
+"-enable-experimental-feature",
+"Lifetimes",
+"-enable-experimental-feature",
+"MoveOnlyTuples",
+);
+"CLANG_ENABLE_MODULES" = "YES";
+"PRODUCT_NAME" = "$(TARGET_NAME)";
+"PRODUCT_BUNDLE_IDENTIFIER" = "org.swift-institute.parser.UserRecordsTests";
+"GENERATE_INFOPLIST_FILE" = "YES";
+"LD_RUNPATH_SEARCH_PATHS" = (
+"$(inherited)",
+"@loader_path/../Frameworks",
+);
+"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+"ENABLE_TESTABILITY" = "YES";
+};
+};
+"000000000000000000000024" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Release";
+"buildSettings" = {
+"SWIFT_VERSION" = "6.0";
+"MACOSX_DEPLOYMENT_TARGET" = "27.0";
+"SDKROOT" = "macosx";
+"CODE_SIGN_IDENTITY" = "-";
+"SWIFT_STRICT_CONCURRENCY" = "complete";
+"OTHER_SWIFT_FLAGS" = (
+"$(inherited)",
+"-enable-experimental-feature",
+"Lifetimes",
+"-enable-experimental-feature",
+"MoveOnlyTuples",
+);
+"CLANG_ENABLE_MODULES" = "YES";
+"PRODUCT_NAME" = "$(TARGET_NAME)";
+"PRODUCT_BUNDLE_IDENTIFIER" = "org.swift-institute.parser.UserRecordsTests";
+"GENERATE_INFOPLIST_FILE" = "YES";
+"LD_RUNPATH_SEARCH_PATHS" = (
+"$(inherited)",
+"@loader_path/../Frameworks",
+);
+"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+"ENABLE_TESTABILITY" = "NO";
+};
+};
+"000000000000000000000025" = {
+"isa" = "XCConfigurationList";
+"buildConfigurations" = (
+"000000000000000000000023",
+"000000000000000000000024",
+);
+"defaultConfigurationIsVisible" = "0";
+"defaultConfigurationName" = "Release";
+};
+"000000000000000000000026" = {
+"isa" = "PBXNativeTarget";
+"name" = "User Records Tests";
+"productName" = "User Records Tests";
+"productReference" = "000000000000000000000009";
+"productType" = "com.apple.product-type.bundle.unit-test";
+"buildPhases" = (
+"000000000000000000000020",
+"000000000000000000000022",
+);
+"buildRules" = (
+);
+"dependencies" = (
+);
+"packageProductDependencies" = (
+"00000000000000000000001B",
+);
+"buildConfigurationList" = "000000000000000000000025";
+};
+"000000000000000000000027" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Debug";
+"buildSettings" = {
+"SWIFT_VERSION" = "6.0";
+"MACOSX_DEPLOYMENT_TARGET" = "27.0";
+"SDKROOT" = "macosx";
+"CODE_SIGN_IDENTITY" = "-";
+"SWIFT_STRICT_CONCURRENCY" = "complete";
+"OTHER_SWIFT_FLAGS" = (
+"$(inherited)",
+"-enable-experimental-feature",
+"Lifetimes",
+"-enable-experimental-feature",
+"MoveOnlyTuples",
+);
+"CLANG_ENABLE_MODULES" = "YES";
+"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+"ENABLE_TESTABILITY" = "YES";
+};
+};
+"000000000000000000000028" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Release";
+"buildSettings" = {
+"SWIFT_VERSION" = "6.0";
+"MACOSX_DEPLOYMENT_TARGET" = "27.0";
+"SDKROOT" = "macosx";
+"CODE_SIGN_IDENTITY" = "-";
+"SWIFT_STRICT_CONCURRENCY" = "complete";
+"OTHER_SWIFT_FLAGS" = (
+"$(inherited)",
+"-enable-experimental-feature",
+"Lifetimes",
+"-enable-experimental-feature",
+"MoveOnlyTuples",
+);
+"CLANG_ENABLE_MODULES" = "YES";
+"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+"ENABLE_TESTABILITY" = "NO";
+};
+};
+"000000000000000000000029" = {
+"isa" = "XCConfigurationList";
+"buildConfigurations" = (
+"000000000000000000000027",
+"000000000000000000000028",
+);
+"defaultConfigurationIsVisible" = "0";
+"defaultConfigurationName" = "Release";
+};
+"00000000000000000000002A" = {
+"isa" = "PBXProject";
+"attributes" = {
+"LastUpgradeCheck" = "2700";
+};
+"buildConfigurationList" = "000000000000000000000029";
+"compatibilityVersion" = "Xcode 16.0";
+"developmentRegion" = "en";
+"knownRegions" = (
+"en",
+"Base",
+);
+"mainGroup" = "00000000000000000000000B";
+"productRefGroup" = "00000000000000000000000A";
+"projectDirPath" = "";
+"projectRoot" = "";
+"packageReferences" = (
+"00000000000000000000000C",
+);
+"targets" = (
+"00000000000000000000001A",
+"000000000000000000000026",
+);
+};
+};
+"rootObject" = "00000000000000000000002A";
+}
