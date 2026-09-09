@@ -4,10 +4,13 @@ extension User {
     struct Parser: Parsing {
         var body: some Parsing<Substring, User, Either<Rejected, Invalid>> {
             Parser::Parser(User.init) {
-                name
-                ","
-                age
-                "\n"
+                Parser::Parser {
+                    name
+                    ","
+                    age
+                    "\n"
+                }
+                .mapFailure { _ in Rejected.record }
             }
         }
 
