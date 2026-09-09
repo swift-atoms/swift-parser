@@ -7,9 +7,7 @@ struct `Parser traits compose through one import` {
     @Test
     func `prefix recognition sequencing punctuation and mapping compose`() throws {
         let parser = Parser {
-            Prefix.While<Character>.Parser<Substring>(
-                .init(minimum: 1) { $0 != "," }
-            )
+            Prefix.While<Character>.Parser<Substring>(.init(minimum: 1) { $0 != "," })
             ","
             Prefix.While<Character>(minimum: 1) { $0 >= "0" && $0 <= "9" }
         }

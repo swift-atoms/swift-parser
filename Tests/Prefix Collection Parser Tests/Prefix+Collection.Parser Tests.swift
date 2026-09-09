@@ -1,5 +1,5 @@
 #if Prefix && Iterator && Collection
-import Prefix_Parser_Test_Support
+import Parser_Test_Support
 import Prefix
 import Prefix_Collection
 import Parser

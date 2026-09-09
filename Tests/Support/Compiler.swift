@@ -2,13 +2,13 @@ import Foundation
 import Testing
 
 package enum Compiler {
-    package static func emissionFailure(named name: String) throws -> String {
-        let result = try emitFixture(named: name)
+    package static func emissionFailure(named name: String, in group: String = "Parser") throws -> String {
+        let result = try emitFixture(named: name, in: group)
         try #require(result.status != 0, "Fixture unexpectedly emitted a module")
         return result.diagnostic
     }
 
-    package static func emitFixture(named name: String) throws -> (status: Int32, diagnostic: String) {
+    package static func emitFixture(named name: String, in group: String = "Parser") throws -> (status: Int32, diagnostic: String) {
         var products = URL(fileURLWithPath: Bundle.module.bundlePath)
         for _ in 0..<12 {
             let direct = products.appendingPathComponent(
@@ -36,7 +36,10 @@ package enum Compiler {
 
         let fixture = try #require(Bundle.module.resourceURL)
             .appendingPathComponent("Fixtures")
+            .appendingPathComponent(group)
             .appendingPathComponent(name)
+
+        try #require(FileManager.default.fileExists(atPath: fixture.path), "Missing compiler fixture: \(group)/\(name)")
 
         let output = FileManager.default.temporaryDirectory
             .appendingPathComponent("parser-emission-\(UUID().uuidString)")

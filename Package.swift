@@ -2,28 +2,6 @@
 
 import PackageDescription
 
-// Shared conditional dependencies keep integration tests aligned with package traits.
-let integrationTestDependencies: [Target.Dependency] = [
-                .target(name: "Parser"),
-                .product(name: "Append", package: "swift-append", condition: .when(traits: ["Append"])),
-                .product(name: "Either", package: "swift-either", condition: .when(traits: ["Either"])),
-                .product(name: "Pair", package: "swift-pair", condition: .when(traits: ["Pair"])),
-                .product(name: "Skip", package: "swift-skip", condition: .when(traits: ["Skip"])),
-                .product(name: "Always", package: "swift-always", condition: .when(traits: ["Always"])),
-                .product(name: "FlatMap", package: "swift-flatmap", condition: .when(traits: ["FlatMap"])),
-                .product(name: "Lazy", package: "swift-lazy", condition: .when(traits: ["Lazy"])),
-                .product(name: "Map", package: "swift-map", condition: .when(traits: ["Map"])),
-                .product(name: "Optic", package: "swift-optic", condition: .when(traits: ["Optic"])),
-                .product(name: "Predicate", package: "swift-predicate", condition: .when(traits: ["Predicate"])),
-                .product(name: "Prefix", package: "swift-prefix", condition: .when(traits: ["Prefix"])),
-                .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator"])),
-                .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["Collection"])),
-                .product(name: "Prefix Collection", package: "swift-prefix", condition: .when(traits: ["Prefix", "Collection"])),
-                .product(name: "Index", package: "swift-index", condition: .when(traits: ["Prefix"])),
-                .product(name: "Ordinal", package: "swift-ordinal", condition: .when(traits: ["Prefix"])),
-                .product(name: "Tagged", package: "swift-tagged", condition: .when(traits: ["Prefix"])),
-            ]
-
 let package = Package(
     name: "swift-parser",
     platforms: [
@@ -198,14 +176,17 @@ let package = Package(
                 .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator"])),
                 .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["Collection"])),
                 .product(name: "Prefix Collection", package: "swift-prefix", condition: .when(traits: ["Prefix", "Collection"])),
-            ],
-            path: "Sources/Parser"
+            ]
         ),
-
         .target(
             name: "Parser Test Support",
             dependencies: [
                 .target(name: "Parser"),
+                .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["Collection"])),
+                .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator"])),
+                .product(name: "Index", package: "swift-index", condition: .when(traits: ["Prefix"])),
+                .product(name: "Ordinal", package: "swift-ordinal", condition: .when(traits: ["Prefix"])),
+                .product(name: "Tagged", package: "swift-tagged", condition: .when(traits: ["Prefix"])),
             ],
             path: "Tests/Support",
             resources: [.copy("Fixtures")]
@@ -215,73 +196,98 @@ let package = Package(
             dependencies: [
                 .target(name: "Parser"),
                 .target(name: "Parser Test Support"),
-            ],
-            path: "Tests/Parser Tests"
+            ]
         ),
         .testTarget(
             name: "Always Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Always Parser Tests"
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Append Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Append Parser Tests", resources: [.copy("Fixtures")]
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Either Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Either Parser Tests"
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "FlatMap Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/FlatMap Parser Tests", resources: [.copy("Fixtures")]
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Lazy Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Lazy Parser Tests"
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Map Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Map Parser Tests", resources: [.copy("Fixtures")]
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Optic Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Optic Parser Tests"
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Pair Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Pair Parser Tests", resources: [.copy("Fixtures")]
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Predicate Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Predicate Parser Tests"
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Prefix Collection Parser Tests",
-            dependencies: integrationTestDependencies + [.target(name: "Prefix Parser Test Support")],
-            path: "Tests/Integrations/Prefix Collection Parser Tests"
-        ),
-        .target(
-            name: "Prefix Parser Test Support",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Prefix Parser Test Support"
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Prefix Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Prefix Parser Tests"
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
         .testTarget(
             name: "Skip Parser Tests",
-            dependencies: integrationTestDependencies,
-            path: "Tests/Integrations/Skip Parser Tests"
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
+        ),
+        .testTarget(
+            name: "Swift Parser Tests",
+            dependencies: [
+                .target(name: "Parser"),
+                .target(name: "Parser Test Support"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v6]
