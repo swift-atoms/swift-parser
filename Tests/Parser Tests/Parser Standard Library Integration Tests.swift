@@ -29,7 +29,7 @@ struct `Optional parsers preserve present operations and omit absent body elemen
     @Test
     func `a Sequence block uses Swift Optional Parser for buildIf`() throws(any Swift.Error) {
         let includePrefix = true
-        let parser = Parser.Sequence(Substring.self) {
+        let parser = Parser::Sequence.Parser(Substring.self) {
             if includePrefix {
                 Prefix("swift")
             }

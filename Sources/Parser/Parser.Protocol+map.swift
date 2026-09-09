@@ -2,15 +2,17 @@ public import Either
 
 extension Parser.`Protocol`
 where
-    Self: ~Copyable,
-    Input: ~Copyable & ~Escapable,
-    Output: ~Copyable & ~Escapable
+Self: ~Copyable,
+Input: ~Copyable & ~Escapable,
+Output: ~Copyable & ~Escapable
 {
 
     @inlinable
-    public consuming func map<NewOutput: ~Copyable & Escapable>(
+    public consuming func map<
+        NewOutput: ~Copyable & Escapable
+    >(
         _ transform: @escaping (consuming Output) -> NewOutput
-    ) -> Parser.Map<Self, NewOutput, Failure> {
+    ) -> Parser::Map<Output, NewOutput, Failure>.Parser<Self> {
         .init(
             upstream: self,
             transform: transform,
@@ -23,13 +25,8 @@ where
         NewOutput: ~Copyable & Escapable,
         TransformFailure: Swift.Error
     >(
-        _ transform: @escaping
-            (consuming Output) throws(TransformFailure) -> NewOutput
-    ) -> Parser.Map<
-        Self,
-        NewOutput,
-        Either<Failure, TransformFailure>
-    > {
+        _ transform: @escaping (consuming Output) throws(TransformFailure) -> NewOutput
+    ) -> Parser::Map<Output, NewOutput, Either<Failure, TransformFailure>>.Parser<Self> {
         .init(
             upstream: self,
             transform: { value throws(Either<Failure, TransformFailure>) in
@@ -46,10 +43,10 @@ where
 
 extension Parser.`Protocol`
 where
-    Self: ~Copyable,
-    Input: ~Copyable & ~Escapable,
-    Output: ~Copyable & ~Escapable,
-    Failure == Never
+Self: ~Copyable,
+Input: ~Copyable & ~Escapable,
+Output: ~Copyable & ~Escapable,
+Failure == Never
 {
 
     @inlinable
@@ -58,8 +55,8 @@ where
         TransformFailure: Swift.Error
     >(
         _ transform: @escaping
-            (consuming Output) throws(TransformFailure) -> NewOutput
-    ) -> Parser.Map<Self, NewOutput, TransformFailure> {
+        (consuming Output) throws(TransformFailure) -> NewOutput
+    ) -> Parser::Map<Output, NewOutput, TransformFailure>.Parser<Self> {
         .init(
             upstream: self,
             transform: transform,

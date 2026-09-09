@@ -25,11 +25,11 @@ struct `Error mapping preserves parser ownership` {
     @Test
     func `explicit error transforms compose noncopyable owners and preserve consumption`() throws {
         let lifetime = Lifetime()
-        let firstMap = Parser.Error.Transform(Owned(lifetime: lifetime)).map { error -> Mapped in
+        let firstMap = Owned(lifetime: lifetime).mapFailure { error -> Mapped in
             lifetime.mapped += 1
             return .upstream(error)
         }
-        let parser = Parser.Error.Transform(firstMap).map { error -> Mapped in error }
+        let parser = firstMap.mapFailure { error -> Mapped in error }
         requireFailure(parser, Mapped.self)
         var input = 0
 
@@ -55,7 +55,7 @@ struct `Error mapping preserves parser ownership` {
     func `error mapping composes with an existing noncopyable value map`() throws {
         let lifetime = Lifetime()
         let upstream = Owned(lifetime: lifetime).map { $0 * 2 }
-        let parser = Parser.Error.Transform(upstream).map { Mapped.upstream($0) }
+        let parser = upstream.mapFailure { Mapped.upstream($0) }
         var input = 0
         let first = try parser.parse(&input)
         #expect(first == 2)
@@ -78,11 +78,11 @@ struct `Error mapping preserves parser ownership` {
     }
 
     @Test
-    func `fluent error access preserves copyable transforms and maps for copyable owners`() throws {
+    func `error adapters preserve copyability for copyable owners`() throws {
         let upstream = Parser.Witness<Int, Int, Owned.Error> { $0 }
-        let transform = upstream.error
+        let transform = Parser::Map<Owned.Error, Mapped, Never> { Mapped.upstream($0) }
         requireCopyable(transform)
-        let mapped = transform.map { Mapped.upstream($0) }
+        let mapped = transform.errorParser(upstream)
         requireCopyable(mapped)
         var input = 7
         let original = try upstream.parse(&input)
@@ -92,7 +92,7 @@ struct `Error mapping preserves parser ownership` {
 }
 
 private func inspectScopedOutput(_ lifetime: Lifetime) throws {
-    let parser = Parser.Error.Transform(Scoped(lifetime: lifetime)).map { Mapped.upstream($0) }
+    let parser = Scoped(lifetime: lifetime).mapFailure { Mapped.upstream($0) }
     var input = 0
     let output = try parser.parse(&input)
     #expect(lifetime.destroyed == 0)

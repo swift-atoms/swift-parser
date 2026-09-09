@@ -70,7 +70,7 @@ private struct Remapped: Parser.`Protocol` {
     typealias Failure = DownstreamFailure
 
     var body: some Parser.`Protocol`<Int, Int, DownstreamFailure> {
-        Fail().error.map { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
+        Fail().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
     }
 }
 
@@ -80,7 +80,7 @@ private struct RemappedSuccess: Parser.`Protocol` {
     typealias Failure = DownstreamFailure
 
     var body: some Parser.`Protocol`<Int, Int, DownstreamFailure> {
-        FallibleSucceed().error.map { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
+        FallibleSucceed().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
     }
 }
 
@@ -92,8 +92,7 @@ private struct Flattened: Parser.`Protocol` {
     var body: some Parser.`Protocol`<Int, Int, DownstreamFailure> {
         Fail()
             .map { (value: consuming Int) throws(TransformFailure) -> Int in value + 1 }
-            .error
-            .map { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
+            .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
                 switch failure {
                 case .left: return .upstream
                 case .right: return .transform
@@ -110,8 +109,7 @@ private struct FlattenedTransform: Parser.`Protocol` {
     var body: some Parser.`Protocol`<Int, Int, DownstreamFailure> {
         FallibleSucceed()
             .map { (_: consuming Int) throws(TransformFailure) -> Int in throw .failed }
-            .error
-            .map { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
+            .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
                 switch failure {
                 case .left: return .upstream
                 case .right: return .transform

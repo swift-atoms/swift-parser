@@ -9,7 +9,7 @@ struct `Parser sequence blocks infer input and preserve body output and failure`
     func `a block accepts twelve elements`() throws(any Swift.Error) {
         var input: Substring = "abcdefghijkZ"
 
-        let output = try Parser.Sequence(Substring.self) {
+        let output = try Parser::Sequence.Parser(Substring.self) {
             Ignore("a")
             Ignore("b")
             Ignore("c")
@@ -32,7 +32,7 @@ struct `Parser sequence blocks infer input and preserve body output and failure`
     @Test
     func `a block infers its input from the elements`() throws(any Swift.Error) {
         var input: Substring = "aZ"
-        let sequence = Parser.Sequence {
+        let sequence = Parser::Sequence.Parser {
             Ignore("a")
             Literal("Z")
         }
@@ -41,7 +41,7 @@ struct `Parser sequence blocks infer input and preserve body output and failure`
 
     @Test
     func `a block's failure is its body's failure`() {
-        let sequence = Parser.Sequence(Substring.self) {
+        let sequence = Parser::Sequence.Parser(Substring.self) {
             Ignore("a")
             Literal("Z")
         }
@@ -103,7 +103,7 @@ private struct Sentence: Parser.`Protocol` {
     typealias Failure = ByteMismatch
 
     var body: some Parser.`Protocol`<Cursor, UInt8, ByteMismatch> {
-        Parser.Sequence(Cursor.self) {
+        Parser::Sequence.Parser(Cursor.self) {
             ByteMarker(0x28)
             ByteValue()
             ByteMarker(0x29)

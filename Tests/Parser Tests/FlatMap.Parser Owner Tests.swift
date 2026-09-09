@@ -81,11 +81,11 @@ struct `Flat map retains its upstream and creates a downstream for each call` {
         let transform = { (number: consuming Int) in
             Downstream(seed: Seed(number: number, lifetime: lifetime), fails: false, lifetime: lifetime)
         }
-        let parser: Parser.FlatMap<Parser.Pure<Int, Int>, Downstream>
+        let parser: Parser::FlatMap<Parser.Pure<Int, Int>.Output, Downstream>.Parser<Parser.Pure<Int, Int>>
         if fluent {
             parser = upstream.flatMap(transform)
         } else {
-            parser = Parser.FlatMap(upstream: upstream, transform: transform)
+            parser = Parser::FlatMap.Parser(upstream: upstream, transform: transform)
         }
         requireCopyable(parser)
         let copied = parser
@@ -104,9 +104,8 @@ private func makeParser(
     fluent: Bool,
     failing: Stage? = nil,
     lifetime: Lifetime
-) -> Parser.FlatMap<Parser.Error.Map<Upstream, Remapped>, Downstream> {
-    let upstream = Parser.Error.Transform(Upstream(fails: failing == .upstream, lifetime: lifetime))
-        .map { error -> Remapped in
+) -> Parser::FlatMap<Parser::Map<Upstream.Failure, Remapped, Never>.Error.Parser<Upstream>.Output, Downstream>.Parser<Parser::Map<Upstream.Failure, Remapped, Never>.Error.Parser<Upstream>> {
+    let upstream = Upstream(fails: failing == .upstream, lifetime: lifetime).mapFailure { error -> Remapped in
             lifetime.errorMaps += 1
             return .upstream(error)
         }
@@ -116,7 +115,7 @@ private func makeParser(
     if fluent {
         return upstream.flatMap(transform)
     }
-    return Parser.FlatMap(upstream: upstream, transform: transform)
+    return Parser::FlatMap.Parser(upstream: upstream, transform: transform)
 }
 
 private func discard<T: ~Copyable>(_ value: consuming T) {}

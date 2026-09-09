@@ -31,8 +31,8 @@ struct Destination: ~Copyable, Parser.`Protocol` {
 }
 
 func composeLinearOwners() throws {
-    let source = Parser.Error.Transform(Source()).map { (error: Never) in error }
-    let direct = Parser.FlatMap(upstream: source) { Destination($0) }
+    let source = Source().mapFailure { (error: Never) in error }
+    let direct = Parser::FlatMap.Parser(upstream: source) { Destination($0) }
     let fluent = Source().flatMap { Destination($0) }
     let values = [3, 4]
     var input = Input(values.span)

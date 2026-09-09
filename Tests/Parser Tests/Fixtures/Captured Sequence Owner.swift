@@ -9,7 +9,7 @@ struct Linear: ~Copyable, Parser.`Protocol` {
 
 func probe() {
     let owner = Linear()
-    let parser = Parser.Sequence(Int.self) {
+    let parser = Parser::Sequence.Parser(Int.self) {
         consume owner
     }
     var input = 0

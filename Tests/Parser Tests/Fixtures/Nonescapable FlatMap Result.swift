@@ -16,6 +16,6 @@ struct Destination: Parser.`Protocol` {
 }
 
 func rejectScopedDownstreamResults() {
-    _ = Parser.FlatMap(upstream: Source()) { _ in Destination() }
+    _ = Parser::FlatMap.Parser(upstream: Source()) { _ in Destination() }
     _ = Source().flatMap { _ in Destination() }
 }

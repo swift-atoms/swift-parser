@@ -61,6 +61,32 @@ private struct `Parser ownership and lifetime constraints survive module emissio
         #expect(diagnostic.contains("'Linear' conform to 'Copyable'"))
     }
 
+    @Test(arguments: ["Escaping Append Accumulated.swift", "Escaping Append Next.swift"])
+    func `append results cannot outlive either operand backing storage`(_ fixture: String) throws {
+        let diagnostic = try emissionFailure(named: fixture)
+        #expect(diagnostic.contains("lifetime-dependent value escapes its scope"))
+    }
+
+    @Test
+    func `append adapters retain noncopyable parser ownership`() throws {
+        let diagnostic = try emissionFailure(named: "Noncopyable Append Adapter.swift")
+        #expect(diagnostic.contains("requireCopyable"))
+        #expect(diagnostic.contains("'Linear' conform to 'Copyable'"))
+    }
+
+    @Test
+    func `mapping a failure transfers the upstream owner`() throws {
+        let diagnostic = try emissionFailure(named: "Consumed Error Map Owner.swift")
+        #expect(diagnostic.contains("'owner' used after consume"))
+    }
+
+    @Test
+    func `failure mapping cannot copy a noncopyable upstream`() throws {
+        let diagnostic = try emissionFailure(named: "Noncopyable Error Map Copyability.swift")
+        #expect(diagnostic.contains("requireCopyable"))
+        #expect(diagnostic.contains("'Owned' conform to 'Copyable'"))
+    }
+
     private func emissionFailure(named name: String) throws -> String {
         let result = try emitFixture(named: name)
         try #require(result.status != 0, "Fixture unexpectedly emitted a module")

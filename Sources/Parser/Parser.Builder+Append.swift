@@ -6,7 +6,7 @@ extension Parser.Builder where Input: ~Copyable & ~Escapable {
     public static func buildPartialBlock<A: Parser.`Protocol` & ~Copyable, N: Parser.`Protocol` & ~Copyable, each O>(
         accumulated: consuming A,
         next: consuming N
-    ) -> Parser.Append<A, N, Either<A.Failure, N.Failure>, repeat each O>
+    ) -> Parser::Append<A.Output, N.Output, (repeat each O, N.Output), Never>.Parser<A, N, Either<A.Failure, N.Failure>>
     where
         A.Input == Input,
         N.Input == Input,
@@ -14,14 +14,19 @@ extension Parser.Builder where Input: ~Copyable & ~Escapable {
         N.Input: ~Copyable & ~Escapable,
         A.Output == (repeat each O)
     {
-        Parser.Append(accumulated, next, { .left($0) }, { .right($0) })
+        .init(
+            .init(), accumulated, next,
+            accumulatedFailure: { .left($0) },
+            nextFailure: { .right($0) },
+            appendFailure: { $0 }
+        )
     }
 
     @inlinable
     public static func buildPartialBlock<A: Parser.`Protocol` & ~Copyable, N: Parser.`Protocol` & ~Copyable, each O>(
         accumulated: consuming A,
         next: consuming N
-    ) -> Parser.Append<A, N, A.Failure, repeat each O>
+    ) -> Parser::Append<A.Output, N.Output, (repeat each O, N.Output), Never>.Parser<A, N, A.Failure>
     where
         A.Input == Input,
         N.Input == Input,
@@ -30,6 +35,11 @@ extension Parser.Builder where Input: ~Copyable & ~Escapable {
         A.Output == (repeat each O),
         A.Failure == N.Failure
     {
-        Parser.Append(accumulated, next, { $0 }, { $0 })
+        .init(
+            .init(), accumulated, next,
+            accumulatedFailure: { $0 },
+            nextFailure: { $0 },
+            appendFailure: { $0 }
+        )
     }
 }

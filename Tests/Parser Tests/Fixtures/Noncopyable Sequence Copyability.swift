@@ -10,6 +10,6 @@ struct Linear: ~Copyable, Parser.`Protocol` {
 func requireCopyable<T: Copyable>(_ value: T) {}
 
 func probe() {
-    let parser = Parser.Sequence(Int.self) { Linear() }
+    let parser = Parser::Sequence.Parser(Int.self) { Linear() }
     requireCopyable(parser)
 }

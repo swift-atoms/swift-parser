@@ -70,7 +70,7 @@ private func makeParser(
     fluent: Bool,
     failing: Stage? = nil,
     lifetime: Lifetime
-) -> Parser.FlatMap<Seed, Finish> {
+) -> Parser::FlatMap<Seed.Output, Finish>.Parser<Seed> {
     let upstream = Seed(fails: failing == .upstream, lifetime: lifetime)
     let transform: (consuming LinearValue) -> Finish = { (value: consuming LinearValue) in
         lifetime.transforms += 1
@@ -79,7 +79,7 @@ private func makeParser(
     if fluent {
         return upstream.flatMap(transform)
     }
-    return Parser.FlatMap(upstream: upstream, transform: transform)
+    return Parser::FlatMap.Parser(upstream: upstream, transform: transform)
 }
 
 private func requireFailure<P: Parser.`Protocol` & ~Copyable, E: Swift.Error>(
