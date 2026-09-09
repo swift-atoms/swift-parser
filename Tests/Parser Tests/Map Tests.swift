@@ -6,7 +6,7 @@ struct `Map values and parser adapters` {
 
     @Test
     func `a standalone map preserves typed failure`() {
-        let map = Parser::Map<Int, String, Rejected> { value throws(Rejected) in
+        let map = Parser::Map<Int>.Transform<String, Rejected> { value throws(Rejected) in
             guard value >= 0 else { throw .negative }
             return String(value)
         }
@@ -21,7 +21,7 @@ struct `Map values and parser adapters` {
 
     @Test
     func `a standalone map carries a scoped result`() {
-        let map = Parser::Map<Span<Int>, Span<Int>, Never> {
+        let map = Parser::Map<Span<Int>>.Transform<Span<Int>, Never> {
             (source: consuming Span<Int>) in source
         }
         let values = [10, 20]
@@ -32,7 +32,7 @@ struct `Map values and parser adapters` {
 
     @Test
     func `the same transformation can be used directly and as a parser`() {
-        let map = Parser::Map<Int, String, Never> { String($0) }
+        let map = Parser::Map<Int>.Transform<String, Never> { String($0) }
         let parser = map.parser(Parser.Pure<Int, Int> { input in
             input += 1
             return input

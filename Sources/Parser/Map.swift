@@ -1,25 +1,14 @@
-/// A typed transformation of one value into another, independent of parsing.
+/// A source bound to the Map family of operations.
 @frozen
-public struct Map<
-    Source: ~Copyable & ~Escapable,
-    Target: ~Copyable & ~Escapable,
-    Failure: Swift.Error
-> {
-
-    public let transform: @_lifetime(captures, copy source)
-        (_ source: consuming Source) throws(Failure) -> Target
+public struct Map<Source: ~Copyable & ~Escapable>: ~Copyable, ~Escapable {
+    public let source: Source
 
     @inlinable
-    public init(
-        _ transform: @escaping @_lifetime(captures, copy source)
-            (_ source: consuming Source) throws(Failure) -> Target
-    ) {
-        self.transform = transform
-    }
-
-    @inlinable
-    @_lifetime(borrow self, copy source)
-    public borrowing func callAsFunction(_ source: consuming Source) throws(Failure) -> Target {
-        try transform(source)
+    @_lifetime(copy source)
+    public init(_ source: consuming Source) {
+        self.source = source
     }
 }
+
+extension Map: Copyable where Source: Copyable & ~Escapable {}
+extension Map: Escapable where Source: Escapable & ~Copyable {}

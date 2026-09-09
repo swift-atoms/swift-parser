@@ -1,24 +1,22 @@
-extension Map where Source: Swift.Error, Target: Swift.Error, Failure == Never {
-
+extension Map
+where Source: Parsing & ~Copyable,
+    Source.Input: ~Copyable & ~Escapable,
+    Source.Output: ~Copyable & ~Escapable {
     public enum Error {
+        /// Changes only failure; successful values retain their lifetimes.
+        public struct Parser<NewFailure: Swift.Error>: Parsing, ~Copyable {
+            public typealias Input = Source.Input
+            public typealias Output = Source.Output
+            public typealias Failure = NewFailure
 
-        /// Maps only an upstream parser's failure. Successful values and their
-        /// lifetime dependencies pass through unchanged; input is not rewound.
-        public struct Parser<Upstream: Parsing & ~Copyable>: Parsing, ~Copyable
-        where
-            Upstream.Input: ~Copyable & ~Escapable,
-            Upstream.Output: ~Copyable & ~Escapable,
-            Upstream.Failure == Source
-        {
-            public typealias Input = Upstream.Input
-            public typealias Output = Upstream.Output
-            public typealias Failure = Target
-
-            public let base: Map
-            public let upstream: Upstream
+            public let base: Map<Source.Failure>.Transform<NewFailure, Never>
+            public let upstream: Source
 
             @inlinable
-            public init(_ base: Map, _ upstream: consuming Upstream) {
+            public init(
+                _ base: Map<Source.Failure>.Transform<NewFailure, Never>,
+                _ upstream: consuming Source
+            ) {
                 self.base = base
                 self.upstream = upstream
             }
@@ -26,7 +24,7 @@ extension Map where Source: Swift.Error, Target: Swift.Error, Failure == Never {
             @inlinable
             @_lifetime(borrow self, &input)
             public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-                do throws(Upstream.Failure) {
+                do throws(Source.Failure) {
                     return try upstream.parse(&input)
                 } catch {
                     throw base(error)
@@ -36,19 +34,23 @@ extension Map where Source: Swift.Error, Target: Swift.Error, Failure == Never {
     }
 
     @inlinable
-    public func errorParser<P: Parsing & ~Copyable>(_ upstream: consuming P) -> Error.Parser<P>
-    where
-        P.Input: ~Copyable & ~Escapable,
-        P.Output: ~Copyable & ~Escapable,
-        P.Failure == Source
-    {
-        .init(self, upstream)
+    public consuming func failure<NewFailure: Swift.Error>(
+        _ transform: @escaping (Source.Failure) -> NewFailure
+    ) -> Error.Parser<NewFailure> {
+        .init(.init(transform), source)
     }
 }
 
 extension Map.Error.Parser: Copyable
-where
-    Upstream: Parsing<Upstream.Input, Upstream.Output, Upstream.Failure> & Copyable,
-    Upstream.Input: ~Copyable & ~Escapable,
-    Upstream.Output: ~Copyable & ~Escapable
-{}
+where Source: Parsing<Source.Input, Source.Output, Source.Failure> & Copyable,
+    Source.Input: ~Copyable & ~Escapable,
+    Source.Output: ~Copyable & ~Escapable {}
+
+extension Map.Transform where Source: Swift.Error, Target: Swift.Error, Failure == Never {
+    @inlinable
+    public func errorParser<P: Parsing & ~Copyable>(_ upstream: consuming P) -> Map<P>.Error.Parser<Target>
+    where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable,
+        P.Failure == Source {
+        .init(self, upstream)
+    }
+}

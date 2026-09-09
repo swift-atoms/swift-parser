@@ -6,7 +6,7 @@ struct Owned: ~Copyable, Parser.`Protocol` {
 
 func reuseConsumedUpstream() throws {
     let upstream = Owned()
-    let mapped = upstream.flatMap { _ in Owned() }
+    let mapped = (consume upstream).flatMap { _ in Owned() }
     var input = 0
     _ = upstream.parse(&input)
     _ = try mapped.parse(&input)

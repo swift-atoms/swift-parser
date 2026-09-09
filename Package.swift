@@ -70,6 +70,7 @@ for target in package.targets {
         .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableUpcomingFeature("InferIsolatedConformances"),
         .enableExperimentalFeature("Lifetimes"),
+        .enableExperimentalFeature("UnderscoreOwned"),
         .enableExperimentalFeature("MoveOnlyTuples"),
     ]
 }

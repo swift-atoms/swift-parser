@@ -1,20 +1,14 @@
-/// Selects a subsequent computation from a value, independently of how that
-/// computation is executed. A domain adapter supplies the execution semantics.
+/// A source bound to the FlatMap family of operations.
 @frozen
-public struct FlatMap<
-    Source: ~Copyable & ~Escapable,
-    Continuation: ~Copyable
-> {
-
-    public let transform: (consuming Source) -> Continuation
+public struct FlatMap<Source: ~Copyable & ~Escapable>: ~Copyable, ~Escapable {
+    public let source: Source
 
     @inlinable
-    public init(_ transform: @escaping (consuming Source) -> Continuation) {
-        self.transform = transform
-    }
-
-    @inlinable
-    public borrowing func callAsFunction(_ source: consuming Source) -> Continuation {
-        transform(source)
+    @_lifetime(copy source)
+    public init(_ source: consuming Source) {
+        self.source = source
     }
 }
+
+extension FlatMap: Copyable where Source: Copyable & ~Escapable {}
+extension FlatMap: Escapable where Source: Escapable & ~Copyable {}

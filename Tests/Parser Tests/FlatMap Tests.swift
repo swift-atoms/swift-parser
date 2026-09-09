@@ -6,14 +6,14 @@ struct `FlatMap selects continuations independently of parsing` {
 
     @Test
     func `a factory can return a noncopyable continuation`() {
-        let flatMap = Parser::FlatMap<Int, Continuation> { Continuation(value: $0) }
+        let flatMap = Parser::FlatMap<Int>.Transform<Continuation> { Continuation(value: $0) }
         let continuation = flatMap(42)
         #expect(continuation.value == 42)
     }
 
     @Test
     func `an instance adapts its selected parser`() throws {
-        let flatMap = Parser::FlatMap<Int, Parser.Pure<Int, Int>> { seed in
+        let flatMap = Parser::FlatMap<Int>.Transform<Parser.Pure<Int, Int>> { seed in
             Parser.Pure { input in
                 input += 1
                 return seed + input

@@ -1,21 +1,10 @@
-public import Either
-
 extension Parser.`Protocol`
-where
-    Self: ~Copyable,
-    Input: ~Copyable & ~Escapable,
-    Output: ~Copyable & ~Escapable
-{
-
+where Self: ~Copyable, Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable {
+    /// Binds this parser so the transformation can be supplied now or later.
+    /// Experimental: see README.md for the Swift 6.4 destruction limitation.
+    @_owned
     @inlinable
-    public consuming func flatMap<P: Parser.`Protocol` & ~Copyable>(
-        _ transform: @escaping (consuming Output) -> P
-    ) -> Parser::FlatMap<Output, P>.Parser<Self>
-    where
-        P.Input == Input,
-        P.Input: ~Copyable & ~Escapable,
-        P.Output: ~Copyable & Escapable
-    {
-        .init(upstream: self, transform: transform)
+    public var flatMap: Parser::FlatMap<Self> {
+        consuming get { .init(consume self) }
     }
 }

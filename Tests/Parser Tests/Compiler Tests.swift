@@ -138,6 +138,7 @@ private struct `Parser ownership and lifetime constraints survive module emissio
             "-swift-version", "6",
             "-strict-memory-safety",
             "-enable-experimental-feature", "Lifetimes",
+            "-enable-experimental-feature", "UnderscoreOwned",
             "-module-name", "Proof",
             "-I", products.path,
             "-I", products.appendingPathComponent("Modules").path,

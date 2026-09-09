@@ -1,26 +1,22 @@
 extension Map
-where Source: ~Copyable & ~Escapable, Target: ~Copyable & Escapable {
-
-    /// Transforms one parser's output, preserving its input consumption.
+where Source: Parsing & ~Copyable,
+    Source.Input: ~Copyable & ~Escapable,
+    Source.Output: ~Copyable & ~Escapable {
+    /// Transforms the upstream output while preserving input consumption.
     @frozen
-    public struct Parser<Upstream: Parsing & ~Copyable>: Parsing, ~Copyable
-    where
-        Upstream.Input: ~Copyable & ~Escapable,
-        Upstream.Output: ~Copyable & ~Escapable,
-        Upstream.Output == Source
-    {
-        public typealias Input = Upstream.Input
+    public struct Parser<Target: ~Copyable, Failure: Swift.Error>: Parsing, ~Copyable {
+        public typealias Input = Source.Input
         public typealias Output = Target
 
-        public let base: Map
-        public let upstream: Upstream
-        public let failure: (Upstream.Failure) -> Failure
+        public let base: Map<Source.Output>.Transform<Target, Failure>
+        public let upstream: Source
+        public let failure: (Source.Failure) -> Failure
 
         @inlinable
         public init(
-            _ base: Map,
-            upstream: consuming Upstream,
-            failure: @escaping (Upstream.Failure) -> Failure
+            _ base: Map<Source.Output>.Transform<Target, Failure>,
+            upstream: consuming Source,
+            failure: @escaping (Source.Failure) -> Failure
         ) {
             self.base = base
             self.upstream = upstream
@@ -29,17 +25,17 @@ where Source: ~Copyable & ~Escapable, Target: ~Copyable & Escapable {
 
         @inlinable
         public init(
-            upstream: consuming Upstream,
-            transform: @escaping (consuming Source) throws(Failure) -> Target,
-            failure: @escaping (Upstream.Failure) -> Failure
+            upstream: consuming Source,
+            transform: @escaping (consuming Source.Output) throws(Failure) -> Target,
+            failure: @escaping (Source.Failure) -> Failure
         ) {
-            self.init(Map(transform), upstream: upstream, failure: failure)
+            self.init(.init(transform), upstream: upstream, failure: failure)
         }
 
         @inlinable
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Target {
-            let value: Source
-            do throws(Upstream.Failure) {
+            let value: Source.Output
+            do throws(Source.Failure) {
                 value = try upstream.parse(&input)
             } catch {
                 throw failure(error)
@@ -47,37 +43,10 @@ where Source: ~Copyable & ~Escapable, Target: ~Copyable & Escapable {
             return try base(value)
         }
     }
-
-    @inlinable
-    public func parser<P: Parsing & ~Copyable>(
-        _ upstream: consuming P,
-        failure: @escaping (P.Failure) -> Failure
-    ) -> Parser<P>
-    where
-        P.Input: ~Copyable & ~Escapable,
-        P.Output: ~Copyable & ~Escapable,
-        P.Output == Source
-    {
-        .init(self, upstream: upstream, failure: failure)
-    }
-
-    @inlinable
-    public func parser<P: Parsing & ~Copyable>(_ upstream: consuming P) -> Parser<P>
-    where
-        P.Input: ~Copyable & ~Escapable,
-        P.Output: ~Copyable & ~Escapable,
-        P.Output == Source,
-        P.Failure == Failure
-    {
-        .init(self, upstream: upstream, failure: { $0 })
-    }
 }
 
 extension Map.Parser: Copyable
-where
-    Source: ~Copyable & ~Escapable,
-    Target: ~Copyable & Escapable,
-    Upstream: Parsing<Upstream.Input, Upstream.Output, Upstream.Failure> & Copyable,
-    Upstream.Input: ~Copyable & ~Escapable,
-    Upstream.Output: ~Copyable & ~Escapable
-{}
+where Source: Parsing<Source.Input, Source.Output, Source.Failure> & Copyable,
+    Source.Input: ~Copyable & ~Escapable,
+    Source.Output: ~Copyable & ~Escapable,
+    Target: ~Copyable {}

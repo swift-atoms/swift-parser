@@ -1,45 +1,42 @@
 public import Either
 
 extension FlatMap
-where
-    Source: ~Copyable & ~Escapable,
-    Continuation: Parsing & ~Copyable,
-    Continuation.Input: ~Copyable & ~Escapable,
-    Continuation.Output: ~Copyable & Escapable
-{
-
-    public struct Parser<Upstream: Parsing & ~Copyable>: Parsing, ~Copyable
-    where
-        Upstream.Input == Continuation.Input,
-        Upstream.Input: ~Copyable & ~Escapable,
-        Upstream.Output: ~Copyable & ~Escapable,
-        Upstream.Output == Source
-    {
-        public typealias Input = Upstream.Input
+where Source: Parsing & ~Copyable,
+    Source.Input: ~Copyable & ~Escapable,
+    Source.Output: ~Copyable & ~Escapable {
+    /// Selects and executes a continuation on the remaining input.
+    public struct Parser<Continuation: Parsing & ~Copyable>: Parsing, ~Copyable
+    where Continuation.Input == Source.Input,
+        Continuation.Input: ~Copyable & ~Escapable,
+        Continuation.Output: ~Copyable & Escapable {
+        public typealias Input = Source.Input
         public typealias Output = Continuation.Output
-        public typealias Failure = Either<Upstream.Failure, Continuation.Failure>
+        public typealias Failure = Either<Source.Failure, Continuation.Failure>
 
-        public let base: FlatMap
-        public let upstream: Upstream
+        public let base: FlatMap<Source.Output>.Transform<Continuation>
+        public let upstream: Source
 
         @inlinable
-        public init(_ base: FlatMap, upstream: consuming Upstream) {
+        public init(
+            _ base: FlatMap<Source.Output>.Transform<Continuation>,
+            upstream: consuming Source
+        ) {
             self.base = base
             self.upstream = upstream
         }
 
         @inlinable
         public init(
-            upstream: consuming Upstream,
-            transform: @escaping (consuming Source) -> Continuation
+            upstream: consuming Source,
+            transform: @escaping (consuming Source.Output) -> Continuation
         ) {
-            self.init(FlatMap(transform), upstream: upstream)
+            self.init(.init(transform), upstream: upstream)
         }
 
         @inlinable
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-            let value: Source
-            do throws(Upstream.Failure) {
+            let value: Source.Output
+            do throws(Source.Failure) {
                 value = try upstream.parse(&input)
             } catch {
                 throw .left(error)
@@ -54,24 +51,19 @@ where
     }
 
     @inlinable
-    public func parser<P: Parsing & ~Copyable>(_ upstream: consuming P) -> Parser<P>
-    where
-        P.Input == Continuation.Input,
-        P.Input: ~Copyable & ~Escapable,
-        P.Output: ~Copyable & ~Escapable,
-        P.Output == Source
-    {
-        .init(self, upstream: upstream)
+    public consuming func callAsFunction<P: Parsing & ~Copyable>(
+        _ transform: @escaping (consuming Source.Output) -> P
+    ) -> Parser<P>
+    where P.Input == Source.Input, P.Input: ~Copyable & ~Escapable,
+        P.Output: ~Copyable & Escapable {
+        .init(upstream: source, transform: transform)
     }
 }
 
 extension FlatMap.Parser: Copyable
-where
-    Source: ~Copyable & ~Escapable,
+where Source: Parsing<Source.Input, Source.Output, Source.Failure> & Copyable,
+    Source.Input: ~Copyable & ~Escapable,
+    Source.Output: ~Copyable & ~Escapable,
     Continuation: Parsing<Continuation.Input, Continuation.Output, Continuation.Failure> & ~Copyable,
     Continuation.Input: ~Copyable & ~Escapable,
-    Continuation.Output: ~Copyable & Escapable,
-    Upstream: Parsing<Upstream.Input, Upstream.Output, Upstream.Failure> & Copyable,
-    Upstream.Input: ~Copyable & ~Escapable,
-    Upstream.Output: ~Copyable & ~Escapable
-{}
+    Continuation.Output: ~Copyable & Escapable {}

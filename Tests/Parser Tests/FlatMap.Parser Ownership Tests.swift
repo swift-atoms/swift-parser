@@ -70,7 +70,7 @@ private func makeParser(
     fluent: Bool,
     failing: Stage? = nil,
     lifetime: Lifetime
-) -> Parser::FlatMap<Seed.Output, Finish>.Parser<Seed> {
+) -> Parser::FlatMap<Seed>.Parser<Finish> {
     let upstream = Seed(fails: failing == .upstream, lifetime: lifetime)
     let transform: (consuming LinearValue) -> Finish = { (value: consuming LinearValue) in
         lifetime.transforms += 1
