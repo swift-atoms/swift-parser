@@ -4,6 +4,26 @@ import Testing
 @Suite
 struct `Parser supports function and builder construction` {
     @Test
+    func `copies retain the same noncopyable implementation until the last copy is released`() {
+        let count = Count()
+        do {
+            let copy: Parser<Int, Value, Never>
+            do {
+                let parser = Parser { Owner(count: count) }
+                copy = parser
+                var input = 0
+                let output = parser.parse(&input)
+                #expect(output.value == 1)
+            }
+            #expect(count.destroyed == 0)
+            var input = 10
+            let output = copy.parse(&input)
+            #expect(output.value == 11)
+        }
+        #expect(count.destroyed == 1)
+    }
+
+    @Test
     func `builder infers channels and runs once`() {
         let count = Count()
         let parser = Parser {

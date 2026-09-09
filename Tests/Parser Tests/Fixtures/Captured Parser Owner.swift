@@ -7,9 +7,11 @@ struct Linear: ~Copyable, Parsing {
     }
 }
 
-func requireCopyable<T: Copyable>(_ value: T) {}
-
 func probe() {
-    let parser = Parser::Sequence.Parser(Int.self) { Linear() }
-    requireCopyable(parser)
+    let owner = Linear()
+    let parser = Parser::Parser {
+        consume owner
+    }
+    var input = 0
+    _ = parser.parse(&input)
 }

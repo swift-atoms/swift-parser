@@ -17,16 +17,9 @@ private struct `Parser ownership and lifetime constraints survive module emissio
     }
 
     @Test
-    func `a sequence builder cannot consume an owner captured from outside`() throws {
-        let diagnostic = try emissionFailure(named: "Captured Sequence Owner.swift")
+    func `a parser builder cannot consume an owner captured from outside`() throws {
+        let diagnostic = try emissionFailure(named: "Captured Parser Owner.swift")
         #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
-    }
-
-    @Test(arguments: ["Noncopyable Sequence Copyability.swift"])
-    func `sequential wrappers with noncopyable stored owners cannot be copied`(_ fixture: String) throws {
-        let diagnostic = try emissionFailure(named: fixture)
-        #expect(diagnostic.contains("requireCopyable"))
-        #expect(diagnostic.contains("'Linear' conform to 'Copyable'"))
     }
 
     private func emissionFailure(named name: String) throws -> String {
