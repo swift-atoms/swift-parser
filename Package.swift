@@ -152,11 +152,13 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-iterator.git",
-            branch: "main"
+            branch: "main",
+            traits: ["default", "Prefix"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-collection.git",
-            branch: "main"
+            branch: "main",
+            traits: ["default", "Prefix"]
         ),
     ],
     targets: [
@@ -176,7 +178,6 @@ let package = Package(
                 .product(name: "Prefix", package: "swift-prefix", condition: .when(traits: ["Prefix"])),
                 .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator"])),
                 .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["Collection"])),
-                .product(name: "Prefix Collection", package: "swift-prefix", condition: .when(traits: ["Prefix", "Collection"])),
             ]
         ),
         .target(

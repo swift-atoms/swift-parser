@@ -1,6 +1,5 @@
 #if Prefix && Collection
 public import Prefix
-internal import Prefix_Collection
 public import Collection
 
 extension Prefix.While where Element: ~Copyable & Escapable {

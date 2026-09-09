@@ -62,3 +62,6 @@ the temporary parser is destroyed after each call.
 Explicit type annotations now spell `Lazy<Value, FactoryFailure>` and
 `Lazy<Value, FactoryFailure>.Parser<Failure>`. Inferred infallible construction
 such as `Lazy { parser }` continues to infer `Never` for the factory failure.
+
+Prefix iterator and custom collection adapters use the `Prefix` integrations owned
+by Iterator and Collection. The former Prefix Collection product is no longer required.
