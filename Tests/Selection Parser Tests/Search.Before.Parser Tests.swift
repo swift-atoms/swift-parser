@@ -11,7 +11,8 @@ struct `Search.Before.Parser Tests` {
     @Test
     func `a builder selects and consumes a prefix`() throws {
         var input: Substring = "abc--def"
-        let output = try Search("--").selecting(.start).parser(for: Substring.self).parse(&input)
+        let parser = Search("--").selecting(.start).parser(for: Substring.self)
+        let output = try parser.parse(&input)
         #expect(output == "abc")
         #expect(input == "--def")
     }
