@@ -1,5 +1,6 @@
 #if Prefix
 public import Prefix
+internal import Predicate
 
 extension Prefix.While {
     /// Selects a prefix and commits input consumption only after selection succeeds.
@@ -12,7 +13,9 @@ extension Prefix.While {
         public init(_ wrapped: Prefix.While<Element>) { self.wrapped = wrapped }
 
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Input {
-            let end = try wrapped.end(in: input)
+            let end = try wrapped.end(from: input.startIndex, advance: { position in
+                position == input.endIndex ? nil : input.index(after: position)
+            }, satisfies: { position, predicate in predicate(input[position]) })
             let output = input[..<end]
             input = input[end...]
             return output

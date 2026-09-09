@@ -2,7 +2,7 @@
 public import Prefix
 public import Collection
 
-extension Prefix.UpTo {
+extension Prefix.UpTo where Delimiter: Swift.Collection, Delimiter.Element: Equatable {
     /// Selects before committing, preserving input on selection failure.
     public func parser<Input: Collection.Slice.`Protocol`>(
         forCollection input: Input.Type

@@ -1,9 +1,10 @@
 #if Prefix && Iterator && Either
 public import Prefix
+internal import Collection
 public import Iterator
 public import Either
 
-extension Prefix.Through {
+extension Prefix.Through where Delimiter: Swift.Collection, Delimiter.Element: Equatable {
     /// Materializes iterator output. On failure, already delivered output is consumed;
     /// predicate/delimiter lookahead remains in the input wrapper.
     public func parser<I: Iterating & ~Copyable & ~Escapable>(

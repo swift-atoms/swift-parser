@@ -12,7 +12,9 @@ extension Prefix {
         public init(_ wrapped: Prefix) { self.wrapped = wrapped }
 
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Input {
-            let end = try wrapped.end(in: input)
+            let end = try wrapped.end(from: input.startIndex) { position in
+                position == input.endIndex ? nil : input.index(after: position)
+            }
             let output = input[..<end]
             input = input[end...]
             return output

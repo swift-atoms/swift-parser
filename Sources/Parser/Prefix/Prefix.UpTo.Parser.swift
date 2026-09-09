@@ -1,7 +1,7 @@
 #if Prefix
 public import Prefix
 
-extension Prefix.UpTo {
+extension Prefix.UpTo where Delimiter: Swift.Collection, Delimiter.Element: Equatable {
     /// Selects a prefix and commits input consumption only after selection succeeds.
     public struct Parser<Input: Swift.Collection>: Parser::Parsing
     where Input.SubSequence == Input, Input.Element == Delimiter.Element {
@@ -12,7 +12,16 @@ extension Prefix.UpTo {
         public init(_ wrapped: Prefix.UpTo<Delimiter>) { self.wrapped = wrapped }
 
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Input {
-            let end = try wrapped.end(in: input)
+            let end = try wrapped.end(from: input.startIndex, advance: { position in
+                position == input.endIndex ? nil : input.index(after: position)
+            }, matching: { delimiter, position in
+                var end = position
+                for element in delimiter {
+                    guard end != input.endIndex, input[end] == element else { return nil }
+                    input.formIndex(after: &end)
+                }
+                return end
+            })
             let output = input[..<end]
             input = input[end...]
             return output

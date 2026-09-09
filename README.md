@@ -65,3 +65,6 @@ such as `Lazy { parser }` continues to infer `Never` for the factory failure.
 
 Prefix iterator and custom collection adapters use the `Prefix` integrations owned
 by Iterator and Collection. The former Prefix Collection product is no longer required.
+
+Swift collection Prefix parsers adapt the position-based Prefix traversal directly;
+the custom Collection trait remains optional.
