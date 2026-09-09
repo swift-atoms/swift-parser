@@ -1,0 +1,156 @@
+#if Map && Append && Skip && FlatMap
+import Map
+import Parser
+import Either
+import Testing
+
+@Suite
+struct `Parser error maps transform failure branches and preserve successful outputs` {
+
+    @Test
+    func `error map rewrites the upstream failure`() {
+        let parser = Remapped()
+        requireFailure(parser, DownstreamFailure.self)
+
+        var input = 0
+        #expect(throws: DownstreamFailure.upstream) {
+            try parser.parse(&input)
+        }
+    }
+
+    @Test
+    func `error map leaves a successful output untouched`() throws(any Swift.Error) {
+        let parser = RemappedSuccess()
+        requireFailure(parser, DownstreamFailure.self)
+
+        var input = 41
+        let output = try parser.parse(&input)
+
+        #expect(output == 41)
+    }
+
+    @Test
+    func `error map flattens an Either produced by map`() {
+        let parser = Flattened()
+        requireFailure(parser, DownstreamFailure.self)
+
+        var input = 0
+        #expect(throws: DownstreamFailure.upstream) {
+            try parser.parse(&input)
+        }
+    }
+
+    @Test
+    func `error map reaches the transform side of an Either`() {
+        let parser = FlattenedTransform()
+        requireFailure(parser, DownstreamFailure.self)
+
+        var input = 0
+        #expect(throws: DownstreamFailure.transform) {
+            try parser.parse(&input)
+        }
+    }
+
+}
+
+private func requireFailure<
+    P: Parsing,
+    Failure: Swift.Error
+>(
+    _ parser: borrowing P,
+    _: Failure.Type
+)
+where
+    P.Input: ~Copyable & ~Escapable,
+    P.Output: ~Copyable & ~Escapable,
+    P.Failure == Failure
+{}
+
+private struct Remapped: Parsing {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = DownstreamFailure
+
+    var body: some Parsing<Int, Int, DownstreamFailure> {
+        Fail().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
+    }
+}
+
+private struct RemappedSuccess: Parsing {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = DownstreamFailure
+
+    var body: some Parsing<Int, Int, DownstreamFailure> {
+        FallibleSucceed().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
+    }
+}
+
+private struct Flattened: Parsing {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = DownstreamFailure
+
+    var body: some Parsing<Int, Int, DownstreamFailure> {
+        Fail()
+            .map { (value: consuming Int) throws(TransformFailure) -> Int in value + 1 }
+            .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
+                switch failure {
+                case .left: return .upstream
+                case .right: return .transform
+                }
+            }
+    }
+}
+
+private struct FlattenedTransform: Parsing {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = DownstreamFailure
+
+    var body: some Parsing<Int, Int, DownstreamFailure> {
+        FallibleSucceed()
+            .map { (_: consuming Int) throws(TransformFailure) -> Int in throw .failed }
+            .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
+                switch failure {
+                case .left: return .upstream
+                case .right: return .transform
+                }
+            }
+    }
+}
+
+private enum UpstreamFailure: Swift.Error, Equatable {
+    case failed
+}
+
+private enum TransformFailure: Swift.Error, Equatable {
+    case failed
+}
+
+private enum DownstreamFailure: Swift.Error, Equatable {
+    case upstream
+    case transform
+}
+
+private struct Fail: Parsing {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = UpstreamFailure
+
+    borrowing func parse(_ input: inout Int) throws(UpstreamFailure) -> Int {
+        throw .failed
+    }
+}
+
+private struct FallibleSucceed: Parsing {
+    typealias Input = Int
+    typealias Output = Int
+    typealias Failure = UpstreamFailure
+
+    borrowing func parse(_ input: inout Int) throws(UpstreamFailure) -> Int {
+        input
+    }
+}
+
+#endif
