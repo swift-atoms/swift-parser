@@ -1,6 +1,6 @@
 public import Either
 
-extension Parser.`Protocol`
+extension Parsing
 where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,
@@ -8,7 +8,7 @@ where
 {
 
     @inlinable
-    public consuming func flatMap<P: Parser.`Protocol` & ~Copyable>(
+    public consuming func flatMap<P: Parsing & ~Copyable>(
         _ transform: @escaping (consuming Output) -> P
     ) -> Parser::FlatMap<Output, P>.Parser<Self>
     where

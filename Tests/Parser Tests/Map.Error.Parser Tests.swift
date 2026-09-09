@@ -52,7 +52,7 @@ struct `Parser error maps transform failure branches and preserve successful out
 }
 
 private func requireFailure<
-    P: Parser.`Protocol`,
+    P: Parsing,
     Failure: Swift.Error
 >(
     _ parser: borrowing P,
@@ -64,32 +64,32 @@ where
     P.Failure == Failure
 {}
 
-private struct Remapped: Parser.`Protocol` {
+private struct Remapped: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = DownstreamFailure
 
-    var body: some Parser.`Protocol`<Int, Int, DownstreamFailure> {
+    var body: some Parsing<Int, Int, DownstreamFailure> {
         Fail().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
     }
 }
 
-private struct RemappedSuccess: Parser.`Protocol` {
+private struct RemappedSuccess: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = DownstreamFailure
 
-    var body: some Parser.`Protocol`<Int, Int, DownstreamFailure> {
+    var body: some Parsing<Int, Int, DownstreamFailure> {
         FallibleSucceed().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
     }
 }
 
-private struct Flattened: Parser.`Protocol` {
+private struct Flattened: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = DownstreamFailure
 
-    var body: some Parser.`Protocol`<Int, Int, DownstreamFailure> {
+    var body: some Parsing<Int, Int, DownstreamFailure> {
         Fail()
             .map { (value: consuming Int) throws(TransformFailure) -> Int in value + 1 }
             .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
@@ -101,12 +101,12 @@ private struct Flattened: Parser.`Protocol` {
     }
 }
 
-private struct FlattenedTransform: Parser.`Protocol` {
+private struct FlattenedTransform: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = DownstreamFailure
 
-    var body: some Parser.`Protocol`<Int, Int, DownstreamFailure> {
+    var body: some Parsing<Int, Int, DownstreamFailure> {
         FallibleSucceed()
             .map { (_: consuming Int) throws(TransformFailure) -> Int in throw .failed }
             .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
@@ -131,7 +131,7 @@ private enum DownstreamFailure: Swift.Error, Equatable {
     case transform
 }
 
-private struct Fail: Parser.`Protocol` {
+private struct Fail: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
@@ -141,7 +141,7 @@ private struct Fail: Parser.`Protocol` {
     }
 }
 
-private struct FallibleSucceed: Parser.`Protocol` {
+private struct FallibleSucceed: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure

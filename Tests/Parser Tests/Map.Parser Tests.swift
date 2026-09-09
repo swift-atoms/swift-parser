@@ -120,7 +120,7 @@ struct `Parser maps preserve failure types and transfer transformed outputs` {
 }
 
 private func requireFailure<
-    P: Parser.`Protocol` & ~Copyable,
+    P: Parsing & ~Copyable,
     Failure: Swift.Error
 >(
     _ parser: borrowing P,
@@ -136,32 +136,32 @@ private func increment(_ value: consuming Int) throws(Never) -> Int {
     value + 1
 }
 
-private struct Incremented: Parser.`Protocol` {
+private struct Incremented: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Never
 
-    var body: some Parser.`Protocol`<Int, Int, Never> {
+    var body: some Parsing<Int, Int, Never> {
         Succeed().map { $0 + 1 }
     }
 }
 
-private struct IncrementedFallibleUpstream: Parser.`Protocol` {
+private struct IncrementedFallibleUpstream: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
 
-    var body: some Parser.`Protocol`<Int, Int, UpstreamFailure> {
+    var body: some Parsing<Int, Int, UpstreamFailure> {
         Fail().map { $0 + 1 }
     }
 }
 
-private struct ThrowingTransform: Parser.`Protocol` {
+private struct ThrowingTransform: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = TransformFailure
 
-    var body: some Parser.`Protocol`<Int, Int, TransformFailure> {
+    var body: some Parsing<Int, Int, TransformFailure> {
         Succeed().map {
             (_: consuming Int) throws(TransformFailure) -> Int in
             throw .failed
@@ -169,12 +169,12 @@ private struct ThrowingTransform: Parser.`Protocol` {
     }
 }
 
-private struct FallibleUpstreamThrowingTransform: Parser.`Protocol` {
+private struct FallibleUpstreamThrowingTransform: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Either<UpstreamFailure, TransformFailure>
 
-    var body: some Parser.`Protocol`<
+    var body: some Parsing<
         Int,
         Int,
         Either<UpstreamFailure, TransformFailure>
@@ -186,12 +186,12 @@ private struct FallibleUpstreamThrowingTransform: Parser.`Protocol` {
     }
 }
 
-private struct FallibleUpstreamFailingTransform: Parser.`Protocol` {
+private struct FallibleUpstreamFailingTransform: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Either<UpstreamFailure, TransformFailure>
 
-    var body: some Parser.`Protocol`<
+    var body: some Parsing<
         Int,
         Int,
         Either<UpstreamFailure, TransformFailure>
@@ -203,42 +203,42 @@ private struct FallibleUpstreamFailingTransform: Parser.`Protocol` {
     }
 }
 
-private struct IncrementedByNeverThrowingFunction: Parser.`Protocol` {
+private struct IncrementedByNeverThrowingFunction: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Never
 
-    var body: some Parser.`Protocol`<Int, Int, Never> {
+    var body: some Parsing<Int, Int, Never> {
         Succeed().map(increment)
     }
 }
 
-private struct FallibleUpstreamNeverThrowingFunction: Parser.`Protocol` {
+private struct FallibleUpstreamNeverThrowingFunction: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
 
-    var body: some Parser.`Protocol`<Int, Int, UpstreamFailure> {
+    var body: some Parsing<Int, Int, UpstreamFailure> {
         Fail().map(increment)
     }
 }
 
-private struct IncrementedScopedToken: Parser.`Protocol` {
+private struct IncrementedScopedToken: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Never
 
-    var body: some Parser.`Protocol`<Int, Int, Never> {
+    var body: some Parsing<Int, Int, Never> {
         Linear().map { token in token.value + 1 }
     }
 }
 
-private struct IncrementedIntoLinearResult: Parser.`Protocol` {
+private struct IncrementedIntoLinearResult: Parsing {
     typealias Input = Int
     typealias Output = LinearResult
     typealias Failure = Never
 
-    var body: some Parser.`Protocol`<Int, LinearResult, Never> {
+    var body: some Parsing<Int, LinearResult, Never> {
         Succeed().map { LinearResult(value: $0 + 1) }
     }
 }
@@ -251,7 +251,7 @@ private enum TransformFailure: Swift.Error, Equatable {
     case failed
 }
 
-private struct Succeed: Parser.`Protocol` {
+private struct Succeed: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Never
@@ -261,7 +261,7 @@ private struct Succeed: Parser.`Protocol` {
     }
 }
 
-private struct Fail: Parser.`Protocol` {
+private struct Fail: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
@@ -273,7 +273,7 @@ private struct Fail: Parser.`Protocol` {
     }
 }
 
-private struct FallibleSucceed: Parser.`Protocol` {
+private struct FallibleSucceed: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = UpstreamFailure
@@ -293,7 +293,7 @@ private struct LinearResult: ~Copyable {
     let value: Int
 }
 
-private struct Linear: Parser.`Protocol` {
+private struct Linear: Parsing {
     typealias Input = Int
     typealias Output = ScopedToken
     typealias Failure = Never
@@ -318,10 +318,10 @@ struct `Parser maps transform values read from a nonescapable cursor` {
     }
 }
 
-private struct Successor: Parser.`Protocol` {
+private struct Successor: Parsing {
     typealias Failure = ByteMismatch
 
-    var body: some Parser.`Protocol`<Cursor, UInt8, ByteMismatch> {
+    var body: some Parsing<Cursor, UInt8, ByteMismatch> {
         ByteValue().map { $0 &+ 1 }
     }
 }
@@ -341,7 +341,7 @@ private enum ByteMismatch: Swift.Error, Equatable {
     case endOfInput
 }
 
-private struct ByteMarker: Parser.`Protocol` {
+private struct ByteMarker: Parsing {
     let expected: UInt8
 
     init(_ expected: UInt8) {
@@ -355,7 +355,7 @@ private struct ByteMarker: Parser.`Protocol` {
     }
 }
 
-private struct ByteValue: Parser.`Protocol` {
+private struct ByteValue: Parsing {
     borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> UInt8 {
         guard input.index < input.span.count else { throw .endOfInput }
         let byte = input.span[input.index]

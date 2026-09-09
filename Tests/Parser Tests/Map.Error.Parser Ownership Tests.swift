@@ -79,7 +79,7 @@ struct `Error mapping preserves parser ownership` {
 
     @Test
     func `error adapters preserve copyability for copyable owners`() throws {
-        let upstream = Parser.Witness<Int, Int, Owned.Error> { $0 }
+        let upstream = Parser<Int, Int, Owned.Error> { $0 }
         let transform = Parser::Map<Owned.Error, Mapped, Never> { Mapped.upstream($0) }
         requireCopyable(transform)
         let mapped = transform.errorParser(upstream)
@@ -100,7 +100,7 @@ private func inspectScopedOutput(_ lifetime: Lifetime) throws {
     #expect(output[0] == 4 && output[1] == 9)
 }
 
-private func requireFailure<P: Parser.`Protocol` & ~Copyable, E: Swift.Error>(
+private func requireFailure<P: Parsing & ~Copyable, E: Swift.Error>(
     _: borrowing P,
     _: E.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == E {}
@@ -118,7 +118,7 @@ private final class Lifetime {
     var mapped = 0
 }
 
-private struct Owned: ~Copyable, Parser.`Protocol` {
+private struct Owned: ~Copyable, Parsing {
     let lifetime: Lifetime
 
     enum Error: Swift.Error, Equatable {
@@ -134,7 +134,7 @@ private struct Owned: ~Copyable, Parser.`Protocol` {
     }
 }
 
-private struct Scoped: ~Copyable, Parser.`Protocol` {
+private struct Scoped: ~Copyable, Parsing {
     let lifetime: Lifetime
     let values = [4, 9]
 

@@ -24,7 +24,7 @@ private final class Lifetime {
     var destroyed = 0
 }
 
-private struct Value: ~Copyable, Parser.`Protocol` {
+private struct Value: ~Copyable, Parsing {
     enum Error: Swift.Error { case rejected }
 
     let lifetime: Lifetime
@@ -37,7 +37,7 @@ private struct Value: ~Copyable, Parser.`Protocol` {
     }
 }
 
-private struct BodyOwner: ~Copyable, Parser.`Protocol` {
+private struct BodyOwner: ~Copyable, Parsing {
     typealias Failure = Value.Error
 
     let body: Value

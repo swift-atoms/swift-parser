@@ -13,7 +13,6 @@ let package = Package(
     ],
     products: [
         .library(name: "Parser", targets: ["Parser"]),
-
         .library(name: "Parser Foundation Integration", targets: ["Parser Foundation Integration"]),
         .library(name: "Parser Test Support", targets: ["Parser Test Support"]),
     ],

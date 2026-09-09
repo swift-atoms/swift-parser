@@ -49,7 +49,7 @@ struct `Parser sequence blocks infer input and preserve body output and failure`
     }
 }
 
-private func requireFailure<P: Parser.`Protocol`, Failure: Swift.Error>(
+private func requireFailure<P: Parsing, Failure: Swift.Error>(
     _: borrowing P,
     _: Failure.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == Failure {}
@@ -58,7 +58,7 @@ private enum Mismatch: Swift.Error, Equatable {
     case expected(Character)
 }
 
-private struct Ignore: Parser.`Protocol` {
+private struct Ignore: Parsing {
     let expected: Character
 
     init(_ expected: Character) {
@@ -71,7 +71,7 @@ private struct Ignore: Parser.`Protocol` {
     }
 }
 
-private struct Literal: Parser.`Protocol` {
+private struct Literal: Parsing {
     let expected: Character
 
     init(_ expected: Character) {
@@ -99,10 +99,10 @@ struct `Parser sequence blocks nest within bodies over nonescapable cursors` {
     }
 }
 
-private struct Sentence: Parser.`Protocol` {
+private struct Sentence: Parsing {
     typealias Failure = ByteMismatch
 
-    var body: some Parser.`Protocol`<Cursor, UInt8, ByteMismatch> {
+    var body: some Parsing<Cursor, UInt8, ByteMismatch> {
         Parser::Sequence.Parser(Cursor.self) {
             ByteMarker(0x28)
             ByteValue()
@@ -127,7 +127,7 @@ private enum ByteMismatch: Swift.Error, Equatable {
     case endOfInput
 }
 
-private struct ByteMarker: Parser.`Protocol` {
+private struct ByteMarker: Parsing {
     let expected: UInt8
 
     init(_ expected: UInt8) {
@@ -141,7 +141,7 @@ private struct ByteMarker: Parser.`Protocol` {
     }
 }
 
-private struct ByteValue: Parser.`Protocol` {
+private struct ByteValue: Parsing {
     borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> UInt8 {
         guard input.index < input.span.count else { throw .endOfInput }
         let byte = input.span[input.index]

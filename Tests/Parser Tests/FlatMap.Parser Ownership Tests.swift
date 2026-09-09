@@ -82,7 +82,7 @@ private func makeParser(
     return Parser::FlatMap.Parser(upstream: upstream, transform: transform)
 }
 
-private func requireFailure<P: Parser.`Protocol` & ~Copyable, E: Swift.Error>(
+private func requireFailure<P: Parsing & ~Copyable, E: Swift.Error>(
     _: borrowing P,
     _: E.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == E {}
@@ -121,7 +121,7 @@ private struct LinearValue: ~Copyable {
     }
 }
 
-private struct Seed: Parser.`Protocol` {
+private struct Seed: Parsing {
     let fails: Bool
     let lifetime: Lifetime
 
@@ -137,7 +137,7 @@ private struct Seed: Parser.`Protocol` {
     }
 }
 
-private struct Finish: Parser.`Protocol` {
+private struct Finish: Parsing {
     let seed: Int
     let fails: Bool
     let lifetime: Lifetime

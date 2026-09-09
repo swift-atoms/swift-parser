@@ -17,7 +17,7 @@ struct `Skip discards values independently of parsing` {
     @Test
     func `its adapter executes both parsers and discards the second result`() {
         let skip = Parser::Skip<Int, Int>()
-        let number = Parser.Pure<Int, Int> { input in
+        let number = Parser<Int, Int, Never> { input in
             input += 1
             return input
         }

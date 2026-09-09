@@ -4,7 +4,7 @@ struct ScopedResult: ~Copyable, ~Escapable {
     let value: Int
 }
 
-struct Source: Parser.`Protocol` {
+struct Source: Parsing {
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Never

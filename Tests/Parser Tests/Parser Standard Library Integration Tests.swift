@@ -69,7 +69,7 @@ private enum Mismatch: Swift.Error, Equatable {
     case mismatch
 }
 
-private struct Prefix: Parser.`Protocol` {
+private struct Prefix: Parsing {
     let text: String
 
     init(_ text: String) {
@@ -82,7 +82,7 @@ private struct Prefix: Parser.`Protocol` {
     }
 }
 
-private struct OptionalPrefix: Parser.`Protocol` {
+private struct OptionalPrefix: Parsing {
     typealias Input = Substring
     typealias Output = Void?
     typealias Failure = Mismatch

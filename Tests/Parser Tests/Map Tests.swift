@@ -33,7 +33,7 @@ struct `Map values and parser adapters` {
     @Test
     func `the same transformation can be used directly and as a parser`() {
         let map = Parser::Map<Int, String, Never> { String($0) }
-        let parser = map.parser(Parser.Pure<Int, Int> { input in
+        let parser = map.parser(Parser<Int, Int, Never> { input in
             input += 1
             return input
         })

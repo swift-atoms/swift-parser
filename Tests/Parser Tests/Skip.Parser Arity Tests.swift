@@ -49,12 +49,12 @@ struct `Parser bodies process twelve elements and stop at the first mismatch` {
 
 }
 
-private struct TwelveElements: Parser.`Protocol` {
+private struct TwelveElements: Parsing {
     typealias Input = Substring
     typealias Output = Character
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<Substring, Character, Mismatch> {
+    var body: some Parsing<Substring, Character, Mismatch> {
         Ignore("a")
         Ignore("b")
         Ignore("c")
@@ -70,12 +70,12 @@ private struct TwelveElements: Parser.`Protocol` {
     }
 }
 
-private struct TwelveVoidElements: Parser.`Protocol` {
+private struct TwelveVoidElements: Parsing {
     typealias Input = Substring
     typealias Output = Void
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<Substring, Void, Mismatch> {
+    var body: some Parsing<Substring, Void, Mismatch> {
         Ignore("a")
         Ignore("b")
         Ignore("c")
@@ -96,7 +96,7 @@ private enum Mismatch: Swift.Error, Equatable {
     case expected(Character)
 }
 
-private struct Ignore: Parser.`Protocol` {
+private struct Ignore: Parsing {
     typealias Input = Substring
     typealias Output = Void
     typealias Failure = Mismatch
@@ -113,7 +113,7 @@ private struct Ignore: Parser.`Protocol` {
     }
 }
 
-private struct Literal: Parser.`Protocol` {
+private struct Literal: Parsing {
     typealias Input = Substring
     typealias Output = Character
     typealias Failure = Mismatch

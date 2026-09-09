@@ -32,7 +32,7 @@ private enum LiteralError: Swift.Error {
     case expected(Character)
 }
 
-private struct Literal: Parser.`Protocol` {
+private struct Literal: Parsing {
     let expected: Character
 
     init(_ expected: Character) {
@@ -46,10 +46,10 @@ private struct Literal: Parser.`Protocol` {
     }
 }
 
-private struct Wrapped: Parser.`Protocol` {
+private struct Wrapped: Parsing {
     typealias Failure = LiteralError
 
-    var body: some Parser.`Protocol`<Substring, Character, LiteralError> {
+    var body: some Parsing<Substring, Character, LiteralError> {
         Literal("a")
     }
 }
@@ -60,7 +60,7 @@ private struct Token: Equatable, Parseable {
     static var parser: TokenParser { TokenParser() }
 }
 
-private struct TokenParser: Parser.`Protocol` {
+private struct TokenParser: Parsing {
     borrowing func parse(_ input: inout Substring) throws(LiteralError) -> Token {
         guard let character = input.first else { throw .expected(" ") }
         input = input.dropFirst()

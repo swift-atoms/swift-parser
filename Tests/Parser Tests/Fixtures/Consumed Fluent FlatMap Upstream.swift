@@ -1,6 +1,6 @@
 import Parser
 
-struct Owned: ~Copyable, Parser.`Protocol` {
+struct Owned: ~Copyable, Parsing {
     borrowing func parse(_ input: inout Int) -> Int { input }
 }
 

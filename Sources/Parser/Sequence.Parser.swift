@@ -21,7 +21,7 @@ where
         @inlinable
         public init(
             _: Input.Type = Input.self,
-            @Parser::Parser.Builder<Input> _ build: () -> Body
+            @Parser::Builder<Input> _ build: () -> Body
         ) {
             self.base = Sequence(build())
         }

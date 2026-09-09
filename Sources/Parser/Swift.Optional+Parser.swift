@@ -1,11 +1,11 @@
 extension Swift.Optional
 where
-    Wrapped: Parser::Parser.`Protocol`,
+    Wrapped: Parser::Parsing,
     Wrapped.Input: ~Copyable & ~Escapable,
     Wrapped.Output: ~Copyable & Escapable
 {
 
-    public struct Parser: Parser::Parser.`Protocol` {
+    public struct Parser: Parser::Parsing {
 
         public typealias Input = Wrapped.Input
 
@@ -30,10 +30,10 @@ where
     }
 }
 
-extension Parser::Parser.Builder where Input: ~Copyable & ~Escapable {
+extension Parser::Builder where Input: ~Copyable & ~Escapable {
 
     @inlinable
-    public static func buildIf<P: Parser::Parser.`Protocol`>(
+    public static func buildIf<P: Parser::Parsing>(
         _ parser: P?
     ) -> Swift.Optional<P>.Parser
     where

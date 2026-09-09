@@ -93,47 +93,47 @@ struct `Parser skip and append preserve tuple shape and stage failures` {
     }
 }
 
-private func requireOutput<P: Parser.`Protocol`, Output>(
+private func requireOutput<P: Parsing, Output>(
     _: borrowing P,
     _: Output.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output == Output {}
 
-private func requireFailure<P: Parser.`Protocol`, Failure: Swift.Error>(
+private func requireFailure<P: Parsing, Failure: Swift.Error>(
     _: borrowing P,
     _: Failure.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == Failure {}
 
-private struct LeadingSkip: Parser.`Protocol` {
+private struct LeadingSkip: Parsing {
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<Substring, Character, Mismatch> {
+    var body: some Parsing<Substring, Character, Mismatch> {
         Ignore("<")
         Literal("x")
     }
 }
 
-private struct TrailingSkip: Parser.`Protocol` {
+private struct TrailingSkip: Parsing {
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<Substring, Character, Mismatch> {
+    var body: some Parsing<Substring, Character, Mismatch> {
         Literal("x")
         Ignore(">")
     }
 }
 
-private struct VoidPair: Parser.`Protocol` {
+private struct VoidPair: Parsing {
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<Substring, Void, Mismatch> {
+    var body: some Parsing<Substring, Void, Mismatch> {
         Ignore("<")
         Ignore(">")
     }
 }
 
-private struct Three: Parser.`Protocol` {
+private struct Three: Parsing {
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<Substring, (Character, Character, Character), Mismatch> {
+    var body: some Parsing<Substring, (Character, Character, Character), Mismatch> {
         Literal("a")
         Ignore(",")
         Literal("b")
@@ -142,10 +142,10 @@ private struct Three: Parser.`Protocol` {
     }
 }
 
-private struct Framed: Parser.`Protocol` {
+private struct Framed: Parsing {
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<Substring, (Character, Character), Mismatch> {
+    var body: some Parsing<Substring, (Character, Character), Mismatch> {
         Ignore("<")
         Literal("a")
         Literal("b")
@@ -153,21 +153,21 @@ private struct Framed: Parser.`Protocol` {
     }
 }
 
-private struct MixedFailures: Parser.`Protocol` {
+private struct MixedFailures: Parsing {
     typealias Failure = Either<Mismatch, Other>
 
-    var body: some Parser.`Protocol`<Substring, Character, Either<Mismatch, Other>> {
+    var body: some Parsing<Substring, Character, Either<Mismatch, Other>> {
         Ignore("<")
         OtherLiteral("x")
     }
 }
 
-private struct Sixteen: Parser.`Protocol` {
+private struct Sixteen: Parsing {
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<Substring, [Character], Mismatch> {
-        Parser.Builder<Substring>.buildBlock(
-            Parser.Builder<Substring>.buildPartialBlock(
+    var body: some Parsing<Substring, [Character], Mismatch> {
+        Builder<Substring>.buildBlock(
+            Builder<Substring>.buildPartialBlock(
                 accumulated: SixteenBody().body,
                 next: Ignore(",")
             )
@@ -178,10 +178,10 @@ private struct Sixteen: Parser.`Protocol` {
     }
 }
 
-private struct SixteenBody: Parser.`Protocol` {
+private struct SixteenBody: Parsing {
     typealias Failure = Mismatch
 
-    var body: some Parser.`Protocol`<
+    var body: some Parsing<
         Substring,
         (Character, Character, Character, Character, Character, Character, Character, Character,
          Character, Character, Character, Character, Character, Character, Character, Character),
@@ -230,7 +230,7 @@ private enum Other: Swift.Error, Equatable {
     case expected(Character)
 }
 
-private struct Ignore: Parser.`Protocol` {
+private struct Ignore: Parsing {
     let expected: Character
 
     init(_ expected: Character) {
@@ -243,7 +243,7 @@ private struct Ignore: Parser.`Protocol` {
     }
 }
 
-private struct Literal: Parser.`Protocol` {
+private struct Literal: Parsing {
     let expected: Character
 
     init(_ expected: Character) {
@@ -257,7 +257,7 @@ private struct Literal: Parser.`Protocol` {
     }
 }
 
-private struct OtherLiteral: Parser.`Protocol` {
+private struct OtherLiteral: Parsing {
     let expected: Character
 
     init(_ expected: Character) {
@@ -298,10 +298,10 @@ struct `Parser skip and append preserve values and failures over nonescapable cu
     }
 }
 
-private struct FramedByte: Parser.`Protocol` {
+private struct FramedByte: Parsing {
     typealias Failure = ByteMismatch
 
-    var body: some Parser.`Protocol`<Cursor, UInt8, ByteMismatch> {
+    var body: some Parsing<Cursor, UInt8, ByteMismatch> {
         ByteMarker(0x3C)
         ByteValue()
         ByteMarker(0x3E)
@@ -324,7 +324,7 @@ private enum ByteMismatch: Swift.Error, Equatable {
     case endOfInput
 }
 
-private struct ByteMarker: Parser.`Protocol` {
+private struct ByteMarker: Parsing {
     let expected: UInt8
 
     init(_ expected: UInt8) {
@@ -338,7 +338,7 @@ private struct ByteMarker: Parser.`Protocol` {
     }
 }
 
-private struct ByteValue: Parser.`Protocol` {
+private struct ByteValue: Parsing {
     borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> UInt8 {
         guard input.index < input.span.count else { throw .endOfInput }
         let byte = input.span[input.index]

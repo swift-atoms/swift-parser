@@ -4,11 +4,11 @@ struct ScopedResult: ~Copyable, ~Escapable {
     let number: Int
 }
 
-struct Source: Parser.`Protocol` {
+struct Source: Parsing {
     borrowing func parse(_ input: inout Int) -> Int { input }
 }
 
-struct Destination: Parser.`Protocol` {
+struct Destination: Parsing {
     @_lifetime(&input)
     borrowing func parse(_ input: inout Int) -> ScopedResult {
         ScopedResult(number: input)

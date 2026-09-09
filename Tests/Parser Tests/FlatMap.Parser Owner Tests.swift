@@ -77,11 +77,11 @@ struct `Flat map retains its upstream and creates a downstream for each call` {
     @Test(arguments: [false, true])
     func `a copyable upstream makes the wrapper copyable even when downstream owners are linear`(_ fluent: Bool) throws {
         let lifetime = Lifetime()
-        let upstream = Parser.Pure<Int, Int> { input in input += 1; return input }
+        let upstream = Parser<Int, Int, Never> { input in input += 1; return input }
         let transform = { (number: consuming Int) in
             Downstream(seed: Seed(number: number, lifetime: lifetime), fails: false, lifetime: lifetime)
         }
-        let parser: Parser::FlatMap<Parser.Pure<Int, Int>.Output, Downstream>.Parser<Parser.Pure<Int, Int>>
+        let parser: Parser::FlatMap<Parser<Int, Int, Never>.Output, Downstream>.Parser<Parser<Int, Int, Never>>
         if fluent {
             parser = upstream.flatMap(transform)
         } else {
@@ -168,7 +168,7 @@ private struct Result: ~Copyable {
     deinit { lifetime.resultsDestroyed += 1 }
 }
 
-private struct Upstream: ~Copyable, Parser.`Protocol` {
+private struct Upstream: ~Copyable, Parsing {
     let fails: Bool
     let lifetime: Lifetime
 
@@ -185,7 +185,7 @@ private struct Upstream: ~Copyable, Parser.`Protocol` {
     }
 }
 
-private struct Downstream: ~Copyable, Parser.`Protocol` {
+private struct Downstream: ~Copyable, Parsing {
     let seed: Seed
     let fails: Bool
     let lifetime: Lifetime

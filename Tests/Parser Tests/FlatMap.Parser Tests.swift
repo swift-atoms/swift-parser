@@ -30,10 +30,10 @@ struct `Parser flat maps select downstream operations and distinguish stage fail
     }
 }
 
-private struct Counted: Parser.`Protocol` {
+private struct Counted: Parsing {
     typealias Failure = Either<DigitError, TakeError>
 
-    var body: some Parser.`Protocol`<Substring, Substring, Either<DigitError, TakeError>> {
+    var body: some Parsing<Substring, Substring, Either<DigitError, TakeError>> {
         Digit().flatMap { count in Take(count) }
     }
 }
@@ -46,7 +46,7 @@ private enum TakeError: Swift.Error, Equatable {
     case short
 }
 
-private struct Digit: Parser.`Protocol` {
+private struct Digit: Parsing {
     borrowing func parse(_ input: inout Substring) throws(DigitError) -> Int {
         guard let first = input.first, let value = first.wholeNumberValue else { throw .empty }
         input = input.dropFirst()
@@ -54,7 +54,7 @@ private struct Digit: Parser.`Protocol` {
     }
 }
 
-private struct Take: Parser.`Protocol` {
+private struct Take: Parsing {
     let count: Int
 
     init(_ count: Int) {

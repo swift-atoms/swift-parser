@@ -4,6 +4,18 @@ import Testing
 @Suite
 private struct `Parser ownership and lifetime constraints survive module emission` {
 
+    @Test(arguments: ["Escaping Parser Input.swift"])
+    func `concrete parser results cannot outlive input`(_ fixture: String) throws {
+        let diagnostic = try emissionFailure(named: fixture)
+        #expect(diagnostic.contains("escapes its scope"), "\(diagnostic)")
+    }
+
+    @Test
+    func `concrete parser supports scoped input and direct scoped output`() throws {
+        let result = try emitFixture(named: "Scoped Parser Construction.swift")
+        #expect(result.status == 0, "\(result.diagnostic)")
+    }
+
     @Test
     func `stored transform result must be escapable`() throws {
         let diagnostic = try emissionFailure(

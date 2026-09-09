@@ -13,13 +13,13 @@ struct `FlatMap selects continuations independently of parsing` {
 
     @Test
     func `an instance adapts its selected parser`() throws {
-        let flatMap = Parser::FlatMap<Int, Parser.Pure<Int, Int>> { seed in
-            Parser.Pure { input in
+        let flatMap = Parser::FlatMap<Int, Parser<Int, Int, Never>> { seed in
+            Parser { input in
                 input += 1
                 return seed + input
             }
         }
-        let parser = flatMap.parser(Parser.Pure<Int, Int> { input in
+        let parser = flatMap.parser(Parser<Int, Int, Never> { input in
             input += 1
             return input
         })

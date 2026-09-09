@@ -1,13 +1,10 @@
-extension Parser {
+@resultBuilder
+public struct Builder<Input: ~Copyable & ~Escapable> {}
 
-    @resultBuilder
-    public struct Builder<Input: ~Copyable & ~Escapable> {}
-}
-
-extension Parser.Builder where Input: ~Copyable & ~Escapable {
+extension Builder where Input: ~Copyable & ~Escapable {
 
     @inlinable
-    public static func buildExpression<P: Parser.`Protocol` & ~Copyable>(
+    public static func buildExpression<P: Parsing & ~Copyable>(
         _ parser: consuming P
     ) -> P
     where
@@ -19,7 +16,7 @@ extension Parser.Builder where Input: ~Copyable & ~Escapable {
     }
 
     @inlinable
-    public static func buildBlock<P: Parser.`Protocol` & ~Copyable>(
+    public static func buildBlock<P: Parsing & ~Copyable>(
         _ parser: consuming P
     ) -> P
     where
@@ -31,7 +28,7 @@ extension Parser.Builder where Input: ~Copyable & ~Escapable {
     }
 
     @inlinable
-    public static func buildPartialBlock<P: Parser.`Protocol` & ~Copyable>(
+    public static func buildPartialBlock<P: Parsing & ~Copyable>(
         first: consuming P
     ) -> P
     where

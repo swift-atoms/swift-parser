@@ -1,6 +1,6 @@
 public import Either
 
-extension Parser.`Protocol`
+extension Parsing
 where
 Self: ~Copyable,
 Input: ~Copyable & ~Escapable,
@@ -41,7 +41,7 @@ Output: ~Copyable & ~Escapable
     }
 }
 
-extension Parser.`Protocol`
+extension Parsing
 where
 Self: ~Copyable,
 Input: ~Copyable & ~Escapable,

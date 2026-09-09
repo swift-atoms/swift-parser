@@ -1,4 +1,4 @@
-extension Parser.`Protocol`
+extension Parsing
 where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,

@@ -8,7 +8,7 @@ struct `Append parser adapters` {
     @Test
     func `tuple operation parses in order without try`() {
         let append = Append<Int, Int, (Int, Int), Never>()
-        let number = Parser.Pure<Int, Int> { input in
+        let number = Parser<Int, Int, Never> { input in
             input += 1
             return input
         }
@@ -30,13 +30,13 @@ struct `Append parser adapters` {
             if stage == 3 { throw .rejected }
             return head + last
         }
-        let first = Parser.Witness<Int, Int, FirstError> {
+        let first = Parser<Int, Int, FirstError> {
             (input: inout Int) throws(FirstError) in
             input += 1
             if stage == 1 { throw .rejected }
             return input
         }
-        let second = Parser.Witness<Int, Int, SecondError> {
+        let second = Parser<Int, Int, SecondError> {
             (input: inout Int) throws(SecondError) in
             input += 1
             if stage == 2 { throw .rejected }
@@ -63,7 +63,7 @@ struct `Append parser adapters` {
         let append = Append<Int, Int, Int, AppendError> {
             (_, _) throws(AppendError) in throw .rejected
         }
-        let number = Parser.Witness<Int, Int, AppendError> {
+        let number = Parser<Int, Int, AppendError> {
             (input: inout Int) throws(AppendError) in
             input += 1
             return input
@@ -103,7 +103,7 @@ struct `Append parser adapters` {
     func `final output can borrow from the stored append operation`() {
         let storage = [10, 20]
         let append = Append<Int, Int, Span<Int>, Never> { _, _ in storage.span }
-        let number = Parser.Pure<Int, Int> { input in input += 1; return input }
+        let number = Parser<Int, Int, Never> { input in input += 1; return input }
         let parser = append.parser(number, number)
         var input = 0
         let result = parser.parse(&input)

@@ -12,7 +12,7 @@ struct Value: ~Copyable {
     let number: Int
 }
 
-struct Source: ~Copyable, Parser.`Protocol` {
+struct Source: ~Copyable, Parsing {
     borrowing func parse(_ input: inout Input) -> Value {
         let result = Value(number: input.values[input.index])
         input.index += 1
@@ -20,7 +20,7 @@ struct Source: ~Copyable, Parser.`Protocol` {
     }
 }
 
-struct Destination: ~Copyable, Parser.`Protocol` {
+struct Destination: ~Copyable, Parsing {
     let seed: Value
 
     init(_ seed: consuming Value) { self.seed = seed }

@@ -6,7 +6,7 @@ struct `Parser witnesses execute their closure and preserve typed failure` {
 
     @Test
     func `a witness parses through its closure`() throws(any Swift.Error) {
-        let witness = Parser.Witness<Substring, Character, WitnessError> { input throws(WitnessError) in
+        let witness = Parser<Substring, Character, WitnessError> { input throws(WitnessError) in
             guard let first = input.first else { throw .empty }
             input = input.dropFirst()
             return first
@@ -18,14 +18,14 @@ struct `Parser witnesses execute their closure and preserve typed failure` {
 
     @Test
     func `a pure witness needs no try`() {
-        let pure = Parser.Pure<Substring, Int> { input in input.count }
+        let pure = Parser<Substring, Int, Never> { input in input.count }
         var input: Substring = "abc"
         #expect(pure.parse(&input) == 3)
     }
 
     @Test
     func `a witness propagates its typed failure`() {
-        let witness = Parser.Witness<Substring, Character, WitnessError> { _ throws(WitnessError) in
+        let witness = Parser<Substring, Character, WitnessError> { _ throws(WitnessError) in
             throw .empty
         }
         var input: Substring = ""
