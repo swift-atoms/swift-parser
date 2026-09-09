@@ -2,6 +2,7 @@
 import Either
 import Parser
 import Testing
+import Parser_Test_Support
 
 @Suite
 struct `Either Parser` {
@@ -95,6 +96,64 @@ extension `Either Parser` {
         #expect(try selected.parser().parse(&input) == "a")
         #expect(try Parser { selected }.parse(&input) == "a")
         #expect(input == "b")
+    }
+}
+
+private final class Lifetime {
+    var destroyed = 0
+}
+
+private struct Owned: Parsing, ~Copyable {
+    typealias Input = Substring
+    typealias Output = Int
+    typealias Failure = Never
+    let lifetime: Lifetime
+    let result: Int
+    deinit { lifetime.destroyed += 1 }
+    func parse(_ input: inout Substring) -> Int { result }
+}
+
+private struct Conditional: Parsing {
+    typealias Failure = Either<Never, Never>
+    let lifetime: Lifetime
+    let useLeft: Bool
+    var body: some Parsing<Substring, Int, Either<Never, Never>> & ~Copyable {
+        if useLeft {
+            Owned(lifetime: lifetime, result: 1)
+        } else {
+            Owned(lifetime: lifetime, result: 2)
+        }
+    }
+}
+
+extension `Either Parser` {
+    @Test(arguments: [true, false])
+    func `noncopyable branches are borrowed repeatedly and destroyed once`(_ useLeft: Bool) throws {
+        let lifetime = Lifetime()
+        var input: Substring = "abc"
+        do {
+            let selected: Either<Owned, Owned> = useLeft
+                ? .left(Owned(lifetime: lifetime, result: 1))
+                : .right(Owned(lifetime: lifetime, result: 2))
+            let parser = selected.parser()
+            #expect(try parser.parse(&input) == (useLeft ? 1 : 2))
+            #expect(try parser.parse(&input) == (useLeft ? 1 : 2))
+            #expect(lifetime.destroyed == 0)
+        }
+        #expect(lifetime.destroyed == 1)
+        #expect(try Conditional(lifetime: lifetime, useLeft: useLeft).parse(&input) == (useLeft ? 1 : 2))
+        #expect(lifetime.destroyed == 2)
+    }
+}
+
+extension `Either Parser` {
+    @Test func `conditional scoped results survive module emission`() throws {
+        let result = try Compiler.emitFixture(named: "Scoped Result.swift", in: "Either")
+        #expect(result.status == 0, "\(result.diagnostic)")
+    }
+    @Test func `conditional scoped results cannot escape their input`() throws {
+        let diagnostic = try Compiler.emissionFailure(named: "Escaping Result.swift", in: "Either")
+        #expect(diagnostic.contains("lifetime") || diagnostic.contains("escapes"))
     }
 }
 #endif

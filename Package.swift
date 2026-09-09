@@ -46,7 +46,8 @@ let package = Package(
         ),
         .trait(
             name: "Lazy",
-            description: "Parsing integration for Lazy"
+            description: "Parsing integration for Lazy",
+            enabledTraits: ["Either"]
         ),
         .trait(
             name: "Map",

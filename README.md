@@ -23,7 +23,7 @@ All traits are enabled by default. There is no aggregate composition trait.
 | Iterator | Iterator adapters for Predicate and Prefix, alongside those traits |
 | Collection | Custom Collection adapters for Prefix, alongside that trait |
 
-Append, Pair, Skip, Map, and FlatMap enable Either for typed failure composition.
+Append, Pair, Skip, Map, FlatMap, and Lazy enable Either for typed failure composition.
 Optic enables Map. Iterator adapters that combine input and recognition errors
 also require Either.
 
@@ -49,3 +49,16 @@ algebra implementations remain in their own packages.
 The legacy `swift-collection-parser`, `swift-cursor-parser`, and
 `swift-iterator-parser` APIs have not been migrated. Their responsibility and
 overlap cleanup is separate from these integrations.
+
+## Deferred construction
+
+`Lazy` creates a fresh parser on every parse, including after construction fails.
+An infallible factory preserves the produced parser's failure type. A throwing
+factory reports `Either<FactoryFailure, ParseFailure>`: `.left` for construction
+and `.right` for parsing. Construction failure leaves the input untouched.
+Factories may produce noncopyable parsers. Parse outputs must be escapable because
+the temporary parser is destroyed after each call.
+
+Explicit type annotations now spell `Lazy<Value, FactoryFailure>` and
+`Lazy<Value, FactoryFailure>.Parser<Failure>`. Inferred infallible construction
+such as `Lazy { parser }` continues to infer `Never` for the factory failure.
