@@ -18,5 +18,4 @@ where
     {
         .init(upstream: self, transform: transform)
     }
-
 }
