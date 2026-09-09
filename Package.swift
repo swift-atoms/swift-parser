@@ -13,7 +13,6 @@ let package = Package(
     ],
     products: [
         .library(name: "Parser", targets: ["Parser"]),
-        .library(name: "Parser Foundation Integration", targets: ["Parser Foundation Integration"]),
         .library(name: "Parser Test Support", targets: ["Parser Test Support"]),
     ],
     targets: [
@@ -21,14 +20,7 @@ let package = Package(
             name: "Parser",
             path: "Sources/Parser"
         ),
-        
-        .target(
-            name: "Parser Foundation Integration",
-            dependencies: [
-                .target(name: "Parser"),
-            ],
-            path: "Sources/Parser Foundation Integration"
-        ),
+
         .target(
             name: "Parser Test Support",
             dependencies: [
@@ -42,7 +34,6 @@ let package = Package(
             dependencies: [
                 .target(name: "Parser"),
                 .target(name: "Parser Test Support"),
-                .target(name: "Parser Foundation Integration"),
             ],
             path: "Tests/Parser Tests"
         ),
