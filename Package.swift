@@ -96,9 +96,18 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-atoms/swift-checkpoint.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-cardinal.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-repetition.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-atoms/swift-checkpoint.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-cardinal.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-repetition.git",
+            branch: "main"
+        ),
         .package(
             url: "https://github.com/swift-atoms/swift-tagged.git",
             branch: "main"

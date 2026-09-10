@@ -93,7 +93,7 @@ private var leaf: Optic<Node, Node, Int, Int>.Prism {
 private var unmatched: Optic<Unmatched, Unmatched, Int, Int>.Prism {
     Optic<Unmatched, Unmatched, Int, Int>.Prism(
         match: { source in .left(source) },
-        embed: { Unmatched(value: $0) }
+        embed: Unmatched.init
     )
 }
 
@@ -103,8 +103,8 @@ struct `Optic Parser` {
     @Test
     func `Adapter with two total stages remains exactly nonthrowing`() {
         let adapter = Optic<Int, String, String, Int>.Adapter(
-            forward: { String($0) },
-            backward: { String($0) }
+            forward: String.init,
+            backward: String.init
         )
         let parser = Succeed(output: 42).map(forward: adapter)
         requireFailure(parser, Never.self)
@@ -116,7 +116,7 @@ struct `Optic Parser` {
     @Test
     func `Adapter ignores backward failure`() {
         let adapter = Optic<Int, String, String, Int>.Adapter(
-            forward: { String($0) },
+            forward: String.init,
             backward: { _ throws(BackwardFailure) in throw .unused }
         )
         let parser = Succeed(output: 42).map(forward: adapter)
@@ -129,8 +129,8 @@ struct `Optic Parser` {
     @Test
     func `Adapter preserves a fallible upstream when forward is total`() {
         let adapter = Optic<Int, String, String, Int>.Adapter(
-            forward: { String($0) },
-            backward: { String($0) }
+            forward: String.init,
+            backward: String.init
         )
         let parser = Fail<Int>().map(forward: adapter)
         requireFailure(parser, UpstreamFailure.self)
