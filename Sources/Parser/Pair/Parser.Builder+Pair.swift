@@ -1,5 +1,5 @@
 #if Pair
-// Prefer tuple accumulation when available; Pair also supports noncopyable fields.
+
 public import Either
 public import Pair
 

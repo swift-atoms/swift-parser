@@ -1,4 +1,3 @@
-// !$*UTF8*$!
 {
 "archiveVersion" = "1";
 "classes" = {
@@ -42,12 +41,6 @@
 "path" = "User Records/Samples";
 "sourceTree" = "<group>";
 };
-"000000000000000000000007" = {
-"isa" = "PBXFileReference";
-"lastKnownFileType" = "net.daringfireball.markdown";
-"path" = "User Records/README.md";
-"sourceTree" = "<group>";
-};
 "000000000000000000000008" = {
 "isa" = "PBXFileReference";
 "explicitFileType" = "compiled.mach-o.executable";
@@ -78,7 +71,6 @@
 "000000000000000000000004",
 "000000000000000000000005",
 "000000000000000000000006",
-"000000000000000000000007",
 "00000000000000000000000A",
 );
 "sourceTree" = "<group>";

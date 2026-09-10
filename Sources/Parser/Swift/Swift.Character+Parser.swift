@@ -1,5 +1,5 @@
 extension Swift.Character {
-    /// Matches the supplied literal without consuming input on failure.
+
     public struct Parser: Parser::Parsing {
         public typealias Input = Substring
         public typealias Output = Void

@@ -2,7 +2,6 @@
 public import Either
 #endif
 
-/// A parser represented by a typed parsing function.
 public struct Parser<
     Input: ~Copyable & ~Escapable,
     Output: ~Copyable & ~Escapable,
@@ -24,10 +23,7 @@ public struct Parser<
 
 extension Parser
 where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
-    /// Builds once and retains the composition in a parsing closure.
-    ///
-    /// Scoped outputs remain supported by direct construction and concrete
-    /// Parsing implementations; this initializer requires an escapable output.
+
     @inlinable
     public init<P: Parsing & ~Copyable>(
         @Builder<Input> _ build: () -> P
@@ -47,7 +43,7 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
 #if Map
 extension Parser
 where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
-    /// Builds once and maps the result, preserving the parsing failure.
+
     @inlinable
     public init<P: Parsing & ~Copyable>(
         _ transform: @escaping (consuming P.Output) -> Output,
@@ -58,7 +54,6 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
         self.init { build().map(transform) }
     }
 
-    /// Preserves parsing and construction failures as the left and right branches.
     @inlinable
     @_disfavoredOverload
     public init<P: Parsing & ~Copyable, TransformFailure: Swift.Error>(
@@ -70,7 +65,6 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
         self.init { build().map(transform) }
     }
 
-    /// With infallible parsing, only construction can fail.
     @inlinable
     public init<P: Parsing & ~Copyable>(
         _ transform: @escaping (consuming P.Output) throws(Failure) -> Output,
@@ -84,7 +78,7 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
 
 extension Parser
 where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable, Failure == Never {
-    /// Infallible parsing and construction remain exactly nonthrowing.
+
     @inlinable
     public init<P: Parsing & ~Copyable>(
         _ transform: @escaping (consuming P.Output) -> Output,

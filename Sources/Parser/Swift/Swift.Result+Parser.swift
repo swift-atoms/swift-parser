@@ -5,7 +5,7 @@ Success.Input: ~Copyable & ~Escapable,
 Success.Output: ~Copyable & ~Escapable,
 Success.Failure == Failure
 {
-    /// Runs the successful parser, or throws the stored failure without consuming input.
+
     public struct Parser: Parser::Parsing, ~Copyable {
         public typealias Input = Success.Input
         public typealias Output = Success.Output

@@ -3,7 +3,7 @@ public import Search
 public import Collection
 
 extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equatable {
-    /// Selects before committing, preserving input on selection failure.
+
     public func parser<Input: Collection.Slice.`Protocol`>(
         forCollection input: Input.Type
     ) -> Parser::Parser<Input, Input, Error> where Input.Element == Pattern.Element {

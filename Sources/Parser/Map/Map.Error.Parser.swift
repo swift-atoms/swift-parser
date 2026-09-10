@@ -3,8 +3,6 @@ public import Map
 
 extension Map.Error where Source: Swift.Error, Target: Swift.Error, Failure == Never {
 
-    /// Maps only an upstream parser's failure. Successful values and their
-    /// lifetime dependencies pass through unchanged; input is not rewound.
     public struct Parser<Upstream: Parsing & ~Copyable>: Parsing, ~Copyable
     where
         Upstream.Input: ~Copyable & ~Escapable,

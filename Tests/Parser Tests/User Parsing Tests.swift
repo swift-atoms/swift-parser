@@ -43,8 +43,7 @@ private struct User: Equatable {
 }
 
 extension User {
-    /// An example format: a nonempty name, a comma, and a nonnegative decimal age.
-    /// The model stays independent of its textual representation.
+
     struct Parser: Parsing {
         enum Failure: Swift.Error {
             case invalidRecord

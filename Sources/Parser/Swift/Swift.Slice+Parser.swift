@@ -1,5 +1,5 @@
 extension Swift.Slice where Base.Element: Equatable {
-    /// Matches a collection literal, committing consumption only after a complete match.
+
     public struct Parser<Input: Swift.Collection>: Parser::Parsing
     where Input.SubSequence == Input, Input.Element == Base.Element {
         public typealias Output = Void

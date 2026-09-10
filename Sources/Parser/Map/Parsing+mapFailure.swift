@@ -8,7 +8,6 @@ where
     Output: ~Copyable & ~Escapable
 {
 
-    /// Transforms the failure type without changing successful outputs.
     @inlinable
     public consuming func mapFailure<NewFailure: Swift.Error>(
         _ transform: @escaping (Failure) -> NewFailure

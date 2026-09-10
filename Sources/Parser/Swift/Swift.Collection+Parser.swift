@@ -1,6 +1,5 @@
 extension Swift.Collection where Element: Equatable {
-    /// Interprets this collection as an exact prefix literal, not as a value to decode.
-    /// The slice retains this collection without materializing an array.
+
     @inlinable
     public func parser<Input: Swift.Collection>(
         for input: Input.Type = Input.self

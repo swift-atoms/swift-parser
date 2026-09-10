@@ -28,7 +28,6 @@ extension User.Parser {
     enum Rejected: Error { case record }
     enum Invalid: Error, Equatable { case age(String) }
 
-    /// One or more matching characters, materialized as a String.
     private func text(
         while accepts: @escaping (Character) -> Bool
     ) -> some Parsing<Substring, String, Rejected> {
@@ -43,7 +42,7 @@ extension User.Parser {
 }
 
 extension User {
-    /// Convert the complete record only after its terminating newline matched.
+
     fileprivate init(name: String, age: String) throws(Parser.Invalid) {
         guard let value = Int(age), (0...130).contains(value) else {
             throw .age(age)

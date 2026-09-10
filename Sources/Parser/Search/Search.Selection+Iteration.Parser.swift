@@ -4,8 +4,7 @@ public import Iterator
 public import Either
 
 extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equatable {
-    /// Materializes iterator output. On failure, already delivered output is consumed;
-    /// predicate/delimiter lookahead remains in the input wrapper.
+
     public func parser<I: Iterating & ~Copyable & ~Escapable>(
         for input: Iterator::Iterator.Buffered<I, I.Failure>.Type
     ) -> Parser::Parser<Iterator::Iterator.Buffered<I, I.Failure>, [I.Element], Either<Error, I.Failure>>

@@ -4,7 +4,6 @@ public import Map
 extension Map
 where Source: ~Copyable & ~Escapable, Target: ~Copyable & Escapable {
 
-    /// Transforms one parser's output, preserving its input consumption.
     @frozen
     public struct Parser<Upstream: Parsing & ~Copyable>: Parsing, ~Copyable
     where

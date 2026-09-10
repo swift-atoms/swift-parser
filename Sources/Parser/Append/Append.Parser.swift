@@ -11,11 +11,6 @@ where
 
     public typealias AppendFailure = Failure
 
-    /// Parses two operands in order, then applies this append operation.
-    ///
-    /// Operand results must be escapable: the second parser mutates the input
-    /// after the first result has been produced. Input and final output may be
-    /// nonescapable. Failures preserve consumption; this adapter does not rewind.
     public struct Parser<
         A: Parsing & ~Copyable,
         N: Parsing & ~Copyable,
@@ -79,8 +74,6 @@ where
         }
     }
 
-    /// Distinguishes accumulated, next, and append failures as
-    /// `.left(.left(error))`, `.left(.right(error))`, and `.right(error)`.
     @inlinable
     public func parser<A: Parsing & ~Copyable, N: Parsing & ~Copyable>(
         _ accumulated: consuming A,
@@ -101,7 +94,6 @@ where
               appendFailure: { .right($0) })
     }
 
-    /// Preserves a shared failure type, including `Never` for nonthrowing stages.
     @inlinable
     public func parser<A: Parsing & ~Copyable, N: Parsing & ~Copyable>(
         _ accumulated: consuming A,

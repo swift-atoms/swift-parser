@@ -1,5 +1,5 @@
 extension Swift.Array where Element: Equatable {
-    /// Matches the supplied literal without consuming input on failure.
+
     public struct Parser<Input: Swift.Collection>: Parser::Parsing
     where Input.SubSequence == Input, Input.Element == Element {
         public typealias Output = Void

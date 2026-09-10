@@ -2,7 +2,7 @@
 public import Search
 
 extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equatable {
-    /// Selects a prefix and commits input consumption only after selection succeeds.
+
     public struct Parser<Input: Swift.Collection>: Parser::Parsing
     where Input.SubSequence == Input, Input.Element == Pattern.Element {
         public typealias Output = Input

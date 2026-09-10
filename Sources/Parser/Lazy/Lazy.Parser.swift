@@ -8,7 +8,7 @@ where
     Value.Input: ~Copyable & ~Escapable,
     Value.Output: ~Copyable & Escapable
 {
-    /// Creates a temporary parser per call; its output must not borrow that parser.
+
     public struct Parser<Failure: Swift.Error>: Parser::Parsing {
         public typealias Input = Value.Input
         public typealias Output = Value.Output

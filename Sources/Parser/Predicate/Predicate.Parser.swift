@@ -2,7 +2,7 @@
 public import Predicate
 
 extension Predicate where T: Copyable & Escapable {
-    /// Consumes exactly one element satisfying the predicate, not a maximal prefix.
+
     public struct Parser<Input: Swift.Collection>: Parser::Parsing
     where Input.SubSequence == Input, Input.Element == T {
         public typealias Output = T
