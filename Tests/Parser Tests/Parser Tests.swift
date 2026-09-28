@@ -185,6 +185,7 @@ private struct `Parser mapping initializers preserve failures` {
         #expect(throws: ParseFailure.empty) { try parser.parse(&input) }
     }
 
+#if Either
     @Test func `two throwing stages preserve the source of failure`() {
         let parser = Parser({ (value: consuming Int) throws(ConstructionFailure) -> String in
             throw .invalid
@@ -204,6 +205,7 @@ private struct `Parser mapping initializers preserve failures` {
             try parser.parse(&input)
         }
     }
+#endif
 
     @Test func `infallible parsing introduces no Never branch`() {
         let parser = Parser({ (_: consuming Int) throws(ConstructionFailure) -> String in
