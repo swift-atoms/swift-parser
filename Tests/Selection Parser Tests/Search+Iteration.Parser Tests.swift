@@ -1,4 +1,4 @@
-#if Search && Repetition && Iterator && Collection
+#if Search && Repetition && Iterator && Collection && Predicate
 import Search
 import Repetition
 import Cardinal

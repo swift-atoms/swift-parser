@@ -2,6 +2,10 @@
 @_exported public import Append
 #endif
 
+#if Tagged
+@_exported public import Tagged
+#endif
+
 #if Either
 @_exported public import Either
 #endif

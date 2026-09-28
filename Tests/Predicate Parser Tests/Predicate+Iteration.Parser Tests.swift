@@ -1,4 +1,4 @@
-#if Predicate
+#if Predicate && Iterator
 import Predicate
 import Parser
 import Iterator

@@ -1,4 +1,4 @@
-#if Append && Skip && Map && Repetition && Collection
+#if Append && Skip && Map && Repetition && Collection && Predicate
 import Parser
 import Testing
 

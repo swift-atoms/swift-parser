@@ -1,4 +1,4 @@
-#if Search && Repetition && Iterator && Collection
+#if Search && Repetition && Iterator && Collection && Predicate
 import Parser_Test_Support
 import Search
 import Repetition
