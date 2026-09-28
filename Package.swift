@@ -156,12 +156,12 @@ let package = Package(
         .package(
             url: "https://github.com/swift-atoms/swift-iterator.git",
             branch: "main",
-            traits: ["Search", "Repetition"]
+            traits: [.trait(name: "Search", condition: .when(traits: ["Iterator", "IteratorLeaves", "Collection", "CollectionLeaves"])), .trait(name: "Repetition", condition: .when(traits: ["Iterator", "IteratorLeaves", "Collection", "CollectionLeaves"]))]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-collection.git",
             branch: "main",
-            traits: ["Search", "Repetition"]
+            traits: [.trait(name: "Search", condition: .when(traits: ["Collection", "CollectionLeaves"])), .trait(name: "Repetition", condition: .when(traits: ["Collection", "CollectionLeaves"]))]
         ),
         .package(url: "https://github.com/swift-atoms/swift-product.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-cursor.git", branch: "main"),
