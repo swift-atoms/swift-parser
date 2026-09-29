@@ -1,7 +1,6 @@
 #if Repetition
 public import Checkpoint
 
-/// Repetition stops only on classified rejection. Committed failures retain input.
 public struct Many<Source: Restorable & ~Copyable & ~Escapable, Element: Parsing>: Parsing
 where Element.Input == Source, Element.Input: ~Copyable & ~Escapable,
       Source.Checkpoint: Equatable, Element.Output: Copyable & Escapable {

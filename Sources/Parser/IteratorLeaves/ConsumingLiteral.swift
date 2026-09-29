@@ -1,8 +1,6 @@
 #if IteratorLeaves
 public import Iterator
 
-/// Explicit iterator literal matching. A mismatch consumes the matching prefix and
-/// the mismatching element, if present. Use `.backtracking()` for explicit rollback.
 public struct ConsumingLiteral<Input: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parsing
 where Input.Element: Equatable & Copyable & Escapable, Input.Failure == Never {
     public typealias Output = Void

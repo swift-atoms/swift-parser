@@ -1,7 +1,6 @@
 #if Choice
 public import Checkpoint
 
-/// Alternatives retry only errors explicitly classified as rejection.
 public enum OneOf {}
 
 extension OneOf {
@@ -22,7 +21,6 @@ extension OneOf {
         public let p1: P1
         public let rejectFirst: (P0.Failure) -> Bool
         public let rejectSecond: (P1.Failure) -> Bool
-        /// Coding integrations may classify representability separately from parsing.
         public let serializationRejectFirst: (P0.Failure) -> Bool
         public let serializationRejectSecond: (P1.Failure) -> Bool
 

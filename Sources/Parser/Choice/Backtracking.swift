@@ -1,8 +1,6 @@
 #if Choice
 public import Checkpoint
 
-/// Explicit transaction: restore input on any failure, preserve its typed error.
-/// This opt-in operation is separate from rejection-aware choice.
 public struct Backtracking<Upstream: Parsing>: Parsing
 where Upstream.Input: Restorable & ~Copyable & ~Escapable,
       Upstream.Output: ~Copyable & Escapable {
