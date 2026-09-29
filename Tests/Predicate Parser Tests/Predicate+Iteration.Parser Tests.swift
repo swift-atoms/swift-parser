@@ -33,7 +33,7 @@ import Testing
     }
 
     @Test func sourceFailureAndExhaustionRemainDistinct() {
-        let parser = Predicate<Int>.always.parser(for: Input.self)
+        let parser = Predicate<Int> { _ in true }.parser(for: Input.self)
         var empty = Input(elements: [])
         do {
             _ = try parser.parse(&empty)
