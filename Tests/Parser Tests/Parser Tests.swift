@@ -144,6 +144,7 @@ private enum ParseFailure: Swift.Error, Equatable {
     case empty
 }
 
+#if os(macOS)
 @Suite
 private struct `Parser ownership and lifetime constraints survive module emission` {
 
@@ -165,6 +166,7 @@ private struct `Parser ownership and lifetime constraints survive module emissio
         #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
     }
 }
+#endif
 
 #if Map
 @Suite
