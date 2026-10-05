@@ -58,6 +58,12 @@ private enum LiteralError: Error, Equatable {
 }
 
 private struct Literal: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Substring
     typealias Output = Character
     typealias Failure = LiteralError
@@ -104,6 +110,12 @@ private final class Lifetime {
 }
 
 private struct Owned: Parsing, ~Copyable {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Substring
     typealias Output = Int
     typealias Failure = Never

@@ -9,6 +9,13 @@ extension Map.Error where Source: Swift.Error, Target: Swift.Error, Failure == N
         Upstream.Output: ~Copyable & ~Escapable,
         Upstream.Failure == Source
     {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
+
         public typealias Input = Upstream.Input
         public typealias Output = Upstream.Output
         public typealias Failure = Target

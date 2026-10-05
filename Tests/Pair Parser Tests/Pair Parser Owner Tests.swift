@@ -9,6 +9,12 @@ private final class Lifetime {
     var values: [Int] = []
 }
 private struct Value: ~Copyable, Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     enum Error: Swift.Error, Equatable { case rejected(Int) }
     let id: Int
     let life: Lifetime
@@ -21,6 +27,12 @@ private struct Value: ~Copyable, Parsing {
     }
 }
 private struct Marker: ~Copyable, Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     enum Error: Swift.Error, Equatable { case rejected(Int) }
     let id: Int
     let life: Lifetime
@@ -37,6 +49,12 @@ private struct Token: ~Copyable {
     deinit { life.values.append(value) }
 }
 private struct TokenParser: ~Copyable, Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let id: Int
     let life: Lifetime
     var fail = false
@@ -48,6 +66,12 @@ private struct TokenParser: ~Copyable, Parsing {
     }
 }
 private struct OtherTokenParser: ~Copyable, Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let id: Int
     let life: Lifetime
     var fail = false
@@ -59,9 +83,21 @@ private struct OtherTokenParser: ~Copyable, Parsing {
     }
 }
 private struct CopyValue: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     borrowing func parse(_ input: inout Int) -> Int { input += 1; return input }
 }
 private struct CopyTokenParser: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let life: Lifetime
     borrowing func parse(_ input: inout Int) -> Token {
         input += 1
@@ -69,6 +105,12 @@ private struct CopyTokenParser: Parsing {
     }
 }
 private struct CopyMarker: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     borrowing func parse(_ input: inout Int) { input += 1 }
 }
 private func discard<T: ~Copyable>(_ value: consuming T) {}

@@ -34,6 +34,12 @@ private enum LiteralError: Swift.Error, Equatable {
 }
 
 private struct Literal: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let expected: Character
 
     init(_ expected: Character) {
@@ -77,6 +83,12 @@ private final class Lifetime {
 }
 
 private struct Value: ~Copyable, Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     enum Error: Swift.Error { case rejected }
 
     let lifetime: Lifetime

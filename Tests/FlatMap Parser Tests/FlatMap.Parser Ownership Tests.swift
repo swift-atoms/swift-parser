@@ -124,6 +124,12 @@ private struct LinearValue: ~Copyable {
 }
 
 private struct Seed: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let fails: Bool
     let lifetime: Lifetime
 
@@ -140,6 +146,12 @@ private struct Seed: Parsing {
 }
 
 private struct Finish: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let seed: Int
     let fails: Bool
     let lifetime: Lifetime

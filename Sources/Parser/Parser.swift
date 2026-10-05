@@ -7,6 +7,13 @@ public struct Parser<
     Output: ~Copyable & ~Escapable,
     Failure: Swift.Error
 >: Parsing {
+    @inlinable
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+        }
+    }
+
     public var _parse: @_lifetime(&input) (_ input: inout Input) throws(Failure) -> Output
 
     @inlinable

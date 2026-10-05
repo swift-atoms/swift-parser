@@ -15,6 +15,13 @@ where Kept: ~Copyable & Escapable, Dropped: ~Copyable & Escapable {
         A.Output == Kept,
         N.Output == Dropped
     {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
+
         public typealias Input = A.Input
 
         public typealias Output = A.Output

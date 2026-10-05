@@ -99,6 +99,12 @@ private enum Mismatch: Swift.Error, Equatable {
 }
 
 private struct Ignore: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Substring
     typealias Output = Void
     typealias Failure = Mismatch
@@ -116,6 +122,12 @@ private struct Ignore: Parsing {
 }
 
 private struct Literal: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Substring
     typealias Output = Character
     typealias Failure = Mismatch

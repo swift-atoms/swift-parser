@@ -9,6 +9,13 @@ extension OneOf {
           P0.Input: Restorable & ~Copyable & ~Escapable,
           P1.Input: ~Copyable & ~Escapable,
           P0.Output: ~Copyable & Escapable, P1.Output: ~Copyable & Escapable {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
+
         public typealias Input = P0.Input
         public typealias Output = P0.Output
         public typealias Failure = Error

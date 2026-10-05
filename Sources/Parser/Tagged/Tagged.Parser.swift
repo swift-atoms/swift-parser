@@ -21,6 +21,13 @@ where
     UnderlyingParser.Output == Underlying
 {
     @inlinable
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+        }
+    }
+
+    @inlinable
     public borrowing func parse(
         _ input: inout UnderlyingParser.Input
     ) throws(UnderlyingParser.Failure) -> Tagged::Tagged<Tag, Underlying> {

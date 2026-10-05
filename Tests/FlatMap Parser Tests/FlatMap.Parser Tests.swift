@@ -49,6 +49,12 @@ private enum TakeError: Swift.Error, Equatable {
 }
 
 private struct Digit: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     borrowing func parse(_ input: inout Substring) throws(DigitError) -> Int {
         guard let first = input.first, let value = first.wholeNumberValue else { throw .empty }
         input = input.dropFirst()
@@ -57,6 +63,12 @@ private struct Digit: Parsing {
 }
 
 private struct Take: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let count: Int
 
     init(_ count: Int) {

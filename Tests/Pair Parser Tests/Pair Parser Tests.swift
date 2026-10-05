@@ -77,6 +77,12 @@ private struct Token: ~Copyable {
 }
 
 private struct TokenLiteral: Parser::Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let expected: Character
 
     borrowing func parse(_ input: inout Substring) throws(LiteralError) -> Token {
@@ -95,6 +101,12 @@ private enum OtherError: Error, Equatable {
 }
 
 private struct Literal: Parser::Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let expected: Character
 
     init(_ expected: Character) {
@@ -109,6 +121,12 @@ private struct Literal: Parser::Parsing {
 }
 
 private struct OtherLiteral: Parser::Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     let expected: Character
 
     init(_ expected: Character) {

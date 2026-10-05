@@ -5,6 +5,13 @@ extension Parser::Prefix {
 
     public struct UpTo<Input: Collection.Slice.`Protocol`>: Parsing
     where Input.Element: Equatable, Input.Element: Copyable {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
+
 
         public typealias Output = Input
 

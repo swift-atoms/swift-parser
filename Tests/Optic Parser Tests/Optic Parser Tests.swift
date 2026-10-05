@@ -18,6 +18,12 @@ private enum BackwardFailure: Error {
 }
 
 private struct Succeed<Output>: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Void
     typealias Failure = Never
 
@@ -29,6 +35,12 @@ private struct Succeed<Output>: Parsing {
 }
 
 private struct Fail<Output>: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Void
     typealias Failure = UpstreamFailure
 
@@ -56,6 +68,12 @@ private struct ScopedToken: ~Copyable, ~Escapable {
 }
 
 private struct Linear: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Int
     typealias Output = ScopedToken
     typealias Failure = Never
@@ -71,6 +89,12 @@ private struct Unmatched: ~Copyable {
 }
 
 private struct UnmatchedParser: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Int
     typealias Output = Unmatched
     typealias Failure = Never

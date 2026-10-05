@@ -27,6 +27,12 @@ private enum TokenError: Error, Equatable {
 }
 
 private struct TokenParser: Parser::Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
+
     typealias Input = Substring
     typealias Output = Token
     typealias Failure = TokenError

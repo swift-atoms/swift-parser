@@ -2,6 +2,13 @@
 public import Collection
 
     public struct Rest<Input: Collection.Slice.`Protocol`>: Parsing {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
+
 
         public typealias Output = Input
 

@@ -3,6 +3,13 @@ public import Iterator
 
 public struct ConsumingLiteral<Input: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parsing
 where Input.Element: Equatable & Copyable & Escapable, Input.Failure == Never {
+    @inlinable
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+        }
+    }
+
     public typealias Output = Void
     public typealias Failure = Error
     public enum Error: Swift.Error, Equatable { case mismatch }
