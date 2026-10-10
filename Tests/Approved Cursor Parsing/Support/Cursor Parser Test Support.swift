@@ -29,6 +29,11 @@ extension CursorParserTest.Take {
 }
 
 extension CursorParserTest.Take: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
 
     public typealias Input = ArraySlice<UInt8>
@@ -66,6 +71,11 @@ extension CursorParserTest {
 }
 
 extension CursorParserTest.TakeWhile: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
 
     public typealias Input = ArraySlice<UInt8>
@@ -95,6 +105,11 @@ extension CursorParserTest {
 }
 
 extension CursorParserTest.Rest: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
 
     public typealias Input = ArraySlice<UInt8>
@@ -131,6 +146,11 @@ extension CursorParserTest.End {
 }
 
 extension CursorParserTest.End: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
 
     public typealias Input = ArraySlice<UInt8>

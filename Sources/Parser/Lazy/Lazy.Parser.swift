@@ -10,6 +10,12 @@ where
 {
 
     public struct Parser<Failure: Swift.Error>: Parser::Parsing {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
 
         public typealias Input = Value.Input
         public typealias Output = Value.Output

@@ -377,6 +377,11 @@ private enum `Always Throwing Leaf Error`: Swift.Error, Equatable {
 }
 
 private struct `Always Throwing Leaf`<Input, Output>: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     let error: `Always Throwing Leaf Error`
 

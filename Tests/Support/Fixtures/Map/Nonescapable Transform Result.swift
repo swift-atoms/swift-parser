@@ -6,6 +6,9 @@ struct ScopedResult: ~Copyable, ~Escapable {
 }
 
 struct Source: Parsing {
+    var body: Never {
+        borrowing get { return fatalError() }
+    }
     typealias Input = Int
     typealias Output = Int
     typealias Failure = Never

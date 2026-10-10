@@ -234,6 +234,11 @@ private enum Other: Swift.Error, Equatable {
 }
 
 private struct Ignore: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     let expected: Character
 
@@ -248,6 +253,11 @@ private struct Ignore: Parsing {
 }
 
 private struct Literal: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     let expected: Character
 
@@ -263,6 +273,11 @@ private struct Literal: Parsing {
 }
 
 private struct OtherLiteral: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     let expected: Character
 
@@ -331,6 +346,11 @@ private enum ByteMismatch: Swift.Error, Equatable {
 }
 
 private struct ByteMarker: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     let expected: UInt8
 
@@ -346,6 +366,11 @@ private struct ByteMarker: Parsing {
 }
 
 private struct ByteValue: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> UInt8 {
         guard input.index < input.span.count else { throw .endOfInput }

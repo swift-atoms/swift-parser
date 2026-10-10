@@ -7,6 +7,12 @@ Success.Failure == Failure
 {
 
     public struct Parser: Parser::Parsing, ~Copyable {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
 
         public typealias Input = Success.Input
         public typealias Output = Success.Output

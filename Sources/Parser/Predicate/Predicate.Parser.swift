@@ -5,6 +5,12 @@ extension Predicate where T: Copyable & Escapable {
 
     public struct Parser<Input: Swift.Collection>: Parser::Parsing
     where Input.SubSequence == Input, Input.Element == T {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
 
         public typealias Output = T
         public typealias Failure = Error

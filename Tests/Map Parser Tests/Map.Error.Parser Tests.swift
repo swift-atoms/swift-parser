@@ -134,6 +134,11 @@ private enum DownstreamFailure: Swift.Error, Equatable {
 }
 
 private struct Fail: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     typealias Input = Int
     typealias Output = Int
@@ -145,6 +150,11 @@ private struct Fail: Parsing {
 }
 
 private struct FallibleSucceed: Parsing {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     typealias Input = Int
     typealias Output = Int

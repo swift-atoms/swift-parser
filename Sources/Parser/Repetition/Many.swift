@@ -4,6 +4,12 @@ public import Checkpoint
 public struct Many<Source: Restorable & ~Copyable & ~Escapable, Element: Parsing>: Parsing
 where Element.Input == Source, Element.Input: ~Copyable & ~Escapable,
       Source.Checkpoint: Equatable, Element.Output: Copyable & Escapable {
+    @inlinable
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+        }
+    }
 
     public typealias Input = Source
     public typealias Output = [Element.Output]
@@ -63,6 +69,12 @@ extension Many where Source: ~Copyable & ~Escapable {
     public struct Separated<Separator: Parsing>: Parsing
     where Separator.Input == Source, Separator.Input: ~Copyable & ~Escapable,
           Separator.Output: ~Copyable & ~Escapable {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
 
         public typealias Input = Source
         public typealias Output = [Element.Output]

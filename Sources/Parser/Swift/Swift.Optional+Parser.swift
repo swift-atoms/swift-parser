@@ -6,6 +6,12 @@ where
 {
 
     public struct Parser: Parser::Parsing {
+        @inlinable
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+            }
+        }
 
 
         public typealias Input = Wrapped.Input

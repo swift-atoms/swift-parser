@@ -15,21 +15,6 @@ public protocol Parsing<Input, Output, Failure>: ~Copyable {
     borrowing func parse(_ input: inout Input) throws(Failure) -> Output
 }
 
-extension Parsing
-where
-    Self: ~Copyable,
-    Input: ~Copyable & ~Escapable,
-    Output: ~Copyable & ~Escapable,
-    Body == Never
-{
-
-    @inlinable @_optimize(none)
-    public var body: Never {
-        borrowing get {
-            fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-        }
-    }
-}
 
 extension Parsing
 where

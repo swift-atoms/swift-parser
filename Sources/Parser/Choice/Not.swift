@@ -3,6 +3,12 @@ public import Checkpoint
 
 public struct Not<Upstream: Parsing>: Parsing
 where Upstream.Input: Restorable & ~Copyable & ~Escapable, Upstream.Output: ~Copyable & ~Escapable {
+    @inlinable
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+        }
+    }
 
     public typealias Input = Upstream.Input
     public typealias Output = Void
