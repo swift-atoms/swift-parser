@@ -254,11 +254,6 @@ private enum TransformFailure: Swift.Error, Equatable {
 }
 
 private struct Succeed: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     typealias Input = Int
     typealias Output = Int
@@ -270,11 +265,6 @@ private struct Succeed: Parsing {
 }
 
 private struct Fail: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     typealias Input = Int
     typealias Output = Int
@@ -288,11 +278,6 @@ private struct Fail: Parsing {
 }
 
 private struct FallibleSucceed: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     typealias Input = Int
     typealias Output = Int
@@ -314,11 +299,6 @@ private struct LinearResult: ~Copyable {
 }
 
 private struct Linear: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     typealias Input = Int
     typealias Output = ScopedToken
@@ -368,11 +348,6 @@ private enum ByteMismatch: Swift.Error, Equatable {
 }
 
 private struct ByteMarker: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     let expected: UInt8
 
@@ -388,11 +363,6 @@ private struct ByteMarker: Parsing {
 }
 
 private struct ByteValue: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> UInt8 {
         guard input.index < input.span.count else { throw .endOfInput }

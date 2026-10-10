@@ -5,11 +5,6 @@ import Testing
 private enum Rejected: Error { case mismatch }
 private enum Fatal: Error, Equatable { case unavailable }
 private struct Step: Parsing, ~Copyable {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     typealias Input = Substring
     typealias Output = Character
@@ -130,11 +125,6 @@ extension `Repetition Parser Tests` {
 
 private final class Probe { var destroyed = 0 }
 private struct OwnedStep: Parsing, ~Copyable {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     typealias Input = Substring
     typealias Output = Character

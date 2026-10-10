@@ -98,11 +98,6 @@ private final class Count {
     }
 }
 private struct Owner: Parsing, ~Copyable {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     let count: Count
     borrowing func parse(_ input: inout Int) -> Value {

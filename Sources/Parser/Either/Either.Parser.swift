@@ -13,12 +13,6 @@ where
     Right.Output: ~Copyable & ~Escapable
 {
     public struct Parser: Parser::Parsing, ~Copyable {
-        @inlinable
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-            }
-        }
 
         public typealias Input = Left.Input
         public typealias Output = Left.Output

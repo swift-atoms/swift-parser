@@ -3,12 +3,6 @@ public import Checkpoint
 
 public struct Optionally<Wrapped: Parsing>: Parsing
 where Wrapped.Input: Restorable & ~Copyable & ~Escapable, Wrapped.Output: ~Copyable & Escapable {
-    @inlinable
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-        }
-    }
 
     public typealias Input = Wrapped.Input
     public typealias Output = Wrapped.Output?

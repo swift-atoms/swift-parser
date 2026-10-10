@@ -2,9 +2,6 @@ import Append
 import Parser
 
 struct Linear: Parsing, ~Copyable {
-    var body: Never {
-        borrowing get { return fatalError() }
-    }
     borrowing func parse(_ input: inout Int) -> Int { input }
 }
 

@@ -5,12 +5,6 @@ extension Always::Always {
 
     @frozen
     public struct Parser<Input>: Parser::Parsing {
-        @inlinable
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-            }
-        }
 
 
         public typealias Output = Value

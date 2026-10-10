@@ -121,11 +121,6 @@ private final class Lifetime {
 }
 
 private struct Owned: ~Copyable, Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     let lifetime: Lifetime
 
@@ -143,11 +138,6 @@ private struct Owned: ~Copyable, Parsing {
 }
 
 private struct Scoped: ~Copyable, Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     let lifetime: Lifetime
     let values = [4, 9]
