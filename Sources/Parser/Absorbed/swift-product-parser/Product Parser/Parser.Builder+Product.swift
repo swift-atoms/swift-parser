@@ -1,4 +1,5 @@
 #if Product
+import Parser_Core
 #if hasFeature(MoveOnlyTuples) && hasFeature(NoncopyablePacks)
     public import Either
 

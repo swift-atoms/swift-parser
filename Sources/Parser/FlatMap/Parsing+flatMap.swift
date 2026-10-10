@@ -1,4 +1,5 @@
 #if FlatMap
+public import Parser_Core
 public import FlatMap
 
 extension Parsing

@@ -1,13 +1,8 @@
+public import Parser_Core
 extension Swift.Slice where Base.Element: Equatable {
 
     public struct Parser<Input: Swift.Collection>: Parser::Parsing
     where Input.SubSequence == Input, Input.Element == Base.Element {
-        @inlinable
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-            }
-        }
 
         public typealias Output = Void
         public typealias Failure = Error

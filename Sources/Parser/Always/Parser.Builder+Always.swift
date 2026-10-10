@@ -1,4 +1,5 @@
 #if Always
+public import Parser_Core
 public import Always
 
 extension Parser::Builder {

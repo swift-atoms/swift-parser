@@ -1,4 +1,5 @@
 #if Optic
+public import Parser_Core
 public import Optic
 
 extension Parser::Parsing

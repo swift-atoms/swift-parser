@@ -1,4 +1,5 @@
 #if Either
+public import Parser_Core
 public import Either
 
 extension Parser::Builder where Input: ~Copyable & ~Escapable {

@@ -1,4 +1,5 @@
 #if Lazy
+public import Parser_Core
 public import Lazy
 public import Either
 

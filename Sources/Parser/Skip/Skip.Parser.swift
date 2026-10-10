@@ -1,4 +1,5 @@
 #if Skip
+public import Parser_Core
 public import Skip
 public import Either
 
@@ -15,12 +16,6 @@ where Kept: ~Copyable & Escapable, Dropped: ~Copyable & Escapable {
         A.Output == Kept,
         N.Output == Dropped
     {
-        @inlinable
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-            }
-        }
 
         public typealias Input = A.Input
 

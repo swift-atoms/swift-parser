@@ -20,6 +20,22 @@ extension Parsing
 where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & ~Escapable,
+    Body == Never
+{
+
+    @inlinable
+    public var body: Never {
+        borrowing get {
+            fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
+        }
+    }
+}
+
+extension Parsing
+where
+    Self: ~Copyable,
+    Input: ~Copyable & ~Escapable,
     Output: ~Copyable & Escapable,
     Body: Parsing & ~Copyable,
     Body.Input: ~Copyable & ~Escapable,

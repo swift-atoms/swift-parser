@@ -168,9 +168,11 @@ let package = Package(
     ],
     targets: [
         .testTarget(name: "Repetition Parser Tests", dependencies: [.target(name: "Parser")]),
+        .target(name: "Parser Core"),
         .target(
             name: "Parser",
             dependencies: [
+            .target(name: "Parser Core"),
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Checkpoint", package: "swift-checkpoint"),
                 .product(name: "Repetition", package: "swift-repetition"),

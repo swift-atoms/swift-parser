@@ -1,4 +1,5 @@
 #if Choice
+public import Parser_Core
 public import Checkpoint
 
 
@@ -8,12 +9,6 @@ public import Checkpoint
         Upstream.Input: Restorable & ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable & Escapable
     {
-        @inlinable
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-            }
-        }
 
 
         public typealias Input = Upstream.Input

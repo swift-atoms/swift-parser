@@ -1,4 +1,5 @@
 #if Tagged
+public import Parser_Core
 public import Tagged
 
 extension Tagged::Tagged {
@@ -20,12 +21,6 @@ where
     UnderlyingParser.Input: ~Copyable & ~Escapable,
     UnderlyingParser.Output == Underlying
 {
-    @inlinable
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-        }
-    }
 
     @inlinable
     public borrowing func parse(

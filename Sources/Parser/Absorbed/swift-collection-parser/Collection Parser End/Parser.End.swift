@@ -1,13 +1,8 @@
 #if CollectionLeaves
+public import Parser_Core
 public import Collection
 
     public struct End<Input: Collection.Slice.`Protocol`>: Parsing {
-        @inlinable
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-            }
-        }
 
 
         public typealias Output = Void

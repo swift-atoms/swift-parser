@@ -1,4 +1,5 @@
 #if Repetition
+public import Parser_Core
 public import Repetition
 public import Cardinal
 public import Either
@@ -10,12 +11,6 @@ where Bounds: Cardinal.Range, Operation: Parsing & ~Copyable,
       Operation.Output: Copyable & Escapable {
     public struct Parser<Rejection: Swift.Error, Fatal: Swift.Error>: Parsing, ~Copyable
     where Operation.Failure == Either<Rejection, Fatal> {
-        @inlinable
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-            }
-        }
 
         public typealias Input = Operation.Input
         public typealias Output = [Operation.Output]

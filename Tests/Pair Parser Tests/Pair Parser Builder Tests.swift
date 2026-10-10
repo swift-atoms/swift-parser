@@ -150,11 +150,6 @@ private struct Token: ~Copyable {
 }
 
 private struct Literal: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     let expected: Character
 
@@ -170,11 +165,6 @@ private struct Literal: Parsing {
 }
 
 private struct TokenLiteral: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     let expected: Character
 
@@ -190,11 +180,6 @@ private struct TokenLiteral: Parsing {
 }
 
 private struct OtherTokenLiteral: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     let expected: Character
 
@@ -229,11 +214,6 @@ private struct ByteToken: ~Copyable {
 }
 
 private struct ByteValue: Parsing {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> ByteToken {
         guard input.index < input.span.count else { throw .endOfInput }

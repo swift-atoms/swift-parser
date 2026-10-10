@@ -1,4 +1,5 @@
 #if Pair
+public import Parser_Core
 public import Either
 public import Pair
 
@@ -14,12 +15,6 @@ where
 {
 
     public struct Parser<Failure: Swift.Error>: Parser::Parsing, ~Copyable {
-        @inlinable
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf parser: implement parse(_:) directly")
-            }
-        }
 
 
         public typealias Input = First.Input

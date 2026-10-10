@@ -137,11 +137,6 @@ struct `Append parser adapters` {
     }
 
     private struct Reader: Parsing, ~Copyable {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         let lifetime: Lifetime
         deinit { lifetime.destroyed += 1 }

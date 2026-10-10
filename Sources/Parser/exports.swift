@@ -1,3 +1,5 @@
+@_exported public import Parser_Core
+
 #if Append
 @_exported public import Append
 #endif

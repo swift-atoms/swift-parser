@@ -1,4 +1,5 @@
 #if Repetition
+public import Parser_Core
 public import Cardinal
 public import Repetition
 public import Either

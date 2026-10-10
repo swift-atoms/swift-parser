@@ -1,4 +1,5 @@
 #if Append
+public import Parser_Core
 public import Append
 public import Either
 
