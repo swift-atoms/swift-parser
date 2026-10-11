@@ -14,7 +14,7 @@ struct `Parser::Many` {
 
 extension `Parser::Many`.Unit {
     @Test
-    func `zero or more collects all matching elements`() throws(any Swift.Error) {
+    func `zero or more collects all matching elements`() throws(any Swift::Error) {
         let parser = Parser::Many(rejected: { _ in true }) {
             Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }
         }
@@ -27,7 +27,7 @@ extension `Parser::Many`.Unit {
     }
 
     @Test
-    func `one or more requires at least one match`() throws(any Swift.Error) {
+    func `one or more requires at least one match`() throws(any Swift::Error) {
         let parser = Parser::Many(1..., rejected: { _ in true }) {
             Parser::First.Element<ArraySlice<UInt8>>()
         }
@@ -39,7 +39,7 @@ extension `Parser::Many`.Unit {
     }
 
     @Test
-    func `exact count with closed range`() throws(any Swift.Error) {
+    func `exact count with closed range`() throws(any Swift::Error) {
         let parser = Parser::Many(2...2, rejected: { _ in true }) {
             Parser::First.Element<ArraySlice<UInt8>>()
         }
@@ -55,7 +55,7 @@ extension `Parser::Many`.Unit {
 extension `Parser::Many`.`Edge Case` {
 
     @Test
-    func `terminates after a non-consuming success`() throws(any Swift.Error) {
+    func `terminates after a non-consuming success`() throws(any Swift::Error) {
         let parser = Parser::Many<ArraySlice<UInt8>, Always<Int>.Parser<ArraySlice<UInt8>>>(rejected: { _ in false }) {
             Always<Int>.Parser<ArraySlice<UInt8>>(42)
         }
@@ -68,7 +68,7 @@ extension `Parser::Many`.`Edge Case` {
     }
 
     @Test
-    func `zero or more returns empty on no match`() throws(any Swift.Error) {
+    func `zero or more returns empty on no match`() throws(any Swift::Error) {
         let parser = Parser::Many(rejected: { _ in true }) {
             Parser::First.Where<ArraySlice<UInt8>> { $0 == 0xFF }
         }
@@ -96,7 +96,7 @@ extension `Parser::Many`.`Edge Case` {
     }
 
     @Test
-    func `zero or more succeeds on empty input`() throws(any Swift.Error) {
+    func `zero or more succeeds on empty input`() throws(any Swift::Error) {
         let parser = Parser::Many(rejected: { _ in true }) {
             Parser::First.Element<ArraySlice<UInt8>>()
         }

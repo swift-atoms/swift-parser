@@ -20,7 +20,7 @@ struct `Swift.Collection+Parser Tests` {
     @Test
     func `a generic collection mismatch preserves input`() {
         var input: ArraySlice<Int> = [1, 9, 3]
-        #expect(throws: Swift.Slice<ClosedRange<Int>>.Parser<ArraySlice<Int>>.Error.mismatch) {
+        #expect(throws: Swift::Slice<ClosedRange<Int>>.Parser<ArraySlice<Int>>.Error.mismatch) {
             try Parser { 1...3 }.parse(&input)
         }
         #expect(input == [1, 9, 3])

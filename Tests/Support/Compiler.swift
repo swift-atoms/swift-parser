@@ -2,6 +2,9 @@ import Foundation
 import Testing
 
 package enum Compiler {
+}
+
+extension Compiler {
     package static func emissionFailure(named name: String, in group: String = "Parser") throws -> String {
         let result = try emitFixture(named: name, in: group)
         try #require(result.status != 0, "Fixture unexpectedly emitted a module")

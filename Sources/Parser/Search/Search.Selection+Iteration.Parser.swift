@@ -3,7 +3,7 @@ public import Search
 public import Iterator
 public import Either
 
-extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equatable {
+extension Search.Selection where Pattern: Swift::Collection, Pattern.Element: Equatable {
 
     public func parser<I: Iterating & ~Copyable & ~Escapable>(
         for input: Iterator::Iterator.Buffered<I, I.Failure>.Type

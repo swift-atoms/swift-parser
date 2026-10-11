@@ -116,9 +116,9 @@ struct `Append parser adapters` {
 
     private func requireCopyable<T: Copyable>(_ value: T) {}
 
-    private enum FirstError: Swift.Error { case rejected }
-    private enum SecondError: Swift.Error { case rejected }
-    private enum AppendError: Swift.Error { case rejected }
+    private enum FirstError: Swift::Error { case rejected }
+    private enum SecondError: Swift::Error { case rejected }
+    private enum AppendError: Swift::Error { case rejected }
 
     private final class Lifetime {
         var destroyed = 0

@@ -13,7 +13,7 @@ struct `Swift.Character+Parser Tests` {
     @Test
     func `a mismatch leaves input unchanged`() {
         var input: Substring = "other"
-        #expect(throws: Swift.Character.Parser.Error.mismatch) {
+        #expect(throws: Swift::Character.Parser.Error.mismatch) {
             try Parser { Character("s") }.parse(&input)
         }
         #expect(input == "other")
@@ -21,7 +21,7 @@ struct `Swift.Character+Parser Tests` {
 
     @Test
     func `explicit parser types accept a literal`() throws {
-        let parser = Parser<Substring, Void, Swift.Character.Parser.Error> {
+        let parser = Parser<Substring, Void, Swift::Character.Parser.Error> {
             Character("s")
         }
         var input: Substring = "swift-parser"

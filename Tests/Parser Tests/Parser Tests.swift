@@ -88,6 +88,9 @@ private struct Value: ~Copyable { let value: Int }
 private final class Count {
     var builds = 0
     var destroyed = 0
+}
+
+extension Count {
     func build() -> Parser<Int, Int, Never> {
         builds += 1
         return Parser { input in
@@ -100,18 +103,21 @@ private final class Count {
 private struct Owner: Parsing, ~Copyable {
 
     let count: Count
+    deinit { count.destroyed += 1 }
+}
+
+extension Owner {
     borrowing func parse(_ input: inout Int) -> Value {
         input += 1
         return Value(value: input)
     }
-    deinit { count.destroyed += 1 }
 }
 
 @Suite
 struct `Parser closures consume input and preserve typed failure` {
 
     @Test
-    func `a closure parses and consumes input`() throws(any Swift.Error) {
+    func `a closure parses and consumes input`() throws(any Swift::Error) {
         let parser = Parser<Substring, Character, ParseFailure> { input throws(ParseFailure) in
             guard let first = input.first else { throw .empty }
             input = input.dropFirst()
@@ -141,7 +147,7 @@ struct `Parser closures consume input and preserve typed failure` {
     }
 }
 
-private enum ParseFailure: Swift.Error, Equatable {
+private enum ParseFailure: Swift::Error, Equatable {
     case empty
 }
 

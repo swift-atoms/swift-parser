@@ -8,7 +8,7 @@ import Testing
 struct `Parser flat maps select downstream operations and distinguish stage failures` {
 
     @Test
-    func `the downstream parser depends on the upstream output`() throws(any Swift.Error) {
+    func `the downstream parser depends on the upstream output`() throws(any Swift::Error) {
         var input: Substring = "2ab!"
         let output = try Counted().parse(&input)
         #expect(output == "ab")
@@ -33,23 +33,30 @@ struct `Parser flat maps select downstream operations and distinguish stage fail
 }
 
 private struct Counted: Parsing {
-    typealias Failure = Either<DigitError, TakeError>
+}
 
+extension Counted {
+    typealias Failure = Either<DigitError, TakeError>
+}
+
+extension Counted {
     var body: some Parsing<Substring, Substring, Either<DigitError, TakeError>> {
         Digit().flatMap { count in Take(count) }
     }
 }
 
-private enum DigitError: Swift.Error, Equatable {
+private enum DigitError: Swift::Error, Equatable {
     case empty
 }
 
-private enum TakeError: Swift.Error, Equatable {
+private enum TakeError: Swift::Error, Equatable {
     case short
 }
 
 private struct Digit: Parsing {
+}
 
+extension Digit {
     borrowing func parse(_ input: inout Substring) throws(DigitError) -> Int {
         guard let first = input.first, let value = first.wholeNumberValue else { throw .empty }
         input = input.dropFirst()
@@ -64,7 +71,9 @@ private struct Take: Parsing {
     init(_ count: Int) {
         self.count = count
     }
+}
 
+extension Take {
     borrowing func parse(_ input: inout Substring) throws(TakeError) -> Substring {
         guard input.count >= count else { throw .short }
         let output = input.prefix(count)

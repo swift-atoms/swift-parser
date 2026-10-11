@@ -4,14 +4,19 @@ public import Iterator
 
 public struct ConsumingLiteral<Input: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parsing
 where Input.Element: Equatable & Copyable & Escapable, Input.Failure == Never {
-
-    public typealias Output = Void
-    public typealias Failure = Error
-    public enum Error: Swift.Error, Equatable { case mismatch }
+    public enum Error: Swift::Error, Equatable { case mismatch }
     public let elements: [Input.Element]
 
     @inlinable public init(_ elements: [Input.Element]) { self.elements = elements }
+}
 
+extension ConsumingLiteral where Input: ~Copyable & ~Escapable {
+    public typealias Output = Void
+
+    public typealias Failure = Error
+}
+
+extension ConsumingLiteral where Input: ~Copyable & ~Escapable {
     @inlinable public borrowing func parse(_ input: inout Input) throws(Error) {
         for expected in elements {
             guard let actual = input.next(), actual == expected else { throw .mismatch }

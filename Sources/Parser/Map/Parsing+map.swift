@@ -27,7 +27,7 @@ Output: ~Copyable & ~Escapable
     @inlinable
     public consuming func map<
         NewOutput: ~Copyable & Escapable,
-        TransformFailure: Swift.Error
+        TransformFailure: Swift::Error
     >(
         _ transform: @escaping (consuming Output) throws(TransformFailure) -> NewOutput
     ) -> Map::Map<Output, NewOutput, Either<Failure, TransformFailure>>.Parser<Self> {
@@ -56,7 +56,7 @@ Failure == Never
     @inlinable
     public consuming func map<
         NewOutput: ~Copyable & Escapable,
-        TransformFailure: Swift.Error
+        TransformFailure: Swift::Error
     >(
         _ transform: @escaping
         (consuming Output) throws(TransformFailure) -> NewOutput

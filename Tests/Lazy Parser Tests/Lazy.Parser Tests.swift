@@ -7,7 +7,7 @@ import Testing
 struct `Lazy Parser Tests` {
 
     @Test
-    func `defers parser construction until parse time`() throws(any Swift.Error) {
+    func `defers parser construction until parse time`() throws(any Swift::Error) {
         final class Box {
             var built = 0
         }
@@ -28,7 +28,7 @@ struct `Lazy Parser Tests` {
     }
 
     @Test
-    func `re-invokes the thunk on every parse`() throws(any Swift.Error) {
+    func `re-invokes the thunk on every parse`() throws(any Swift::Error) {
         final class Box {
             var built = 0
         }

@@ -21,7 +21,6 @@ where
 
         public typealias Input = Upstream.Input
         public typealias Output = Continuation.Output
-        public typealias Failure = Either<Upstream.Failure, Continuation.Failure>
 
         public let base: FlatMap
         public let upstream: Upstream
@@ -39,22 +38,6 @@ where
         ) {
             self.init(FlatMap(transform), upstream: upstream)
         }
-
-        @inlinable
-        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-            let value: Source
-            do throws(Upstream.Failure) {
-                value = try upstream.parse(&input)
-            } catch {
-                throw .left(error)
-            }
-            let downstream = base(value)
-            do throws(Continuation.Failure) {
-                return try downstream.parse(&input)
-            } catch {
-                throw .right(error)
-            }
-        }
     }
 
     @inlinable
@@ -66,6 +49,28 @@ where
         P.Output == Source
     {
         .init(self, upstream: upstream)
+    }
+}
+
+extension FlatMap.Parser where Source: ~Copyable & ~Escapable, Continuation: Parsing & ~Copyable, Continuation.Input: ~Copyable & ~Escapable, Continuation.Output: ~Copyable & Escapable, Upstream: ~Copyable {
+    public typealias Failure = Either<Upstream.Failure, Continuation.Failure>
+}
+
+extension FlatMap.Parser where Source: ~Copyable & ~Escapable, Continuation: Parsing & ~Copyable, Continuation.Input: ~Copyable & ~Escapable, Continuation.Output: ~Copyable & Escapable, Upstream: ~Copyable {
+    @inlinable
+    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+        let value: Source
+        do throws(Upstream.Failure) {
+            value = try upstream.parse(&input)
+        } catch {
+            throw .left(error)
+        }
+        let downstream = base(value)
+        do throws(Continuation.Failure) {
+            return try downstream.parse(&input)
+        } catch {
+            throw .right(error)
+        }
     }
 }
 

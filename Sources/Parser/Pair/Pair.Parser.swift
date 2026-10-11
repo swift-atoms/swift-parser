@@ -14,12 +14,10 @@ where
     Second.Output: ~Copyable & Escapable
 {
 
-    public struct Parser<Failure: Swift.Error>: Parser::Parsing, ~Copyable {
+    public struct Parser<Failure: Swift::Error>: Parser::Parsing, ~Copyable {
 
 
         public typealias Input = First.Input
-
-        public typealias Output = Pair::Pair<First.Output, Second.Output>
 
         public let first: First
 
@@ -41,23 +39,6 @@ where
             self.firstFailure = firstFailure
             self.secondFailure = secondFailure
         }
-
-        @inlinable
-        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-            let firstOutput: First.Output
-            do throws(First.Failure) {
-                firstOutput = try first.parse(&input)
-            } catch {
-                throw firstFailure(error)
-            }
-            let secondOutput: Second.Output
-            do throws(Second.Failure) {
-                secondOutput = try second.parse(&input)
-            } catch {
-                throw secondFailure(error)
-            }
-            return Output(firstOutput, secondOutput)
-        }
     }
 
     @inlinable
@@ -69,6 +50,29 @@ where
     public consuming func parser() -> Pair::Pair<First, Second>.Parser<First.Failure>
     where First.Failure == Second.Failure {
         .init(first, second, { $0 }, { $0 })
+    }
+}
+
+extension Pair::Pair.Parser where First: Parser::Parsing & ~Copyable, Second: Parser::Parsing & ~Copyable, First.Input == Second.Input, First.Input: ~Copyable & ~Escapable, Second.Input: ~Copyable & ~Escapable, First.Output: ~Copyable & Escapable, Second.Output: ~Copyable & Escapable {
+    public typealias Output = Pair::Pair<First.Output, Second.Output>
+}
+
+extension Pair::Pair.Parser where First: Parser::Parsing & ~Copyable, Second: Parser::Parsing & ~Copyable, First.Input == Second.Input, First.Input: ~Copyable & ~Escapable, Second.Input: ~Copyable & ~Escapable, First.Output: ~Copyable & Escapable, Second.Output: ~Copyable & Escapable {
+    @inlinable
+    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+        let firstOutput: First.Output
+        do throws(First.Failure) {
+            firstOutput = try first.parse(&input)
+        } catch {
+            throw firstFailure(error)
+        }
+        let secondOutput: Second.Output
+        do throws(Second.Failure) {
+            secondOutput = try second.parse(&input)
+        } catch {
+            throw secondFailure(error)
+        }
+        return Output(firstOutput, secondOutput)
     }
 }
 

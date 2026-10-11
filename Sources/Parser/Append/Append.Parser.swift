@@ -15,7 +15,7 @@ where
     public struct Parser<
         A: Parsing & ~Copyable,
         N: Parsing & ~Copyable,
-        ParseFailure: Swift.Error
+        ParseFailure: Swift::Error
     >: Parsing, ~Copyable
     where
         A.Input == N.Input,

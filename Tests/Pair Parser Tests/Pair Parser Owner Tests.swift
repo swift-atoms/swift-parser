@@ -10,11 +10,14 @@ private final class Lifetime {
 }
 private struct Value: ~Copyable, Parsing {
 
-    enum Error: Swift.Error, Equatable { case rejected(Int) }
+    enum Error: Swift::Error, Equatable { case rejected(Int) }
     let id: Int
     let life: Lifetime
     var fail = false
     deinit { life.owners.append(id) }
+}
+
+extension Value {
     borrowing func parse(_ input: inout Int) throws(Error) -> Int {
         input += 1
         if fail { throw .rejected(id) }
@@ -23,11 +26,14 @@ private struct Value: ~Copyable, Parsing {
 }
 private struct Marker: ~Copyable, Parsing {
 
-    enum Error: Swift.Error, Equatable { case rejected(Int) }
+    enum Error: Swift::Error, Equatable { case rejected(Int) }
     let id: Int
     let life: Lifetime
     var fail = false
     deinit { life.owners.append(id) }
+}
+
+extension Marker {
     borrowing func parse(_ input: inout Int) throws(Error) {
         input += 1
         if fail { throw .rejected(id) }
@@ -44,6 +50,9 @@ private struct TokenParser: ~Copyable, Parsing {
     let life: Lifetime
     var fail = false
     deinit { life.owners.append(id) }
+}
+
+extension TokenParser {
     borrowing func parse(_ input: inout Int) throws(Value.Error) -> Token {
         input += 1
         if fail { throw .rejected(id) }
@@ -56,6 +65,9 @@ private struct OtherTokenParser: ~Copyable, Parsing {
     let life: Lifetime
     var fail = false
     deinit { life.owners.append(id) }
+}
+
+extension OtherTokenParser {
     borrowing func parse(_ input: inout Int) throws(Marker.Error) -> Token {
         input += 1
         if fail { throw .rejected(id) }
@@ -63,30 +75,37 @@ private struct OtherTokenParser: ~Copyable, Parsing {
     }
 }
 private struct CopyValue: Parsing {
+}
 
+extension CopyValue {
     borrowing func parse(_ input: inout Int) -> Int { input += 1; return input }
 }
 private struct CopyTokenParser: Parsing {
 
     let life: Lifetime
+}
+
+extension CopyTokenParser {
     borrowing func parse(_ input: inout Int) -> Token {
         input += 1
         return Token(value: input, life: life)
     }
 }
 private struct CopyMarker: Parsing {
+}
 
+extension CopyMarker {
     borrowing func parse(_ input: inout Int) { input += 1 }
 }
 private func discard<T: ~Copyable>(_ value: consuming T) {}
 private func requireCopyable<T: Copyable>(_ value: T) {}
-private func requireAppend<A: Parsing & ~Copyable, N: Parsing & ~Copyable, F: Swift.Error, each O>(
+private func requireAppend<A: Parsing & ~Copyable, N: Parsing & ~Copyable, F: Swift::Error, each O>(
     _: borrowing Append::Append<A.Output, N.Output, (repeat each O, N.Output), Never>.Parser<A, N, F>
 ) where A.Input == N.Input, A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable, A.Output == (repeat each O) {}
-private func requireSkip<A: Parsing & ~Copyable, N: Parsing & ~Copyable, F: Swift.Error>(
+private func requireSkip<A: Parsing & ~Copyable, N: Parsing & ~Copyable, F: Swift::Error>(
     _: borrowing Skip::Skip<A.Output, N.Output>.Parser<A, N, F>
 ) where A.Input == N.Input, A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable, A.Output: ~Copyable & Escapable, N.Output == Void {}
-private func requirePair<A: Parsing & ~Copyable, N: Parsing & ~Copyable, F: Swift.Error>(
+private func requirePair<A: Parsing & ~Copyable, N: Parsing & ~Copyable, F: Swift::Error>(
     _: borrowing Pair<A, N>.Parser<F>
 ) where A.Input == N.Input, A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable, A.Output: ~Copyable & Escapable, N.Output: ~Copyable & Escapable {}
 

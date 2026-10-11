@@ -13,7 +13,7 @@ struct `Parser::Peek` {
 
 extension `Parser::Peek`.Unit {
     @Test
-    func `returns output without consuming input`() throws(any Swift.Error) {
+    func `returns output without consuming input`() throws(any Swift::Error) {
         let parser = Parser::First.Element<ArraySlice<UInt8>>().peek()
         var input = ArraySlice<UInt8>([0x41, 0x42])
 
@@ -24,7 +24,7 @@ extension `Parser::Peek`.Unit {
     }
 
     @Test
-    func `repeated peeks return same value`() throws(any Swift.Error) {
+    func `repeated peeks return same value`() throws(any Swift::Error) {
         let parser = Parser::First.Element<ArraySlice<UInt8>>().peek()
         var input = ArraySlice<UInt8>([0xFF])
 
@@ -42,7 +42,7 @@ extension `Parser::Peek`.`Edge Case` {
         let parser = Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.peek()
         var input = ArraySlice<UInt8>([0x42])
 
-        #expect(throws: (any Swift.Error).self) {
+        #expect(throws: (any Swift::Error).self) {
             try parser.parse(&input)
         }
         #expect(input.first == 0x42)

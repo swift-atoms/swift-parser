@@ -8,7 +8,7 @@ import Parser_Test_Support
 struct `Either Parser` {
 
     @Test
-    func `parses the selected left parser`() throws(any Swift.Error) {
+    func `parses the selected left parser`() throws(any Swift::Error) {
         var input: Substring = "abc"
 
         let output = try branch(true).parse(&input)
@@ -18,7 +18,7 @@ struct `Either Parser` {
     }
 
     @Test
-    func `parses the selected right parser`() throws(any Swift.Error) {
+    func `parses the selected right parser`() throws(any Swift::Error) {
         var input: Substring = "bac"
 
         let output = try branch(false).parse(&input)

@@ -86,7 +86,7 @@ where
         Target: ~Copyable & Escapable,
         Focus: ~Copyable & Escapable,
         Replacement: ~Copyable & ~Escapable,
-        MatchFailure: Swift.Error
+        MatchFailure: Swift::Error
     >(
         matching prism: Optic::Optic<
             Source,
@@ -114,7 +114,7 @@ where
         Target: ~Copyable & Escapable,
         Focus: ~Copyable & Escapable,
         Replacement: ~Copyable & ~Escapable,
-        MatchFailure: Swift.Error
+        MatchFailure: Swift::Error
     >(
         matching prism: Optic::Optic<
             Source,

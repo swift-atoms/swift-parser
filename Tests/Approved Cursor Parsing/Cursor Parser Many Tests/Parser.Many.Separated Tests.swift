@@ -13,7 +13,7 @@ struct `Parser::Many.Separated` {
 
 extension `Parser::Many.Separated`.Unit {
     @Test
-    func `parses comma-separated bytes`() throws(any Swift.Error) {
+    func `parses comma-separated bytes`() throws(any Swift::Error) {
         let parser = Parser::Many.Separated(rejected: { _ in true }, separatorRejected: { _ in true }) {
             Parser::First.Element<ArraySlice<UInt8>>()
         } separator: {
@@ -30,7 +30,7 @@ extension `Parser::Many.Separated`.Unit {
     }
 
     @Test
-    func `single element without separator`() throws(any Swift.Error) {
+    func `single element without separator`() throws(any Swift::Error) {
         let parser = Parser::Many.Separated(rejected: { _ in true }, separatorRejected: { _ in true }) {
             Parser::First.Element<ArraySlice<UInt8>>()
         } separator: {
@@ -46,7 +46,7 @@ extension `Parser::Many.Separated`.Unit {
 
 extension `Parser::Many.Separated`.`Edge Case` {
     @Test
-    func `empty input returns empty array`() throws(any Swift.Error) {
+    func `empty input returns empty array`() throws(any Swift::Error) {
         let parser = Parser::Many.Separated(rejected: { _ in true }, separatorRejected: { _ in true }) {
             Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }
         } separator: {
@@ -60,7 +60,7 @@ extension `Parser::Many.Separated`.`Edge Case` {
     }
 
     @Test
-    func `trailing separator not consumed`() throws(any Swift.Error) {
+    func `trailing separator not consumed`() throws(any Swift::Error) {
         let parser = Parser::Many.Separated(rejected: { _ in true }, separatorRejected: { _ in true }) {
             Parser::First.Where<ArraySlice<UInt8>> { $0 == UInt8(ascii: "x") }
         } separator: {

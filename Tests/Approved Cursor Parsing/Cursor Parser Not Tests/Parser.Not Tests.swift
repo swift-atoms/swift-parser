@@ -13,7 +13,7 @@ struct `Parser::Not` {
 
 extension `Parser::Not`.Unit {
     @Test
-    func `succeeds when upstream fails`() throws(any Swift.Error) {
+    func `succeeds when upstream fails`() throws(any Swift::Error) {
         let parser = Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.not(rejected: { _ in true })
         var input = ArraySlice<UInt8>([0x42])
 
@@ -23,7 +23,7 @@ extension `Parser::Not`.Unit {
     }
 
     @Test
-    func `never consumes input on success`() throws(any Swift.Error) {
+    func `never consumes input on success`() throws(any Swift::Error) {
         let parser = Parser::First.Where<ArraySlice<UInt8>> { $0 == 0xFF }
             .not(rejected: { _ in true })
         var input = ArraySlice<UInt8>([0x01, 0x02])
@@ -56,7 +56,7 @@ extension `Parser::Not`.`Edge Case` {
     }
 
     @Test
-    func `succeeds on empty input when upstream requires elements`() throws(any Swift.Error) {
+    func `succeeds on empty input when upstream requires elements`() throws(any Swift::Error) {
         let parser = Parser::First.Element<ArraySlice<UInt8>>().not(rejected: { _ in true })
         var input = ArraySlice<UInt8>([])
 

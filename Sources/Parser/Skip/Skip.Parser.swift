@@ -6,7 +6,7 @@ public import Either
 extension Skip
 where Kept: ~Copyable & Escapable, Dropped: ~Copyable & Escapable {
 
-    public struct Parser<A: Parsing & ~Copyable, N: Parsing & ~Copyable, Failure: Swift.Error>: Parsing, ~Copyable
+    public struct Parser<A: Parsing & ~Copyable, N: Parsing & ~Copyable, Failure: Swift::Error>: Parsing, ~Copyable
     where
         A.Input == N.Input,
         A.Input: ~Copyable & ~Escapable,

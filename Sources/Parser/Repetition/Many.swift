@@ -9,7 +9,7 @@ where Element.Input == Source, Element.Input: ~Copyable & ~Escapable,
     public typealias Input = Source
     public typealias Output = [Element.Output]
     public typealias Failure = Error
-    public enum Error: Swift.Error {
+    public enum Error: Swift::Error {
         case invalidBounds
         case noProgress
         case countTooLow(expected: Int, got: Int)
@@ -68,7 +68,7 @@ extension Many where Source: ~Copyable & ~Escapable {
         public typealias Input = Source
         public typealias Output = [Element.Output]
         public typealias Failure = Error
-        public enum Error: Swift.Error {
+        public enum Error: Swift::Error {
             case invalidBounds
             case noProgress
             case countTooLow(expected: Int, got: Int)

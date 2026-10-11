@@ -19,8 +19,7 @@ struct `Parser::OneOf.Sequence` {
 extension `Parser::OneOf.Sequence`.`Builder Propagation` {
 
     @Test
-    func `builder-composed alternation parses through the first matching branch`() throws(any Swift
-        .Error)
+    func `builder-composed alternation parses through the first matching branch`() throws(any Swift::Error)
     {
         let alternation = Parser::OneOf.Two(
             Always<Void>.Parser<ArraySlice<UInt8>>(()).map { _ in Choice.a },

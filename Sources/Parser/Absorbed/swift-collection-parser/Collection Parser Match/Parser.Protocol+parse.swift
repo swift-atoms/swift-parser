@@ -12,7 +12,7 @@ public import Collection
 
 extension Parser::CollectionInput {
 
-    public enum Error: Swift.Error, Equatable {
+    public enum Error: Swift::Error, Equatable {
         case expectedEnd(remaining: Int)
     }
 }

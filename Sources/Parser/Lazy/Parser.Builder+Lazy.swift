@@ -14,7 +14,7 @@ extension Parser::Builder where Input: ~Copyable & ~Escapable {
     }
 
     @inlinable
-    public static func buildExpression<P: Parser::Parsing & ~Copyable, F: Swift.Error>(
+    public static func buildExpression<P: Parser::Parsing & ~Copyable, F: Swift::Error>(
         _ lazy: Lazy::Lazy<P, F>
     ) -> Lazy::Lazy<P, F>.Parser<Either<F, P.Failure>>
     where P.Input == Input, P.Input: ~Copyable & ~Escapable,

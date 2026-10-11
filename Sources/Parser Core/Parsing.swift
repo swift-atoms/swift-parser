@@ -4,7 +4,7 @@ public protocol Parsing<Input, Output, Failure>: ~Copyable {
 
     associatedtype Output: ~Copyable & ~Escapable
 
-    associatedtype Failure: Swift.Error = Never
+    associatedtype Failure: Swift::Error = Never
 
     associatedtype Body: ~Copyable = Never
 

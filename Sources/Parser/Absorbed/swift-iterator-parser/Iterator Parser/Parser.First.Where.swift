@@ -9,11 +9,7 @@ extension Parser::First {
     where Source.Element: Copyable & Escapable, Source.Failure == Never {
 
 
-        public typealias Input = Source
-
         public typealias Output = Source.Element
-
-        public typealias Failure = Either<Parser::EndOfInput.Error, Parser::First.Where<Source>.Error>
 
         @usableFromInline
         let predicate: (Source.Element) -> Bool
@@ -29,25 +25,33 @@ extension Parser::First {
             self.predicate = predicate
             self.expected = expected
         }
+    }
+}
 
-        @inlinable
-        public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
-            guard let element = input.next() else {
-                throw .left(.unexpected(expected: expected))
-            }
+extension Parser::First.Where where Source: ~Copyable & ~Escapable {
+    public typealias Input = Source
 
-            guard predicate(element) else {
-                throw .right(.predicateFailed(expected: expected))
-            }
-            return element
+    public typealias Failure = Either<Parser::EndOfInput.Error, Parser::First.Where<Source>.Error>
+}
+
+extension Parser::First.Where where Source: ~Copyable & ~Escapable {
+    @inlinable
+    public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
+        guard let element = input.next() else {
+            throw .left(.unexpected(expected: expected))
         }
+
+        guard predicate(element) else {
+            throw .right(.predicateFailed(expected: expected))
+        }
+        return element
     }
 }
 
 extension Parser::First.Where
 where Source: ~Copyable & ~Escapable, Source.Element: Copyable & Escapable, Source.Failure == Never {
 
-    public enum Error: Swift.Error, Equatable {
+    public enum Error: Swift::Error, Equatable {
         case predicateFailed(expected: String)
     }
 }

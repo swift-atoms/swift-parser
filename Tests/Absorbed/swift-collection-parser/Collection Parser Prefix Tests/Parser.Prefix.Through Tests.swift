@@ -12,7 +12,7 @@ struct `Parser::Prefix.Through` {
 
 extension `Parser::Prefix.Through`.Unit {
     @Test
-    func `consumes through delimiter including it`() throws(any Swift.Error) {
+    func `consumes through delimiter including it`() throws(any Swift::Error) {
         let parser = Parser::Prefix.Through<CollectionParserTest.Input>([UInt8(ascii: "\n")])
         var input = CollectionParserTest.Input(utf8: "line1\nline2")
 
@@ -23,8 +23,8 @@ extension `Parser::Prefix.Through`.Unit {
     }
 
     @Test
-    func `handles multi-byte delimiter`() throws(any Swift.Error) {
-        let parser = Parser::Prefix.Through<CollectionParserTest.Input>(Swift.Array("\r\n".utf8))
+    func `handles multi-byte delimiter`() throws(any Swift::Error) {
+        let parser = Parser::Prefix.Through<CollectionParserTest.Input>(Swift::Array("\r\n".utf8))
         var input = CollectionParserTest.Input(utf8: "header\r\nbody")
 
         let result = try parser.parse(&input)
@@ -45,7 +45,7 @@ extension `Parser::Prefix.Through`.`Edge Case` {
     }
 
     @Test
-    func `consumes entire input when delimiter at end`() throws(any Swift.Error) {
+    func `consumes entire input when delimiter at end`() throws(any Swift::Error) {
         let parser = Parser::Prefix.Through<CollectionParserTest.Input>([UInt8(ascii: "!")])
         var input = CollectionParserTest.Input(utf8: "ok!")
 

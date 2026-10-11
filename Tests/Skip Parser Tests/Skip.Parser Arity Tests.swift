@@ -7,7 +7,7 @@ import Testing
 struct `Parser bodies process twelve elements and stop at the first mismatch` {
 
     @Test
-    func `a twelve element body parses every element`() throws(any Swift.Error) {
+    func `a twelve element body parses every element`() throws(any Swift::Error) {
         var input: Substring = "abcdefghijkZ"
 
         let output = try TwelveElements().parse(&input)
@@ -29,7 +29,7 @@ struct `Parser bodies process twelve elements and stop at the first mismatch` {
     }
 
     @Test
-    func `a twelve element body of void elements parses every element`() throws(any Swift.Error) {
+    func `a twelve element body of void elements parses every element`() throws(any Swift::Error) {
         var input: Substring = "abcdefghijkl"
 
         try TwelveVoidElements().parse(&input)
@@ -94,7 +94,7 @@ private struct TwelveVoidElements: Parsing {
 }
 
 
-private enum Mismatch: Swift.Error, Equatable {
+private enum Mismatch: Swift::Error, Equatable {
     case expected(Character)
 }
 

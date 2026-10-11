@@ -129,7 +129,7 @@ private enum Stage {
     case downstream
 }
 
-private enum Remapped: Swift.Error, Equatable {
+private enum Remapped: Swift::Error, Equatable {
     case upstream(Upstream.Error)
 }
 
@@ -175,12 +175,14 @@ private struct Upstream: ~Copyable, Parsing {
     let fails: Bool
     let lifetime: Lifetime
 
-    enum Error: Swift.Error, Equatable {
+    enum Error: Swift::Error, Equatable {
         case rejected(Int)
     }
 
     deinit { lifetime.upstreamDestroyed += 1 }
+}
 
+extension Upstream {
     borrowing func parse(_ input: inout Int) throws(Error) -> Seed {
         input += 1
         guard !fails else { throw .rejected(input) }
@@ -201,12 +203,14 @@ private struct Downstream: ~Copyable, Parsing {
         lifetime.downstreamCreated += 1
     }
 
-    enum Error: Swift.Error, Equatable {
+    enum Error: Swift::Error, Equatable {
         case rejected(Int)
     }
 
     deinit { lifetime.downstreamDestroyed += 1 }
+}
 
+extension Downstream {
     borrowing func parse(_ input: inout Int) throws(Error) -> Result {
         input += 1
         guard !fails else { throw .rejected(input) }

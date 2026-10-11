@@ -2,6 +2,9 @@ import Append
 import Parser
 
 struct Linear: ~Copyable, Parsing {
+}
+
+extension Linear {
     borrowing func parse(_ input: inout Int) -> Int {
         input += 1
         return input

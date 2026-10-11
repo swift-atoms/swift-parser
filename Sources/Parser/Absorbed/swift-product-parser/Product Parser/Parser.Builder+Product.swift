@@ -274,7 +274,7 @@ import Parser_Core
         @inlinable
         public static func buildPartialBlock<
             each Element: Parser::Parsing & ~Copyable,
-            Failure: Swift.Error,
+            Failure: Swift::Error,
             Next: Parser::Parsing
         >(
             accumulated: consuming Product::Product<
@@ -296,7 +296,7 @@ import Parser_Core
         @inlinable
         public static func buildPartialBlock<
             each Element: Parser::Parsing & ~Copyable,
-            Failure: Swift.Error,
+            Failure: Swift::Error,
             Next: Parser::Parsing
         >(
             accumulated: consuming Product::Product<

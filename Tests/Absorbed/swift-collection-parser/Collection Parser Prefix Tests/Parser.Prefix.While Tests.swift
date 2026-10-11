@@ -13,7 +13,7 @@ struct `Parser::Prefix.While` {
 
 extension `Parser::Prefix.While`.Unit {
     @Test
-    func `consumes while predicate holds`() throws(any Swift.Error) {
+    func `consumes while predicate holds`() throws(any Swift::Error) {
         let digits = Parser::Prefix.While<CollectionParserTest.Input> {
             $0 >= 0x30 && $0 <= 0x39
         }
@@ -27,7 +27,7 @@ extension `Parser::Prefix.While`.Unit {
     }
 
     @Test
-    func `consumes all input when predicate always holds`() throws(any Swift.Error) {
+    func `consumes all input when predicate always holds`() throws(any Swift::Error) {
         let all = Parser::Prefix.While<CollectionParserTest.Input> { _ in true }
         var input = CollectionParserTest.Input([0x01, 0x02, 0x03])
 
@@ -40,7 +40,7 @@ extension `Parser::Prefix.While`.Unit {
 
 extension `Parser::Prefix.While`.`Edge Case` {
     @Test
-    func `returns empty when predicate immediately fails`() throws(any Swift.Error) {
+    func `returns empty when predicate immediately fails`() throws(any Swift::Error) {
         let parser = Parser::Prefix.While<CollectionParserTest.Input> { _ in false }
         var input = CollectionParserTest.Input([0x01, 0x02])
 
@@ -63,7 +63,7 @@ extension `Parser::Prefix.While`.`Edge Case` {
     }
 
     @Test
-    func `maxLength caps consumed count`() throws(any Swift.Error) {
+    func `maxLength caps consumed count`() throws(any Swift::Error) {
         let parser = Parser::Prefix.While<CollectionParserTest.Input>(maxLength: 2) { _ in true }
         var input = CollectionParserTest.Input([0x01, 0x02, 0x03, 0x04])
 
@@ -74,7 +74,7 @@ extension `Parser::Prefix.While`.`Edge Case` {
     }
 
     @Test
-    func `empty input returns empty result`() throws(any Swift.Error) {
+    func `empty input returns empty result`() throws(any Swift::Error) {
         let parser = Parser::Prefix.While<CollectionParserTest.Input> { _ in true }
         var input: CollectionParserTest.Input = []
 

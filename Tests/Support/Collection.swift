@@ -27,7 +27,7 @@ extension Fixture {
       self.init(bytes: bytes, start: 0, end: bytes.count)
     }
 
-    package init(utf8 string: Swift.String) {
+    package init(utf8 string: Swift::String) {
       self.init([UInt8](string.utf8))
     }
   }

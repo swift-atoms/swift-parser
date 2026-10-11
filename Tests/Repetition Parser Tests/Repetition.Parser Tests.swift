@@ -5,10 +5,17 @@ import Testing
 private enum Rejected: Error { case mismatch }
 private enum Fatal: Error, Equatable { case unavailable }
 private struct Step: Parsing, ~Copyable {
+}
 
+extension Step {
     typealias Input = Substring
+
     typealias Output = Character
+
     typealias Failure = Either<Rejected, Fatal>
+}
+
+extension Step {
     func parse(_ input: inout Substring) throws(Failure) -> Character {
         guard let value = input.popFirst() else { throw .left(.mismatch) }
         if value == "!" { throw .right(.unavailable) }
@@ -85,7 +92,11 @@ private struct ScopedInput: Restorable, ~Copyable, ~Escapable {
     var position: Int = 0
     @_lifetime(copy values)
     init(_ values: Span<Int>) { self.values = values }
+}
+
+extension ScopedInput {
     var checkpoint: Int { position }
+
     mutating func seek(to checkpoint: Int) { position = checkpoint }
 }
 
@@ -125,12 +136,19 @@ extension `Repetition Parser Tests` {
 
 private final class Probe { var destroyed = 0 }
 private struct OwnedStep: Parsing, ~Copyable {
-
-    typealias Input = Substring
-    typealias Output = Character
-    typealias Failure = Either<Rejected, Fatal>
     let probe: Probe
     deinit { probe.destroyed += 1 }
+}
+
+extension OwnedStep {
+    typealias Input = Substring
+
+    typealias Output = Character
+
+    typealias Failure = Either<Rejected, Fatal>
+}
+
+extension OwnedStep {
     func parse(_ input: inout Substring) throws(Failure) -> Character { try Step().parse(&input) }
 }
 

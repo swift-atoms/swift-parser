@@ -19,21 +19,31 @@ private enum BackwardFailure: Error {
 
 private struct Succeed<Output>: Parsing {
 
-    typealias Input = Void
-    typealias Failure = Never
-
     let output: Output
+}
 
+extension Succeed {
+    typealias Input = Void
+
+    typealias Failure = Never
+}
+
+extension Succeed {
     borrowing func parse(_ input: inout Void) -> Output {
         output
     }
 }
 
 private struct Fail<Output>: Parsing {
+}
 
+extension Fail {
     typealias Input = Void
-    typealias Failure = UpstreamFailure
 
+    typealias Failure = UpstreamFailure
+}
+
+extension Fail {
     borrowing func parse(_ input: inout Void) throws(UpstreamFailure) -> Output {
         throw .upstream
     }
@@ -58,11 +68,17 @@ private struct ScopedToken: ~Copyable, ~Escapable {
 }
 
 private struct Linear: Parsing {
+}
 
+extension Linear {
     typealias Input = Int
-    typealias Output = ScopedToken
-    typealias Failure = Never
 
+    typealias Output = ScopedToken
+
+    typealias Failure = Never
+}
+
+extension Linear {
     @_lifetime(&input)
     borrowing func parse(_ input: inout Int) -> ScopedToken {
         ScopedToken(value: input)
@@ -74,11 +90,17 @@ private struct Unmatched: ~Copyable {
 }
 
 private struct UnmatchedParser: Parsing {
+}
 
+extension UnmatchedParser {
     typealias Input = Int
-    typealias Output = Unmatched
-    typealias Failure = Never
 
+    typealias Output = Unmatched
+
+    typealias Failure = Never
+}
+
+extension UnmatchedParser {
     borrowing func parse(_ input: inout Int) -> Unmatched {
         Unmatched(value: input)
     }

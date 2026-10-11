@@ -6,10 +6,17 @@ struct ScopedResult: ~Copyable, ~Escapable {
 }
 
 struct Source: Parsing {
-    typealias Input = Int
-    typealias Output = Int
-    typealias Failure = Never
+}
 
+extension Source {
+    typealias Input = Int
+
+    typealias Output = Int
+
+    typealias Failure = Never
+}
+
+extension Source {
     borrowing func parse(_ input: inout Int) -> Int {
         input
     }

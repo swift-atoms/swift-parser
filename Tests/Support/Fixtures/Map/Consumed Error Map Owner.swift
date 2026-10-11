@@ -2,6 +2,9 @@ import Map
 import Parser
 
 struct Owned: Parsing, ~Copyable {
+}
+
+extension Owned {
     borrowing func parse(_ input: inout Int) -> Int { input }
 }
 

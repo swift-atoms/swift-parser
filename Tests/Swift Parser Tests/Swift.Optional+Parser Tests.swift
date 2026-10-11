@@ -5,8 +5,8 @@ import Testing
 struct `Optional parsers preserve present operations and omit absent body elements` {
 
     @Test
-    func `Optional Parser parses a present parser`() throws(any Swift.Error) {
-        let parser = Swift.Optional<Prefix>.Parser(Prefix("swift"))
+    func `Optional Parser parses a present parser`() throws(any Swift::Error) {
+        let parser = Swift::Optional<Prefix>.Parser(Prefix("swift"))
         var input: Substring = "swift-parser"
 
         let output: Void? = try parser.parse(&input)
@@ -25,8 +25,8 @@ struct `Optional parsers preserve present operations and omit absent body elemen
     }
 
     @Test
-    func `Optional Parser skips an absent parser`() throws(any Swift.Error) {
-        let parser = Swift.Optional<Prefix>.Parser(nil)
+    func `Optional Parser skips an absent parser`() throws(any Swift::Error) {
+        let parser = Swift::Optional<Prefix>.Parser(nil)
         var input: Substring = "swift-parser"
 
         let output: Void? = try parser.parse(&input)
@@ -36,7 +36,7 @@ struct `Optional parsers preserve present operations and omit absent body elemen
     }
 
     @Test
-    func `a Parser block uses Swift Optional Parser for buildIf`() throws(any Swift.Error) {
+    func `a Parser block uses Swift Optional Parser for buildIf`() throws(any Swift::Error) {
         let includePrefix = true
         let parser = Parser<Substring, Void?, Mismatch> {
             if includePrefix {
@@ -52,7 +52,7 @@ struct `Optional parsers preserve present operations and omit absent body elemen
     }
 
     @Test
-    func `a body uses Swift Optional Parser for buildIf`() throws(any Swift.Error) {
+    func `a body uses Swift Optional Parser for buildIf`() throws(any Swift::Error) {
         let parser = OptionalPrefix(includePrefix: true)
         var input: Substring = "swift-parser"
 
@@ -63,7 +63,7 @@ struct `Optional parsers preserve present operations and omit absent body elemen
     }
 
     @Test
-    func `a body omits an absent buildIf element`() throws(any Swift.Error) {
+    func `a body omits an absent buildIf element`() throws(any Swift::Error) {
         let parser = OptionalPrefix(includePrefix: false)
         var input: Substring = "swift-parser"
 
@@ -74,7 +74,7 @@ struct `Optional parsers preserve present operations and omit absent body elemen
     }
 }
 
-private typealias Mismatch = Swift.String.Parser.Error
+private typealias Mismatch = Swift::String.Parser.Error
 
 private struct Prefix: Parsing {
     let text: String
@@ -97,7 +97,7 @@ private struct OptionalPrefix: Parsing {
 
     let includePrefix: Bool
 
-    var body: Swift.Optional<Prefix>.Parser {
+    var body: Swift::Optional<Prefix>.Parser {
         if includePrefix {
             Prefix("swift")
         }

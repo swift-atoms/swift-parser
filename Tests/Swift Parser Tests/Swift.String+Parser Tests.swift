@@ -13,7 +13,7 @@ struct `Swift.String+Parser Tests` {
     @Test
     func `a mismatch leaves input unchanged`() {
         var input: Substring = "swim"
-        #expect(throws: Swift.String.Parser.Error.mismatch) {
+        #expect(throws: Swift::String.Parser.Error.mismatch) {
             try Parser { "swift" }.parse(&input)
         }
         #expect(input == "swim")
@@ -21,7 +21,7 @@ struct `Swift.String+Parser Tests` {
 
     @Test
     func `explicit parser types accept a literal`() throws {
-        let parser = Parser<Substring, Void, Swift.String.Parser.Error> {
+        let parser = Parser<Substring, Void, Swift::String.Parser.Error> {
             "swift"
         }
         var input: Substring = "swift-parser"
@@ -39,7 +39,7 @@ struct `Swift.String+Parser Tests` {
     @Test
     func `a short input is not partially consumed`() {
         var input: Substring = "sw"
-        #expect(throws: Swift.String.Parser.Error.mismatch) {
+        #expect(throws: Swift::String.Parser.Error.mismatch) {
             try Parser { "swift" }.parse(&input)
         }
         #expect(input == "sw")

@@ -8,7 +8,7 @@ import Testing
 struct `Parser builder blocks infer input and preserve body output and failure` {
 
     @Test
-    func `a block accepts twelve elements`() throws(any Swift.Error) {
+    func `a block accepts twelve elements`() throws(any Swift::Error) {
         var input: Substring = "abcdefghijkZ"
 
         let output = try Parser::Parser {
@@ -32,7 +32,7 @@ struct `Parser builder blocks infer input and preserve body output and failure` 
     }
 
     @Test
-    func `a block infers its input from the elements`() throws(any Swift.Error) {
+    func `a block infers its input from the elements`() throws(any Swift::Error) {
         var input: Substring = "aZ"
         let sequence = Parser::Parser {
             Ignore("a")
@@ -51,12 +51,12 @@ struct `Parser builder blocks infer input and preserve body output and failure` 
     }
 }
 
-private func requireFailure<P: Parsing, Failure: Swift.Error>(
+private func requireFailure<P: Parsing, Failure: Swift::Error>(
     _: borrowing P,
     _: Failure.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == Failure {}
 
-private enum Mismatch: Swift.Error, Equatable {
+private enum Mismatch: Swift::Error, Equatable {
     case expected(Character)
 }
 
@@ -93,7 +93,7 @@ private struct Literal: Parsing {
 struct `Parser builder blocks nest within bodies over nonescapable cursors` {
 
     @Test
-    func `a block nests inside a body over a nonescapable cursor`() throws(any Swift.Error) {
+    func `a block nests inside a body over a nonescapable cursor`() throws(any Swift::Error) {
         let bytes: [UInt8] = [0x28, 7, 0x29, 0x2E]
         var cursor = Cursor(bytes.span)
         let value = try Sentence().parse(&cursor)
@@ -126,7 +126,7 @@ private struct Cursor: ~Escapable {
     }
 }
 
-private enum ByteMismatch: Swift.Error, Equatable {
+private enum ByteMismatch: Swift::Error, Equatable {
     case expected(UInt8)
     case endOfInput
 }

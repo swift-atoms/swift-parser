@@ -8,7 +8,7 @@ import Testing
 struct `Pair Parser Builder Tests` {
 
     @Test
-    func `two noncopyable values pair up in order`() throws(any Swift.Error) {
+    func `two noncopyable values pair up in order`() throws(any Swift::Error) {
         var input: Substring = "ab"
         let output = try Tokens().parse(&input)
         #expect(output.first.value == "a")
@@ -39,7 +39,7 @@ struct `Pair Parser Builder Tests` {
     }
 
     @Test
-    func `noncopyable values nest to the left`() throws(any Swift.Error) {
+    func `noncopyable values nest to the left`() throws(any Swift::Error) {
         var input: Substring = "abc"
         let output = try ThreeTokens().parse(&input)
         #expect(output.first.first.value == "a")
@@ -52,7 +52,7 @@ struct `Pair Parser Builder Tests` {
 struct `Pair Parser Builder Resolution` {
 
     @Test
-    func `copyable values resolve to the atom's Append`() throws(any Swift.Error) {
+    func `copyable values resolve to the atom's Append`() throws(any Swift::Error) {
         let node = Builder<Substring>.buildPartialBlock(accumulated: Literal("a"), next: Literal("b"))
         requireAppend(node)
         var input: Substring = "ab"
@@ -62,7 +62,7 @@ struct `Pair Parser Builder Resolution` {
     }
 
     @Test
-    func `a noncopyable value resolves to Pair.Parser`() throws(any Swift.Error) {
+    func `a noncopyable value resolves to Pair.Parser`() throws(any Swift::Error) {
         let node = Builder<Substring>.buildPartialBlock(accumulated: TokenLiteral("a"), next: Literal("b"))
         requirePair(node)
         var input: Substring = "ab"
@@ -76,7 +76,7 @@ struct `Pair Parser Builder Resolution` {
 struct `Pair Parser Nonescapable Input` {
 
     @Test
-    func `two noncopyable values pair up from a nonescapable cursor`() throws(any Swift.Error) {
+    func `two noncopyable values pair up from a nonescapable cursor`() throws(any Swift::Error) {
         let bytes: [UInt8] = [3, 4]
         var cursor = Cursor(bytes.span)
         let pair = try TwoBytes().parse(&cursor)
@@ -87,16 +87,16 @@ struct `Pair Parser Nonescapable Input` {
     }
 }
 
-private func requireFailure<P: Parsing, Failure: Swift.Error>(
+private func requireFailure<P: Parsing, Failure: Swift::Error>(
     _: borrowing P,
     _: Failure.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == Failure {}
 
-private func requireAppend<A: Parsing, N: Parsing, F: Swift.Error, each O>(
+private func requireAppend<A: Parsing, N: Parsing, F: Swift::Error, each O>(
     _: borrowing Append::Append<A.Output, N.Output, (repeat each O, N.Output), Never>.Parser<A, N, F>
 ) where A.Input == N.Input, A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable, A.Output == (repeat each O) {}
 
-private func requirePair<A: Parsing, N: Parsing, F: Swift.Error>(
+private func requirePair<A: Parsing, N: Parsing, F: Swift::Error>(
     _: borrowing Pair<A, N>.Parser<F>
 ) where A.Input == N.Input, A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable, A.Output: ~Copyable & Escapable, N.Output: ~Copyable & Escapable {}
 
@@ -137,11 +137,11 @@ private struct TwoBytes: Parsing {
     }
 }
 
-private enum Mismatch: Swift.Error, Equatable {
+private enum Mismatch: Swift::Error, Equatable {
     case expected(Character)
 }
 
-private enum Other: Swift.Error, Equatable {
+private enum Other: Swift::Error, Equatable {
     case expected(Character)
 }
 
@@ -205,7 +205,7 @@ private struct Cursor: ~Escapable {
     }
 }
 
-private enum ByteMismatch: Swift.Error, Equatable {
+private enum ByteMismatch: Swift::Error, Equatable {
     case endOfInput
 }
 

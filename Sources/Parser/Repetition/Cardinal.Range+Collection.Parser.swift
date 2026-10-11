@@ -5,7 +5,7 @@ public import Collection
 
 extension Cardinal.Range {
     public func parser<
-        Input: Swift.Collection
+        Input: Swift::Collection
     >(
         for input: Input.Type
     ) -> Parser::Parser<

@@ -8,7 +8,7 @@ import Testing
 struct `Pair Parser Tests` {
 
     @Test
-    func `parses sequentially into a nominal Pair`() throws(any Swift.Error) {
+    func `parses sequentially into a nominal Pair`() throws(any Swift::Error) {
         var input: Substring = "abc"
         let parser: Pair::Pair<Literal, OtherLiteral>.Parser<Either<LiteralError, OtherError>> =
             Pair::Pair(Literal("a"), OtherLiteral("b")).parser()
@@ -44,7 +44,7 @@ struct `Pair Parser Tests` {
     }
 
     @Test
-    func `equally typed failures collapse`() throws(any Swift.Error) {
+    func `equally typed failures collapse`() throws(any Swift::Error) {
         var input: Substring = "abc"
         let parser: Pair::Pair<Literal, Literal>.Parser<LiteralError> =
             Pair::Pair(Literal("a"), Literal("b")).parser()
@@ -57,7 +57,7 @@ struct `Pair Parser Tests` {
     }
 
     @Test
-    func `noncopyable parsers produce move-only nominal Pair output`() throws(any Swift.Error) {
+    func `noncopyable parsers produce move-only nominal Pair output`() throws(any Swift::Error) {
         var input: Substring = "abc"
         let parser: Pair::Pair<TokenLiteral, TokenLiteral>.Parser<LiteralError> = Pair::Pair(
             TokenLiteral(expected: "a"),
@@ -79,7 +79,9 @@ private struct Token: ~Copyable {
 private struct TokenLiteral: Parser::Parsing {
 
     let expected: Character
+}
 
+extension TokenLiteral {
     borrowing func parse(_ input: inout Substring) throws(LiteralError) -> Token {
         guard input.first == expected else { throw .expected(expected) }
         input = input.dropFirst()
@@ -102,7 +104,9 @@ private struct Literal: Parser::Parsing {
     init(_ expected: Character) {
         self.expected = expected
     }
+}
 
+extension Literal {
     borrowing func parse(_ input: inout Substring) throws(LiteralError) -> Character {
         guard input.first == expected else { throw .expected(expected) }
         input = input.dropFirst()
@@ -117,7 +121,9 @@ private struct OtherLiteral: Parser::Parsing {
     init(_ expected: Character) {
         self.expected = expected
     }
+}
 
+extension OtherLiteral {
     borrowing func parse(_ input: inout Substring) throws(OtherError) -> Character {
         guard input.first == expected else { throw .expected(expected) }
         input = input.dropFirst()

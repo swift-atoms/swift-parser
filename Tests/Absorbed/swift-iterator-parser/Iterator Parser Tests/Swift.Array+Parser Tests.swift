@@ -8,7 +8,7 @@ import Testing
 struct `Swift.Array+Parser Tests` {
 
     @Test
-    func `an array parses itself from the input`() throws(any Swift.Error) {
+    func `an array parses itself from the input`() throws(any Swift::Error) {
         var input = Characters("swift-parser")
 
         try prefix(Array("swift")).parse(&input)
@@ -35,7 +35,7 @@ struct `Swift.Array+Parser Tests` {
     }
 
     @Test
-    func `an empty array matches without consuming`() throws(any Swift.Error) {
+    func `an empty array matches without consuming`() throws(any Swift::Error) {
         var input = Characters("swift")
 
         try prefix([]).parse(&input)
@@ -44,7 +44,7 @@ struct `Swift.Array+Parser Tests` {
     }
 
     @Test
-    func `a Parser block lifts an array literal`() throws(any Swift.Error) {
+    func `a Parser block lifts an array literal`() throws(any Swift::Error) {
         let parser = Parser::Parser {
             Parser::ConsumingLiteral<Characters>(Array("swift"))
             Parser::ConsumingLiteral<Characters>(Array("-"))
@@ -57,7 +57,7 @@ struct `Swift.Array+Parser Tests` {
     }
 
     @Test
-    func `a body lifts an array under buildIf`() throws(any Swift.Error) {
+    func `a body lifts an array under buildIf`() throws(any Swift::Error) {
         var present = Characters("swift-parser")
         let included: Void? = try OptionalPrefix(includePrefix: true).parse(&present)
         #expect(included != nil)

@@ -10,7 +10,7 @@ where
     Value.Output: ~Copyable & Escapable
 {
 
-    public struct Parser<Failure: Swift.Error>: Parser::Parsing {
+    public struct Parser<Failure: Swift::Error>: Parser::Parsing {
 
         public typealias Input = Value.Input
         public typealias Output = Value.Output
@@ -34,21 +34,6 @@ where
             self.factoryFailure = { .left($0) }
             self.parseFailure = { .right($0) }
         }
-
-        @inlinable
-        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-            let parser: Value
-            do throws(FactoryFailure) {
-                parser = try wrapped()
-            } catch {
-                throw factoryFailure(error)
-            }
-            do throws(Value.Failure) {
-                return try parser.parse(&input)
-            } catch {
-                throw parseFailure(error)
-            }
-        }
     }
 
     @inlinable
@@ -59,6 +44,23 @@ where
     @inlinable
     public func parser() -> Parser<Value.Failure> where FactoryFailure == Never {
         .init(self)
+    }
+}
+
+extension Lazy::Lazy.Parser where Value: Parser::Parsing & ~Copyable, Value.Input: ~Copyable & ~Escapable, Value.Output: ~Copyable & Escapable {
+    @inlinable
+    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+        let parser: Value
+        do throws(FactoryFailure) {
+            parser = try wrapped()
+        } catch {
+            throw factoryFailure(error)
+        }
+        do throws(Value.Failure) {
+            return try parser.parse(&input)
+        } catch {
+            throw parseFailure(error)
+        }
     }
 }
 #endif

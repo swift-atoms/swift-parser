@@ -123,7 +123,7 @@ struct `Parser maps preserve failure types and transfer transformed outputs` {
 
 private func requireFailure<
     P: Parsing & ~Copyable,
-    Failure: Swift.Error
+    Failure: Swift::Error
 >(
     _ parser: borrowing P,
     _: Failure.Type
@@ -245,11 +245,11 @@ private struct IncrementedIntoLinearResult: Parsing {
     }
 }
 
-private enum UpstreamFailure: Swift.Error, Equatable {
+private enum UpstreamFailure: Swift::Error, Equatable {
     case failed
 }
 
-private enum TransformFailure: Swift.Error, Equatable {
+private enum TransformFailure: Swift::Error, Equatable {
     case failed
 }
 
@@ -314,7 +314,7 @@ private struct Linear: Parsing {
 struct `Parser maps transform values read from a nonescapable cursor` {
 
     @Test
-    func `map transforms a value read from a nonescapable cursor`() throws(any Swift.Error) {
+    func `map transforms a value read from a nonescapable cursor`() throws(any Swift::Error) {
         let bytes: [UInt8] = [41]
         var cursor = Cursor(bytes.span)
         let value = try Successor().parse(&cursor)
@@ -342,7 +342,7 @@ private struct Cursor: ~Escapable {
     }
 }
 
-private enum ByteMismatch: Swift.Error, Equatable {
+private enum ByteMismatch: Swift::Error, Equatable {
     case expected(UInt8)
     case endOfInput
 }

@@ -2,7 +2,7 @@
 public import Search
 public import Collection
 
-extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equatable {
+extension Search.Selection where Pattern: Swift::Collection, Pattern.Element: Equatable {
 
     public func parser<Input: Collection.Slice.`Protocol`>(
         forCollection input: Input.Type

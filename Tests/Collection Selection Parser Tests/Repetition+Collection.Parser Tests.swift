@@ -36,10 +36,17 @@ import Testing
 
 private struct Owned: Collection.`Protocol`, ~Copyable {
     var wrapped: Fixture.Input
+}
+
+extension Owned {
     var startIndex: Fixture.Input.Index { wrapped.startIndex }
+
     var endIndex: Fixture.Input.Index { wrapped.endIndex }
+
     subscript(_ index: Fixture.Input.Index) -> UInt8 { wrapped[index] }
+
     func index(after index: Fixture.Input.Index) -> Fixture.Input.Index { wrapped.index(after: index) }
+
     @_lifetime(borrow self)
     borrowing func makeIterator() -> Iterator::Iterator.Chunk<UInt8> { wrapped.makeIterator() }
 }

@@ -13,7 +13,7 @@ struct `Parser::OneOf.Two` {
 
 extension `Parser::OneOf.Two`.Unit {
     @Test
-    func `returns first parser result when it succeeds`() throws(any Swift.Error) {
+    func `returns first parser result when it succeeds`() throws(any Swift::Error) {
         let parser = Parser::OneOf.Two(
             Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.map { _ in "A" },
             Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x42 }.map { _ in "B" }
@@ -26,7 +26,7 @@ extension `Parser::OneOf.Two`.Unit {
     }
 
     @Test
-    func `falls back to second parser when first fails`() throws(any Swift.Error) {
+    func `falls back to second parser when first fails`() throws(any Swift::Error) {
         let parser = Parser::OneOf.Two(
             Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.map { _ in "A" },
             Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x42 }.map { _ in "B" }
@@ -48,13 +48,13 @@ extension `Parser::OneOf.Two`.`Edge Case` {
         , rejectFirst: { _ in true }, rejectSecond: { _ in true })
         var input = ArraySlice<UInt8>([0x43])
 
-        #expect(throws: (any Swift.Error).self) {
+        #expect(throws: (any Swift::Error).self) {
             try parser.parse(&input)
         }
     }
 
     @Test
-    func `backtracks first attempt before trying second`() throws(any Swift.Error) {
+    func `backtracks first attempt before trying second`() throws(any Swift::Error) {
         let parser = Parser::OneOf.Two(
             Parser::First.Where<ArraySlice<UInt8>> { $0 == 0xFF }.map { _ in "first" },
             Parser::First.Element<ArraySlice<UInt8>>().map { _ in "second" }

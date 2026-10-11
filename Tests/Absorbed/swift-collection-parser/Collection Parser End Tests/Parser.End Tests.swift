@@ -12,7 +12,7 @@ struct `Parser::End` {
 
 extension `Parser::End`.Unit {
     @Test
-    func `succeeds on empty input`() throws(any Swift.Error) {
+    func `succeeds on empty input`() throws(any Swift::Error) {
         let parser = Parser::End<CollectionParserTest.Input>()
         var input: CollectionParserTest.Input = []
 

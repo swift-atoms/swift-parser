@@ -2,25 +2,28 @@ import Parser
 
 extension User {
     struct Parser: Parsing {
-        var body: some Parsing<Substring, User, Either<Rejected, Invalid>> {
-            Parser::Parser(User.init) {
-                Parser::Parser {
-                    name
-                    ","
-                    age
-                    "\n"
-                }
-                .mapFailure { _ in Rejected.record }
+    }
+}
+
+extension User.Parser {
+    var body: some Parsing<Substring, User, Either<Rejected, Invalid>> {
+        Parser::Parser(User.init) {
+            Parser::Parser {
+                name
+                ","
+                age
+                "\n"
             }
+            .mapFailure { _ in Rejected.record }
         }
+    }
 
-        private var name: some Parsing<Substring, String, Rejected> {
-            text { $0.isLetter || $0 == " " }
-        }
+    private var name: some Parsing<Substring, String, Rejected> {
+        text { $0.isLetter || $0 == " " }
+    }
 
-        private var age: some Parsing<Substring, String, Rejected> {
-            text { $0 >= "0" && $0 <= "9" }
-        }
+    private var age: some Parsing<Substring, String, Rejected> {
+        text { $0 >= "0" && $0 <= "9" }
     }
 }
 

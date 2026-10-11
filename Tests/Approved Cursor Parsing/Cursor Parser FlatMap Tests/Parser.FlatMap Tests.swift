@@ -14,7 +14,7 @@ struct `FlatMap.Parser` {
 
 extension `FlatMap.Parser`.Unit {
     @Test
-    func `chains parsers where second depends on first output`() throws(any Swift.Error) {
+    func `chains parsers where second depends on first output`() throws(any Swift::Error) {
         let parser = Parser::First.Element<ArraySlice<UInt8>>()
             .flatMap { count -> CursorParserTest.Take in
                 CursorParserTest.Take(Int(count))
@@ -35,7 +35,7 @@ extension `FlatMap.Parser`.`Edge Case` {
             .flatMap { _ in Always<Int>.Parser<ArraySlice<UInt8>>(0) }
         var input = ArraySlice<UInt8>([])
 
-        #expect(throws: (any Swift.Error).self) {
+        #expect(throws: (any Swift::Error).self) {
             try parser.parse(&input)
         }
     }
@@ -48,7 +48,7 @@ extension `FlatMap.Parser`.`Edge Case` {
             }
         var input = ArraySlice<UInt8>([0x01, 0x02])
 
-        #expect(throws: (any Swift.Error).self) {
+        #expect(throws: (any Swift::Error).self) {
             try parser.parse(&input)
         }
     }

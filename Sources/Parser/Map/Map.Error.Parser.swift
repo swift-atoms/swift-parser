@@ -2,7 +2,7 @@
 public import Parser_Core
 public import Map
 
-extension Map.Error where Source: Swift.Error, Target: Swift.Error, Failure == Never {
+extension Map.Error where Source: Swift::Error, Target: Swift::Error, Failure == Never {
 
     public struct Parser<Upstream: Parsing & ~Copyable>: Parsing, ~Copyable
     where
@@ -36,7 +36,7 @@ extension Map.Error where Source: Swift.Error, Target: Swift.Error, Failure == N
     }
 }
 
-extension Map where Source: Swift.Error, Target: Swift.Error, Failure == Never {
+extension Map where Source: Swift::Error, Target: Swift::Error, Failure == Never {
 
     @inlinable
     public func errorParser<P: Parsing & ~Copyable>(_ upstream: consuming P) -> Error.Parser<P>

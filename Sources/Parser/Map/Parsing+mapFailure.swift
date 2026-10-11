@@ -10,7 +10,7 @@ where
 {
 
     @inlinable
-    public consuming func mapFailure<NewFailure: Swift.Error>(
+    public consuming func mapFailure<NewFailure: Swift::Error>(
         _ transform: @escaping (Failure) -> NewFailure
     ) -> Map::Map<Failure, NewFailure, Never>.Error.Parser<Self> {
         Map::Map<Failure, NewFailure, Never>(transform).errorParser(self)

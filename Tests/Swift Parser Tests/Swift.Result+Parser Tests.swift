@@ -5,7 +5,7 @@ import Testing
 struct `Swift.Result+Parser Tests` {
     @Test
     func `a result borrows its noncopyable parser for repeated parses`() {
-        let parser = Swift.Result<Owner, Never>.Parser(.success(Owner()))
+        let parser = Swift::Result<Owner, Never>.Parser(.success(Owner()))
         var input = 0
         let first = parser.parse(&input)
         let second = parser.parse(&input)

@@ -13,7 +13,7 @@ import Parser_Core
         @frozen
         public struct Parser<
             Input: ~Copyable & ~Escapable,
-            Failure: Swift.Error
+            Failure: Swift::Error
         >: ~Copyable
         where repeat (each Element).Input == Input {
             @usableFromInline

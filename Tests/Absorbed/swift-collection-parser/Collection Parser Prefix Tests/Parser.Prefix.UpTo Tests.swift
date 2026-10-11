@@ -24,7 +24,7 @@ extension `Parser::Prefix.UpTo`.Unit {
 
     @Test
     func `handles multi-byte delimiter`() {
-        let parser = Parser::Prefix.UpTo<CollectionParserTest.Input>(Swift.Array("-->".utf8))
+        let parser = Parser::Prefix.UpTo<CollectionParserTest.Input>(Swift::Array("-->".utf8))
         var input = CollectionParserTest.Input(utf8: "content-->rest")
 
         let result = parser.parse(&input)

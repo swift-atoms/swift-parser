@@ -19,6 +19,9 @@ struct `Builder preserves the concrete parser expression` {
 }
 
 private struct Count: Parsing {
+}
+
+extension Count {
     var body: some Parsing<Substring, Int, Never> {
         Parser<Substring, Int, Never> { input in
             input.count

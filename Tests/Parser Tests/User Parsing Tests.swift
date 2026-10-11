@@ -45,7 +45,7 @@ private struct User: Equatable {
 extension User {
 
     struct Parser: Parsing {
-        enum Failure: Swift.Error {
+        enum Failure: Swift::Error {
             case invalidRecord
         }
 

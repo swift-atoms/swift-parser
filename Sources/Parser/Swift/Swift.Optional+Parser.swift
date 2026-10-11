@@ -1,5 +1,5 @@
 public import Parser_Core
-extension Swift.Optional
+extension Swift::Optional
 where
     Wrapped: Parser::Parsing,
     Wrapped.Input: ~Copyable & ~Escapable,
@@ -11,24 +11,28 @@ where
 
         public typealias Input = Wrapped.Input
 
-        public typealias Output = Wrapped.Output?
-
         public typealias Failure = Wrapped.Failure
 
-        public let wrapped: Swift.Optional<Wrapped>
+        public let wrapped: Swift::Optional<Wrapped>
 
         @inlinable
-        public init(_ wrapped: Swift.Optional<Wrapped>) {
+        public init(_ wrapped: Swift::Optional<Wrapped>) {
             self.wrapped = wrapped
         }
+    }
+}
 
-        @inlinable
-        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-            guard let wrapped else {
-                return nil
-            }
-            return try wrapped.parse(&input)
+extension Swift::Optional.Parser where Wrapped: Parser::Parsing, Wrapped.Input: ~Copyable & ~Escapable, Wrapped.Output: ~Copyable & Escapable {
+    public typealias Output = Wrapped.Output?
+}
+
+extension Swift::Optional.Parser where Wrapped: Parser::Parsing, Wrapped.Input: ~Copyable & ~Escapable, Wrapped.Output: ~Copyable & Escapable {
+    @inlinable
+    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+        guard let wrapped else {
+            return nil
         }
+        return try wrapped.parse(&input)
     }
 }
 
@@ -37,7 +41,7 @@ extension Parser::Builder where Input: ~Copyable & ~Escapable {
     @inlinable
     public static func buildIf<P: Parser::Parsing>(
         _ parser: P?
-    ) -> Swift.Optional<P>.Parser
+    ) -> Swift::Optional<P>.Parser
     where
         P.Input == Input,
         P.Input: ~Copyable & ~Escapable,

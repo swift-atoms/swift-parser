@@ -13,7 +13,7 @@ struct `Map.Parser.Transform` {
 
 extension `Map.Parser.Transform`.Unit {
     @Test
-    func `transforms output of upstream parser`() throws(any Swift.Error) {
+    func `transforms output of upstream parser`() throws(any Swift::Error) {
         let parser = Parser::First.Element<ArraySlice<UInt8>>()
             .map { Int($0) }
         var input = ArraySlice<UInt8>([0x0A])
@@ -24,7 +24,7 @@ extension `Map.Parser.Transform`.Unit {
     }
 
     @Test
-    func `preserves input consumption from upstream`() throws(any Swift.Error) {
+    func `preserves input consumption from upstream`() throws(any Swift::Error) {
         let parser = Parser::First.Element<ArraySlice<UInt8>>()
             .map { String($0, radix: 16) }
         var input = ArraySlice<UInt8>([0xFF, 0x01])

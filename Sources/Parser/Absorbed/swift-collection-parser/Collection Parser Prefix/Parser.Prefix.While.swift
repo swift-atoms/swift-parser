@@ -8,10 +8,6 @@ extension Parser::Prefix {
     where Input.Element: Copyable {
 
 
-        public typealias Output = Input
-
-        public typealias Failure = Error
-
         @usableFromInline
         let minLength: Int
 
@@ -31,37 +27,45 @@ extension Parser::Prefix {
             self.maxLength = maxLength ?? .max
             self.predicate = predicate
         }
+    }
+}
 
-        @inlinable
-        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-            var count = 0
-            var endIndex = input.startIndex
+extension Parser::Prefix.While {
+    public typealias Output = Input
 
-            while endIndex < input.endIndex {
-                if count >= maxLength {
-                    break
-                }
-                guard predicate(input[endIndex]) else {
-                    break
-                }
-                input.formIndex(after: &endIndex)
-                count += 1
+    public typealias Failure = Error
+}
+
+extension Parser::Prefix.While {
+    @inlinable
+    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+        var count = 0
+        var endIndex = input.startIndex
+
+        while endIndex < input.endIndex {
+            if count >= maxLength {
+                break
             }
-
-            guard count >= minLength else {
-                throw .countTooLow(expected: minLength, got: count)
+            guard predicate(input[endIndex]) else {
+                break
             }
-
-            let result = input[input.startIndex..<endIndex]
-            input = input[endIndex...]
-            return result
+            input.formIndex(after: &endIndex)
+            count += 1
         }
+
+        guard count >= minLength else {
+            throw .countTooLow(expected: minLength, got: count)
+        }
+
+        let result = input[input.startIndex..<endIndex]
+        input = input[endIndex...]
+        return result
     }
 }
 
 extension Parser::Prefix.While {
 
-    public enum Error: Swift.Error, Equatable {
+    public enum Error: Swift::Error, Equatable {
 
         case countTooLow(expected: Int, got: Int)
     }

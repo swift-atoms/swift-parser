@@ -8,7 +8,7 @@ where Upstream.Input: Restorable & ~Copyable & ~Escapable, Upstream.Output: ~Cop
     public typealias Input = Upstream.Input
     public typealias Output = Void
     public typealias Failure = Error
-    public enum Error: Swift.Error { case unexpectedMatch; case upstream(Upstream.Failure) }
+    public enum Error: Swift::Error { case unexpectedMatch; case upstream(Upstream.Failure) }
     public let upstream: Upstream
     public let rejected: (Upstream.Failure) -> Bool
     public init(_ upstream: Upstream, rejected: @escaping (Upstream.Failure) -> Bool) {

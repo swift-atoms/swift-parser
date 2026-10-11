@@ -6,7 +6,7 @@ public import Either
 public struct Parser<
     Input: ~Copyable & ~Escapable,
     Output: ~Copyable & ~Escapable,
-    Failure: Swift.Error
+    Failure: Swift::Error
 >: Parsing {
 
     public var _parse: @_lifetime(&input) (_ input: inout Input) throws(Failure) -> Output
@@ -15,7 +15,9 @@ public struct Parser<
     public init(_ parse: @escaping @_lifetime(&input) (_ input: inout Input) throws(Failure) -> Output) {
         self._parse = parse
     }
+}
 
+extension Parser where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable {
     @inlinable
     @_lifetime(borrow self, &input)
     public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
@@ -58,7 +60,7 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
 
     @inlinable
     @_disfavoredOverload
-    public init<P: Parsing & ~Copyable, TransformFailure: Swift.Error>(
+    public init<P: Parsing & ~Copyable, TransformFailure: Swift::Error>(
         _ transform: @escaping (consuming P.Output) throws(TransformFailure) -> Output,
         @Builder<Input> _ build: () -> P
     ) where P.Input: ~Copyable & ~Escapable,

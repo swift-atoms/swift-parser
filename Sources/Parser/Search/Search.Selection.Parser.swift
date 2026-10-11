@@ -2,9 +2,9 @@
 public import Parser_Core
 public import Search
 
-extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equatable {
+extension Search.Selection where Pattern: Swift::Collection, Pattern.Element: Equatable {
 
-    public struct Parser<Input: Swift.Collection>: Parser::Parsing
+    public struct Parser<Input: Swift::Collection>: Parser::Parsing
     where Input.SubSequence == Input, Input.Element == Pattern.Element {
 
         public typealias Output = Input
@@ -34,15 +34,15 @@ extension Search.Selection where Pattern: Swift.Collection, Pattern.Element: Equ
         }
     }
 
-    public func parser<Input: Swift.Collection>(for input: Input.Type) -> Parser<Input>
+    public func parser<Input: Swift::Collection>(for input: Input.Type) -> Parser<Input>
     where Input.SubSequence == Input, Input.Element == Pattern.Element {
         .init(self)
     }
 
 }
 
-extension Parser::Builder where Input: Swift.Collection, Input.SubSequence == Input {
-    public static func buildExpression<D: Swift.Collection>(_ selection: Search<D>.Selection) -> Search<D>.Selection.Parser<Input>
+extension Parser::Builder where Input: Swift::Collection, Input.SubSequence == Input {
+    public static func buildExpression<D: Swift::Collection>(_ selection: Search<D>.Selection) -> Search<D>.Selection.Parser<Input>
     where D.Element: Equatable, D.Element == Input.Element {
         .init(selection)
     }

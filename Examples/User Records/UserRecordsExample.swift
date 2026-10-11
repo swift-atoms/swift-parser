@@ -3,6 +3,9 @@ import Parser
 
 @main
 struct UserRecordsExample {
+}
+
+extension UserRecordsExample {
     static func main() throws {
         let paths = Array(CommandLine.arguments.dropFirst())
         let samples: [(String, String)]

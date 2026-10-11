@@ -8,10 +8,6 @@ extension Parser::Prefix {
     where Input.Element: Equatable, Input.Element: Copyable {
 
 
-        public typealias Output = Input
-
-        public typealias Failure = Never
-
         @usableFromInline
         let delimiter: [Input.Element]
 
@@ -19,33 +15,41 @@ extension Parser::Prefix {
         public init(_ delimiter: [Input.Element]) {
             self.delimiter = delimiter
         }
+    }
+}
 
-        @inlinable
-        public borrowing func parse(_ input: inout Input) -> Output {
-            var endIndex = input.startIndex
+extension Parser::Prefix.UpTo {
+    public typealias Output = Input
 
-            outer: while endIndex < input.endIndex {
+    public typealias Failure = Never
+}
 
-                var checkIndex = endIndex
-                for element in delimiter {
-                    guard checkIndex < input.endIndex else {
-                        break outer
-                    }
-                    guard input[checkIndex] == element else {
+extension Parser::Prefix.UpTo {
+    @inlinable
+    public borrowing func parse(_ input: inout Input) -> Output {
+        var endIndex = input.startIndex
 
-                        input.formIndex(after: &endIndex)
-                        continue outer
-                    }
-                    input.formIndex(after: &checkIndex)
+        outer: while endIndex < input.endIndex {
+
+            var checkIndex = endIndex
+            for element in delimiter {
+                guard checkIndex < input.endIndex else {
+                    break outer
                 }
+                guard input[checkIndex] == element else {
 
-                break
+                    input.formIndex(after: &endIndex)
+                    continue outer
+                }
+                input.formIndex(after: &checkIndex)
             }
 
-            let result = input[input.startIndex..<endIndex]
-            input = input[endIndex...]
-            return result
+            break
         }
+
+        let result = input[input.startIndex..<endIndex]
+        input = input[endIndex...]
+        return result
     }
 }
 #endif

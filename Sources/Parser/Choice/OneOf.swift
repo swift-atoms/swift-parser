@@ -14,7 +14,7 @@ extension OneOf {
         public typealias Input = P0.Input
         public typealias Output = P0.Output
         public typealias Failure = Error
-        public enum Error: Swift.Error {
+        public enum Error: Swift::Error {
             case first(P0.Failure)
             case second(P1.Failure)
             case rejected(first: P0.Failure, second: P1.Failure)

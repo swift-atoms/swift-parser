@@ -22,7 +22,7 @@ extension CursorParserTest {
 
 extension CursorParserTest.Take {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case countTooLow(expected: Int, got: Int)
     }
@@ -124,7 +124,7 @@ extension CursorParserTest {
 
 extension CursorParserTest.End {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case unexpectedInput
     }

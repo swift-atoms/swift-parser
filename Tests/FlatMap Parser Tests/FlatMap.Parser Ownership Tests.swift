@@ -84,7 +84,7 @@ private func makeParser(
     return FlatMap::FlatMap.Parser(upstream: upstream, transform: transform)
 }
 
-private func requireFailure<P: Parsing & ~Copyable, E: Swift.Error>(
+private func requireFailure<P: Parsing & ~Copyable, E: Swift::Error>(
     _: borrowing P,
     _: E.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == E {}
@@ -128,10 +128,12 @@ private struct Seed: Parsing {
     let fails: Bool
     let lifetime: Lifetime
 
-    enum Error: Swift.Error, Equatable {
+    enum Error: Swift::Error, Equatable {
         case rejected(Int)
     }
+}
 
+extension Seed {
     borrowing func parse(_ input: inout Int) throws(Error) -> LinearValue {
         input += 1
         let output = LinearValue(value: input, stage: .upstream, lifetime: lifetime)
@@ -146,10 +148,12 @@ private struct Finish: Parsing {
     let fails: Bool
     let lifetime: Lifetime
 
-    enum Error: Swift.Error, Equatable {
+    enum Error: Swift::Error, Equatable {
         case rejected(Int)
     }
+}
 
+extension Finish {
     borrowing func parse(_ input: inout Int) throws(Error) -> LinearValue {
         input += 2
         let output = LinearValue(value: seed + input, stage: .downstream, lifetime: lifetime)

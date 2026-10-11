@@ -82,6 +82,9 @@ private struct Loans: Iterating, ~Copyable, ~Escapable {
     var offset = 0
     @_lifetime(copy values)
     init(_ values: Span<Int>) { self.values = values }
+}
+
+extension Loans {
     @_lifetime(&self)
     mutating func next() -> Loan? {
         guard offset < values.count else { return nil }

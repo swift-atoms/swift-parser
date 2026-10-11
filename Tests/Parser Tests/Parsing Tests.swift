@@ -29,7 +29,7 @@ struct `Parsing forwards expressive bodies to their operations` {
     }
 }
 
-private enum LiteralError: Swift.Error, Equatable {
+private enum LiteralError: Swift::Error, Equatable {
     case expected(Character)
 }
 
@@ -40,7 +40,9 @@ private struct Literal: Parsing {
     init(_ expected: Character) {
         self.expected = expected
     }
+}
 
+extension Literal {
     borrowing func parse(_ input: inout Substring) throws(LiteralError) -> Character {
         guard input.first == expected else { throw .expected(expected) }
         input = input.dropFirst()
@@ -49,6 +51,9 @@ private struct Literal: Parsing {
 }
 
 private struct Prefix: Parsing {
+}
+
+extension Prefix {
     var body: some Parsing<Substring, Character, LiteralError> {
         Literal("a")
     }
@@ -79,12 +84,14 @@ private final class Lifetime {
 
 private struct Value: ~Copyable, Parsing {
 
-    enum Error: Swift.Error { case rejected }
+    enum Error: Swift::Error { case rejected }
 
     let lifetime: Lifetime
 
     deinit { lifetime.destroyed += 1 }
+}
 
+extension Value {
     borrowing func parse(_ input: inout Int) throws(Error) -> Int {
         input += 1
         return input
@@ -129,6 +136,9 @@ private struct ScopedInput: ~Copyable, ~Escapable {
 private enum ScopedFailure: Error, Equatable { case exhausted }
 
 private struct ScopedBody: Parsing {
+}
+
+extension ScopedBody {
     var body: some Parsing<ScopedInput, Int, ScopedFailure> {
         Parser<ScopedInput, Int, ScopedFailure> { input throws(ScopedFailure) in
             guard input.position < input.values.count else { throw .exhausted }

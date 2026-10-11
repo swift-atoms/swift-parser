@@ -8,23 +8,27 @@ extension Parser::First {
     where Source.Element: Copyable & Escapable, Source.Failure == Never {
 
 
-        public typealias Input = Source
-
         public typealias Output = Source.Element
 
         public typealias Failure = Parser::EndOfInput.Error
 
         @inlinable
         public init() {}
+    }
+}
 
-        @inlinable
-        public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
-            guard let element = input.next() else {
-                throw .unexpected(expected: "any element")
-            }
+extension Parser::First.Element where Source: ~Copyable & ~Escapable {
+    public typealias Input = Source
+}
 
-            return element
+extension Parser::First.Element where Source: ~Copyable & ~Escapable {
+    @inlinable
+    public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
+        guard let element = input.next() else {
+            throw .unexpected(expected: "any element")
         }
+
+        return element
     }
 }
 #endif

@@ -102,7 +102,7 @@ private func inspectScopedOutput(_ lifetime: Lifetime) throws {
     #expect(output[0] == 4 && output[1] == 9)
 }
 
-private func requireFailure<P: Parsing & ~Copyable, E: Swift.Error>(
+private func requireFailure<P: Parsing & ~Copyable, E: Swift::Error>(
     _: borrowing P,
     _: E.Type
 ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == E {}
@@ -111,7 +111,7 @@ private func requireCopyable<T: Copyable>(_: T) {}
 
 private func discard<T: ~Copyable>(_ value: consuming T) {}
 
-private enum Mapped: Swift.Error, Equatable {
+private enum Mapped: Swift::Error, Equatable {
     case upstream(Owned.Error)
 }
 
@@ -124,12 +124,14 @@ private struct Owned: ~Copyable, Parsing {
 
     let lifetime: Lifetime
 
-    enum Error: Swift.Error, Equatable {
+    enum Error: Swift::Error, Equatable {
         case rejected(Int)
     }
 
     deinit { lifetime.destroyed += 1 }
+}
 
+extension Owned {
     borrowing func parse(_ input: inout Int) throws(Error) -> Int {
         input += 1
         guard input != 2 else { throw .rejected(input) }
@@ -143,7 +145,9 @@ private struct Scoped: ~Copyable, Parsing {
     let values = [4, 9]
 
     deinit { lifetime.destroyed += 1 }
+}
 
+extension Scoped {
     @_lifetime(borrow self)
     borrowing func parse(_ input: inout Int) throws(Owned.Error) -> Span<Int> {
         values.span

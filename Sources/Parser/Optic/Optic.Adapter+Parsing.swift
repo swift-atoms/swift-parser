@@ -16,7 +16,7 @@ where
         Target: ~Copyable & Escapable,
         Focus: ~Copyable & Escapable,
         Replacement: ~Copyable & ~Escapable,
-        BackwardFailure: Swift.Error
+        BackwardFailure: Swift::Error
     >(
         forward adapter: Optic::Optic<
             Source,
@@ -35,7 +35,7 @@ where
         Target: ~Copyable & Escapable,
         Focus: ~Copyable & Escapable,
         Replacement: ~Copyable & ~Escapable,
-        BackwardFailure: Swift.Error
+        BackwardFailure: Swift::Error
     >(
         forward adapter: Optic::Optic<
             Source,
@@ -54,8 +54,8 @@ where
         Target: ~Copyable & Escapable,
         Focus: ~Copyable & Escapable,
         Replacement: ~Copyable & ~Escapable,
-        ForwardFailure: Swift.Error,
-        BackwardFailure: Swift.Error
+        ForwardFailure: Swift::Error,
+        BackwardFailure: Swift::Error
     >(
         forward adapter: Optic::Optic<
             Source,
@@ -75,8 +75,8 @@ where
         Target: ~Copyable & Escapable,
         Focus: ~Copyable & Escapable,
         Replacement: ~Copyable & ~Escapable,
-        ForwardFailure: Swift.Error,
-        BackwardFailure: Swift.Error
+        ForwardFailure: Swift::Error,
+        BackwardFailure: Swift::Error
     >(
         forward adapter: Optic::Optic<
             Source,

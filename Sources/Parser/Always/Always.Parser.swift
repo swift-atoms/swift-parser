@@ -8,10 +8,6 @@ extension Always::Always {
     public struct Parser<Input>: Parser::Parsing {
 
 
-        public typealias Output = Value
-
-        public typealias Failure = Never
-
         public let base: Always::Always<Value>
 
         @inlinable
@@ -23,16 +19,24 @@ extension Always::Always {
         public init(_ value: Value) {
             self.base = Always::Always(value)
         }
-
-        @inlinable
-        public borrowing func parse(_ input: inout Input) -> Output {
-            base.value
-        }
     }
 
     @inlinable
     public func parser<Input>() -> Parser<Input> {
         .init(self)
+    }
+}
+
+extension Always::Always.Parser {
+    public typealias Output = Value
+
+    public typealias Failure = Never
+}
+
+extension Always::Always.Parser {
+    @inlinable
+    public borrowing func parse(_ input: inout Input) -> Output {
+        base.value
     }
 }
 

@@ -9,7 +9,7 @@ import Testing
 struct `Parser::First Tests` {
 
     @Test
-    func `Element returns the first element and advances`() throws(any Swift.Error) {
+    func `Element returns the first element and advances`() throws(any Swift::Error) {
         var input = Characters("abc")
         #expect(try Parser::First.Element<Characters>().parse(&input) == "a")
         #expect(input.remainder == "bc")
@@ -24,7 +24,7 @@ struct `Parser::First Tests` {
     }
 
     @Test
-    func `Where returns a matching element`() throws(any Swift.Error) {
+    func `Where returns a matching element`() throws(any Swift::Error) {
         var input = Characters("a1")
         #expect(try Parser::First.Where<Characters>(expected: "letter", \.isLetter).parse(&input) == "a")
         #expect(input.remainder == "1")
@@ -53,7 +53,9 @@ private struct Characters: Iterator.`Protocol` {
     init(_ text: String) {
         remainder = text[...]
     }
+}
 
+extension Characters {
     mutating func next() -> Character? {
         remainder.popFirst()
     }
@@ -87,6 +89,9 @@ extension `Parser::First Tests` {
 
 private struct OwnedNumbers: ~Copyable, Iterator.`Protocol` {
     var nextValue = 0
+}
+
+extension OwnedNumbers {
     mutating func next() -> Int? {
         guard nextValue < 4 else { return nil }
         defer { nextValue += 1 }

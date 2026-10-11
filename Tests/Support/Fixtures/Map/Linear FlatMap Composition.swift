@@ -14,6 +14,9 @@ struct Value: ~Copyable {
 }
 
 struct Source: ~Copyable, Parsing {
+}
+
+extension Source {
     borrowing func parse(_ input: inout Input) -> Value {
         let result = Value(number: input.values[input.index])
         input.index += 1
@@ -25,7 +28,9 @@ struct Destination: ~Copyable, Parsing {
     let seed: Value
 
     init(_ seed: consuming Value) { self.seed = seed }
+}
 
+extension Destination {
     borrowing func parse(_ input: inout Input) -> Value {
         Value(number: seed.number)
     }

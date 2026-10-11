@@ -38,7 +38,7 @@ extension CollectionParserTest {
         }
 
         @inlinable
-        public init(utf8 string: Swift.String) {
+        public init(utf8 string: Swift::String) {
             self.init([UInt8](string.utf8))
         }
     }
