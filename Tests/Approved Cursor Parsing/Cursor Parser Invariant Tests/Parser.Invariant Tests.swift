@@ -23,7 +23,7 @@ extension `Parser.Invariant`.`Input Position` {
         var input = ArraySlice<UInt8>([0x01, 0x02, 0x03])
         let checkpoint = input.checkpoint
 
-        _ = try parser.parse(&input)
+        _ = parser.parse(&input)
 
         #expect(input.checkpoint == checkpoint)
     }
@@ -99,7 +99,7 @@ extension `Parser.Invariant`.`Input Position` {
         let parser = CursorParserTest.TakeWhile { $0 < 0x05 }
         var input = ArraySlice<UInt8>([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])
 
-        let result = try parser.parse(&input)
+        let result = parser.parse(&input)
 
         #expect(result.count == 4)
         #expect(input.first == 0x05)
@@ -110,7 +110,7 @@ extension `Parser.Invariant`.`Input Position` {
         let parser = CursorParserTest.Rest()
         var input = ArraySlice<UInt8>([0x01, 0x02, 0x03])
 
-        _ = try parser.parse(&input)
+        _ = parser.parse(&input)
 
         #expect(input.isEmpty)
     }
@@ -336,7 +336,7 @@ extension `Parser.Invariant`.Boundary {
         let parser = CursorParserTest.Rest()
         var input = ArraySlice<UInt8>([])
 
-        let result = try parser.parse(&input)
+        let result = parser.parse(&input)
 
         #expect(result.isEmpty)
     }
@@ -365,7 +365,7 @@ extension `Parser.Invariant`.Boundary {
         let parser = CursorParserTest.TakeWhile { $0 == 0x41 }
         var input = ArraySlice<UInt8>(bytes)
 
-        let result = try parser.parse(&input)
+        let result = parser.parse(&input)
 
         #expect(result.count == 1000)
         #expect(input.first == 0x42)

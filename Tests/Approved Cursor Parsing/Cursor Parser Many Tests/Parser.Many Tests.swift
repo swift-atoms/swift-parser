@@ -56,7 +56,7 @@ extension `Parser::Many`.`Edge Case` {
 
     @Test
     func `terminates after a non-consuming success`() throws(any Swift::Error) {
-        let parser = Parser::Many<ArraySlice<UInt8>, Always<Int>.Parser<ArraySlice<UInt8>>>(rejected: { _ in false }) {
+        let parser = Parser::Many<ArraySlice<UInt8>, Always<Int>.Parser<ArraySlice<UInt8>>>(rejected: { $0 }) {
             Always<Int>.Parser<ArraySlice<UInt8>>(42)
         }
         var input = ArraySlice<UInt8>([0x41])

@@ -3,9 +3,8 @@ public import Collection
 public import Index
 public import Iterator
 public import Ordinal
-public import Parser
+import Parser
 public import Tagged
-import Tagged
 
 
 

@@ -2,7 +2,7 @@
 public import Cardinal
 public import Repetition
 public import Predicate
-public import Collection
+import Collection
 
 extension Repetition where Bounds: Cardinal.Range {
     public func parser<Input: Swift::Collection>(

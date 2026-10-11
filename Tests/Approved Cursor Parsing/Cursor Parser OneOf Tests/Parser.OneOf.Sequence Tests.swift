@@ -24,7 +24,7 @@ extension `Parser::OneOf.Sequence`.`Builder Propagation` {
         let alternation = Parser::OneOf.Two(
             Always<Void>.Parser<ArraySlice<UInt8>>(()).map { _ in Choice.a },
             Always<Void>.Parser<ArraySlice<UInt8>>(()).map { _ in Choice.b },
-            rejectFirst: { _ in false }, rejectSecond: { _ in false }
+            rejectFirst: { $0 }, rejectSecond: { $0 }
         )
 
         var input: ArraySlice<UInt8> = [0x41]

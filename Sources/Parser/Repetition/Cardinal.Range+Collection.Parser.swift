@@ -1,7 +1,7 @@
 #if Repetition && Collection
 public import Cardinal
 public import Repetition
-public import Collection
+import Collection
 
 extension Cardinal.Range {
     public func parser<
