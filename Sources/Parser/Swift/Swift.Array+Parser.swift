@@ -8,12 +8,12 @@ extension Swift.Array where Element: Equatable {
         public typealias Output = Void
         public typealias Failure = Error
 
-        public typealias Error = Swift::Slice<[Element]>.Parser<Input>.Error
+        public typealias Error = Swift::Slice<Swift::Array<Element>>.Parser<Input>.Error
 
-        public let wrapped: [Element]
+        public let wrapped: Swift::Array<Element>
 
         @inlinable
-        public init(_ wrapped: [Element]) {
+        public init(_ wrapped: Swift::Array<Element>) {
             self.wrapped = wrapped
         }
 
@@ -28,7 +28,7 @@ extension Parser::Builder
 where Input: Swift::Collection, Input.SubSequence == Input, Input.Element: Equatable {
     @inlinable
     public static func buildExpression(
-        _ literal: [Input.Element]
+        _ literal: Swift::Array<Input.Element>
     ) -> Swift::Array<Input.Element>.Parser<Input> {
         .init(literal)
     }

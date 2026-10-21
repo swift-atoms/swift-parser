@@ -13,10 +13,10 @@ where
 
         public typealias Failure = Wrapped.Failure
 
-        public let wrapped: Wrapped?
+        public let wrapped: Swift::Optional<Wrapped>
 
         @inlinable
-        public init(_ wrapped: Wrapped?) {
+        public init(_ wrapped: Swift::Optional<Wrapped>) {
             self.wrapped = wrapped
         }
     }
