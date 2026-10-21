@@ -53,9 +53,17 @@ extension Compiler {
 
         let process = Process()
         let standardError = Pipe()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
-        process.arguments = [
-            "swiftc",
+        #if os(macOS)
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
+            let launcher = ["swiftc"]
+        #elseif os(Windows)
+            process.executableURL = URL(fileURLWithPath: "swiftc.exe")
+            let launcher: [String] = []
+        #else
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+            let launcher = ["swiftc"]
+        #endif
+        process.arguments = launcher + [
             "-emit-module",
             "-emit-module-path", output.appendingPathComponent("Proof.swiftmodule").path,
             "-swift-version", "6",
