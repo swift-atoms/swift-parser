@@ -1,4 +1,5 @@
 public import Parser_Core
+
 extension Swift::Character {
 
     public struct Parser: Parser::Parsing {

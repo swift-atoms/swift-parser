@@ -1,37 +1,37 @@
 #if Predicate
-public import Parser_Core
-public import Predicate
+    public import Parser_Core
+    public import Predicate
 
-extension Predicate where T: Copyable & Escapable {
+    extension Predicate where T: Copyable & Escapable {
 
-    public struct Parser<Input: Swift::Collection>: Parser::Parsing
-    where Input.SubSequence == Input, Input.Element == T {
-        public typealias Error = Predicate<T>.Error
-        public let wrapped: Predicate<T>
-        public init(_ wrapped: Predicate<T>) { self.wrapped = wrapped }
+        public struct Parser<Input: Swift::Collection>: Parser::Parsing
+        where Input.SubSequence == Input, Input.Element == T {
+            public typealias Error = Predicate<T>.Error
+            public let wrapped: Predicate<T>
+            public init(_ wrapped: Predicate<T>) { self.wrapped = wrapped }
+        }
     }
-}
 
-extension Predicate.Parser where T: Copyable & Escapable {
-    public typealias Output = T
+    extension Predicate.Parser where T: Copyable & Escapable {
+        public typealias Output = T
 
-    public typealias Failure = Error
-}
-
-extension Predicate.Parser where T: Copyable & Escapable {
-    public borrowing func parse(_ input: inout Input) throws(Error) -> T {
-        guard let element = input.first else { throw .empty }
-        guard wrapped(element) else { throw .rejected }
-        input = input[input.index(after: input.startIndex)...]
-        return element
+        public typealias Failure = Error
     }
-}
 
-extension Parser::Builder
-where Input: Swift::Collection, Input.SubSequence == Input {
-    public static func buildExpression(_ predicate: Predicate<Input.Element>) -> Predicate<Input.Element>.Parser<Input> {
-        .init(predicate)
+    extension Predicate.Parser where T: Copyable & Escapable {
+        public borrowing func parse(_ input: inout Input) throws(Error) -> T {
+            guard let element = input.first else { throw .empty }
+            guard wrapped(element) else { throw .rejected }
+            input = input[input.index(after: input.startIndex)...]
+            return element
+        }
     }
-}
+
+    extension Parser::Builder
+    where Input: Swift::Collection, Input.SubSequence == Input {
+        public static func buildExpression(_ predicate: Predicate<Input.Element>) -> Predicate<Input.Element>.Parser<Input> {
+            .init(predicate)
+        }
+    }
 
 #endif

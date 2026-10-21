@@ -1,4 +1,5 @@
 public import Parser_Core
+
 extension Swift::Substring {
 
     public struct Parser: Parser::Parsing {

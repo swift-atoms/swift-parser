@@ -172,12 +172,12 @@ let package = Package(
         .target(
             name: "Parser",
             dependencies: [
-            .target(name: "Parser Core"),
+                .target(name: "Parser Core"),
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Checkpoint", package: "swift-checkpoint"),
                 .product(name: "Repetition", package: "swift-repetition"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
-                .product(name: "Append", package: "swift-append"),.product(name: "Either", package: "swift-either"),
+                .product(name: "Append", package: "swift-append"), .product(name: "Either", package: "swift-either"),
                 .product(name: "Pair", package: "swift-pair"),
                 .product(name: "Skip", package: "swift-skip"),
                 .product(name: "Always", package: "swift-always"),
@@ -186,7 +186,7 @@ let package = Package(
                 .product(name: "Map", package: "swift-map"),
                 .product(name: "Optic", package: "swift-optic"),
                 .product(name: "Predicate", package: "swift-predicate"),
-                .product(name: "Search", package: "swift-search"),.product(name: "Iterator", package: "swift-iterator"),.product(name: "Collection", package: "swift-collection"),
+                .product(name: "Search", package: "swift-search"), .product(name: "Iterator", package: "swift-iterator"), .product(name: "Collection", package: "swift-collection"),
                 .product(name: "Product", package: "swift-product"),
             ]
         ),
@@ -301,42 +301,117 @@ let package = Package(
                 .target(name: "Parser Test Support"),
             ]
         ),
-        .testTarget(name: "Absorbed swift-collection-parser Collection Parser End Tests", dependencies: [.product(name: "Collection", package: "swift-collection"), .target(name: "Collection Parser Test Support"), .target(name: "Parser")], path: "Tests/Absorbed/swift-collection-parser/Collection Parser End Tests"),
-        .testTarget(name: "Absorbed swift-collection-parser Collection Parser Prefix Tests", dependencies: [.product(name: "Collection", package: "swift-collection"), .target(name: "Collection Parser Test Support"), .target(name: "Parser"), .product(name: "Tagged", package: "swift-tagged")], path: "Tests/Absorbed/swift-collection-parser/Collection Parser Prefix Tests"),
-        .testTarget(name: "Absorbed swift-collection-parser Collection Parser Rest Tests", dependencies: [.product(name: "Collection", package: "swift-collection"), .target(name: "Collection Parser Test Support"), .target(name: "Parser")], path: "Tests/Absorbed/swift-collection-parser/Collection Parser Rest Tests"),
-        .target(name: "Collection Parser Test Support", dependencies: [.product(name: "Collection", package: "swift-collection"), .product(name: "Index", package: "swift-index"), .product(name: "Iterator", package: "swift-iterator"), .product(name: "Ordinal", package: "swift-ordinal"), .target(name: "Parser"), .product(name: "Tagged", package: "swift-tagged")], path: "Tests/Absorbed/swift-collection-parser/Support"),
-        .testTarget(name: "Absorbed swift-iterator-parser Iterator Parser Tests", dependencies: [.product(name: "Either", package: "swift-either"), .product(name: "Iterator", package: "swift-iterator"), .target(name: "Parser")], path: "Tests/Absorbed/swift-iterator-parser/Iterator Parser Tests"),
-        .testTarget(name: "Absorbed swift-product-parser Product Parser Tests", dependencies: [.target(name: "Parser")], path: "Tests/Absorbed/swift-product-parser/Product Parser Tests", resources: [.copy("Fixtures")]),
-        .testTarget(name: "Approved Cursor Parser FlatMap Tests", dependencies: [.target(name: "Parser"), .product(name: "Always", package: "swift-always"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
-            ], path: "Tests/Approved Cursor Parsing/Cursor Parser FlatMap Tests"),
-        .testTarget(name: "Approved Cursor Parser Many Tests", dependencies: [.target(name: "Parser"), .product(name: "Always", package: "swift-always"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
-            ], path: "Tests/Approved Cursor Parsing/Cursor Parser Many Tests"),
-        .testTarget(name: "Approved Cursor Parser Peek Tests", dependencies: [.target(name: "Parser"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
-            ], path: "Tests/Approved Cursor Parsing/Cursor Parser Peek Tests"),
-        .testTarget(name: "Approved Cursor Parser Invariant Tests", dependencies: [.target(name: "Parser"), .product(name: "Always", package: "swift-always"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"), .product(name: "Either", package: "swift-either"),
-            ], path: "Tests/Approved Cursor Parsing/Cursor Parser Invariant Tests"),
+        .testTarget(
+            name: "Absorbed swift-collection-parser Collection Parser End Tests",
+            dependencies: [.product(name: "Collection", package: "swift-collection"), .target(name: "Collection Parser Test Support"), .target(name: "Parser")],
+            path: "Tests/Absorbed/swift-collection-parser/Collection Parser End Tests"
+        ),
+        .testTarget(
+            name: "Absorbed swift-collection-parser Collection Parser Prefix Tests",
+            dependencies: [
+                .product(name: "Collection", package: "swift-collection"), .target(name: "Collection Parser Test Support"), .target(name: "Parser"), .product(name: "Tagged", package: "swift-tagged"),
+            ],
+            path: "Tests/Absorbed/swift-collection-parser/Collection Parser Prefix Tests"
+        ),
+        .testTarget(
+            name: "Absorbed swift-collection-parser Collection Parser Rest Tests",
+            dependencies: [.product(name: "Collection", package: "swift-collection"), .target(name: "Collection Parser Test Support"), .target(name: "Parser")],
+            path: "Tests/Absorbed/swift-collection-parser/Collection Parser Rest Tests"
+        ),
+        .target(
+            name: "Collection Parser Test Support",
+            dependencies: [
+                .product(name: "Collection", package: "swift-collection"), .product(name: "Index", package: "swift-index"), .product(name: "Iterator", package: "swift-iterator"),
+                .product(name: "Ordinal", package: "swift-ordinal"), .target(name: "Parser"), .product(name: "Tagged", package: "swift-tagged"),
+            ],
+            path: "Tests/Absorbed/swift-collection-parser/Support"
+        ),
+        .testTarget(
+            name: "Absorbed swift-iterator-parser Iterator Parser Tests",
+            dependencies: [.product(name: "Either", package: "swift-either"), .product(name: "Iterator", package: "swift-iterator"), .target(name: "Parser")],
+            path: "Tests/Absorbed/swift-iterator-parser/Iterator Parser Tests"
+        ),
+        .testTarget(
+            name: "Absorbed swift-product-parser Product Parser Tests",
+            dependencies: [.target(name: "Parser")],
+            path: "Tests/Absorbed/swift-product-parser/Product Parser Tests",
+            resources: [.copy("Fixtures")]
+        ),
+        .testTarget(
+            name: "Approved Cursor Parser FlatMap Tests",
+            dependencies: [
+                .target(name: "Parser"), .product(name: "Always", package: "swift-always"), .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
+            ],
+            path: "Tests/Approved Cursor Parsing/Cursor Parser FlatMap Tests"
+        ),
+        .testTarget(
+            name: "Approved Cursor Parser Many Tests",
+            dependencies: [
+                .target(name: "Parser"), .product(name: "Always", package: "swift-always"), .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
+            ],
+            path: "Tests/Approved Cursor Parsing/Cursor Parser Many Tests"
+        ),
+        .testTarget(
+            name: "Approved Cursor Parser Peek Tests",
+            dependencies: [
+                .target(name: "Parser"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
+            ],
+            path: "Tests/Approved Cursor Parsing/Cursor Parser Peek Tests"
+        ),
+        .testTarget(
+            name: "Approved Cursor Parser Invariant Tests",
+            dependencies: [
+                .target(name: "Parser"), .product(name: "Always", package: "swift-always"), .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"), .product(name: "Either", package: "swift-either"),
+            ],
+            path: "Tests/Approved Cursor Parsing/Cursor Parser Invariant Tests"
+        ),
         .target(name: "Cursor Parser Test Support", dependencies: [.target(name: "Parser"), .product(name: "Cursor", package: "swift-cursor")], path: "Tests/Approved Cursor Parsing/Support"),
-        .testTarget(name: "Approved Cursor Parser Optionally Tests", dependencies: [.target(name: "Parser"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
-            ], path: "Tests/Approved Cursor Parsing/Cursor Parser Optionally Tests"),
-        .testTarget(name: "Approved Cursor Parser Not Tests", dependencies: [.target(name: "Parser"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
-            ], path: "Tests/Approved Cursor Parsing/Cursor Parser Not Tests"),
-        .testTarget(name: "Approved Cursor Parser OneOf Tests", dependencies: [.target(name: "Parser"), .product(name: "Always", package: "swift-always"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
-            ], path: "Tests/Approved Cursor Parsing/Cursor Parser OneOf Tests"),
-        .testTarget(name: "Approved Cursor Parser Map Tests", dependencies: [.target(name: "Parser"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
-            ], path: "Tests/Approved Cursor Parsing/Cursor Parser Map Tests"),
+        .testTarget(
+            name: "Approved Cursor Parser Optionally Tests",
+            dependencies: [
+                .target(name: "Parser"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
+            ],
+            path: "Tests/Approved Cursor Parsing/Cursor Parser Optionally Tests"
+        ),
+        .testTarget(
+            name: "Approved Cursor Parser Not Tests",
+            dependencies: [
+                .target(name: "Parser"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
+            ],
+            path: "Tests/Approved Cursor Parsing/Cursor Parser Not Tests"
+        ),
+        .testTarget(
+            name: "Approved Cursor Parser OneOf Tests",
+            dependencies: [
+                .target(name: "Parser"), .product(name: "Always", package: "swift-always"), .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
+            ],
+            path: "Tests/Approved Cursor Parsing/Cursor Parser OneOf Tests"
+        ),
+        .testTarget(
+            name: "Approved Cursor Parser Map Tests",
+            dependencies: [
+                .target(name: "Parser"), .product(name: "Checkpoint", package: "swift-checkpoint"), .product(name: "Cursor", package: "swift-cursor"), .target(name: "Cursor Parser Test Support"),
+            ],
+            path: "Tests/Approved Cursor Parsing/Cursor Parser Map Tests"
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    target.swiftSettings = (target.swiftSettings ?? []) + [
-        .strictMemorySafety(),
-        .enableUpcomingFeature("ExistentialAny"),
-        .enableUpcomingFeature("InternalImportsByDefault"),
-        .enableUpcomingFeature("MemberImportVisibility"),
-        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-        .enableUpcomingFeature("InferIsolatedConformances"),
-        .enableExperimentalFeature("Lifetimes"),
-        .treatAllWarnings(as: .error),
-    ]
+    target.swiftSettings =
+        (target.swiftSettings ?? []) + [
+            .strictMemorySafety(),
+            .enableUpcomingFeature("ExistentialAny"),
+            .enableUpcomingFeature("InternalImportsByDefault"),
+            .enableUpcomingFeature("MemberImportVisibility"),
+            .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            .enableUpcomingFeature("InferIsolatedConformances"),
+            .enableExperimentalFeature("Lifetimes"),
+            .treatAllWarnings(as: .error),
+        ]
 }

@@ -1,12 +1,12 @@
 #if Predicate
-public import Predicate
+    public import Predicate
 
-extension Predicate where T: ~Copyable & ~Escapable {
+    extension Predicate where T: ~Copyable & ~Escapable {
 
-    public enum Error: Swift::Error, Equatable {
-        case empty
-        case rejected
+        public enum Error: Swift::Error, Equatable {
+            case empty
+            case rejected
+        }
     }
-}
 
 #endif

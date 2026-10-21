@@ -8,8 +8,7 @@ struct Cursor: ~Copyable, ~Escapable {
 
 @Builder<Cursor>
 func branch(_ left: Bool) -> Either<Parser<Cursor, Span<Int>, Never>, Parser<Cursor, Span<Int>, Never>>.Parser {
-    if left { Parser<Cursor, Span<Int>, Never> { $0.values } }
-    else { Parser<Cursor, Span<Int>, Never> { $0.values } }
+    if left { Parser<Cursor, Span<Int>, Never> { $0.values } } else { Parser<Cursor, Span<Int>, Never> { $0.values } }
 }
 
 func scopedResult() throws {

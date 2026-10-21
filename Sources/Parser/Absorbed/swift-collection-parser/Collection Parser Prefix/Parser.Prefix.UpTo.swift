@@ -1,55 +1,54 @@
 #if CollectionLeaves
-public import Parser_Core
-public import Collection
+    public import Parser_Core
+    public import Collection
 
-extension Parser::Prefix {
+    extension Parser::Prefix {
 
-    public struct UpTo<Input: Collection.Slice.`Protocol`>: Parsing
-    where Input.Element: Equatable, Input.Element: Copyable {
+        public struct UpTo<Input: Collection.Slice.`Protocol`>: Parsing
+        where Input.Element: Equatable, Input.Element: Copyable {
 
+            @usableFromInline
+            let delimiter: [Input.Element]
 
-        @usableFromInline
-        let delimiter: [Input.Element]
-
-        @inlinable
-        public init(_ delimiter: [Input.Element]) {
-            self.delimiter = delimiter
+            @inlinable
+            public init(_ delimiter: [Input.Element]) {
+                self.delimiter = delimiter
+            }
         }
     }
-}
 
-extension Parser::Prefix.UpTo {
-    public typealias Output = Input
+    extension Parser::Prefix.UpTo {
+        public typealias Output = Input
 
-    public typealias Failure = Never
-}
+        public typealias Failure = Never
+    }
 
-extension Parser::Prefix.UpTo {
-    @inlinable
-    public borrowing func parse(_ input: inout Input) -> Output {
-        var endIndex = input.startIndex
+    extension Parser::Prefix.UpTo {
+        @inlinable
+        public borrowing func parse(_ input: inout Input) -> Output {
+            var endIndex = input.startIndex
 
-        outer: while endIndex < input.endIndex {
+            outer: while endIndex < input.endIndex {
 
-            var checkIndex = endIndex
-            for element in delimiter {
-                guard checkIndex < input.endIndex else {
-                    break outer
+                var checkIndex = endIndex
+                for element in delimiter {
+                    guard checkIndex < input.endIndex else {
+                        break outer
+                    }
+                    guard input[checkIndex] == element else {
+
+                        input.formIndex(after: &endIndex)
+                        continue outer
+                    }
+                    input.formIndex(after: &checkIndex)
                 }
-                guard input[checkIndex] == element else {
 
-                    input.formIndex(after: &endIndex)
-                    continue outer
-                }
-                input.formIndex(after: &checkIndex)
+                break
             }
 
-            break
+            let result = input[input.startIndex..<endIndex]
+            input = input[endIndex...]
+            return result
         }
-
-        let result = input[input.startIndex..<endIndex]
-        input = input[endIndex...]
-        return result
     }
-}
 #endif

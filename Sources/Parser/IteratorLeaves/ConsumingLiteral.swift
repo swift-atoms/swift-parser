@@ -1,26 +1,26 @@
 #if IteratorLeaves
-public import Parser_Core
-public import Iterator
+    public import Parser_Core
+    public import Iterator
 
-public struct ConsumingLiteral<Input: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parsing
-where Input.Element: Equatable & Copyable & Escapable, Input.Failure == Never {
-    public enum Error: Swift::Error, Equatable { case mismatch }
-    public let elements: [Input.Element]
+    public struct ConsumingLiteral<Input: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parsing
+    where Input.Element: Equatable & Copyable & Escapable, Input.Failure == Never {
+        public enum Error: Swift::Error, Equatable { case mismatch }
+        public let elements: [Input.Element]
 
-    @inlinable public init(_ elements: [Input.Element]) { self.elements = elements }
-}
+        @inlinable public init(_ elements: [Input.Element]) { self.elements = elements }
+    }
 
-extension ConsumingLiteral where Input: ~Copyable & ~Escapable {
-    public typealias Output = Void
+    extension ConsumingLiteral where Input: ~Copyable & ~Escapable {
+        public typealias Output = Void
 
-    public typealias Failure = Error
-}
+        public typealias Failure = Error
+    }
 
-extension ConsumingLiteral where Input: ~Copyable & ~Escapable {
-    @inlinable public borrowing func parse(_ input: inout Input) throws(Error) {
-        for expected in elements {
-            guard let actual = input.next(), actual == expected else { throw .mismatch }
+    extension ConsumingLiteral where Input: ~Copyable & ~Escapable {
+        @inlinable public borrowing func parse(_ input: inout Input) throws(Error) {
+            for expected in elements {
+                guard let actual = input.next(), actual == expected else { throw .mismatch }
+            }
         }
     }
-}
 #endif

@@ -1,15 +1,12 @@
 #if Choice
-public import Parser_Core
-public import Checkpoint
-
-
+    public import Parser_Core
+    public import Checkpoint
 
     public struct Peek<Upstream: Parsing>: Parsing
     where
         Upstream.Input: Restorable & ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable & Escapable
     {
-
 
         public typealias Input = Upstream.Input
 
@@ -39,13 +36,12 @@ public import Checkpoint
         }
     }
 
+    extension Parsing
+    where Input: Restorable & ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
 
-extension Parsing
-where Input: Restorable & ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
-
-    @inlinable
-    public func peek() -> Parser::Peek<Self> {
-        Parser::Peek(self)
+        @inlinable
+        public func peek() -> Parser::Peek<Self> {
+            Parser::Peek(self)
+        }
     }
-}
 #endif

@@ -1,3 +1,3 @@
 #if IteratorLeaves
-public enum EndOfInput {}
+    public enum EndOfInput {}
 #endif

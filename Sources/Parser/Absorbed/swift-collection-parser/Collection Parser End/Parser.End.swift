@@ -1,9 +1,8 @@
 #if CollectionLeaves
-public import Parser_Core
-public import Collection
+    public import Parser_Core
+    public import Collection
 
     public struct End<Input: Collection.Slice.`Protocol`>: Parsing {
-
 
         public typealias Failure = Parser::End<Input>.Error
 
@@ -11,24 +10,23 @@ public import Collection
         public init() {}
     }
 
-extension End {
-    public typealias Output = Void
-}
+    extension End {
+        public typealias Output = Void
+    }
 
-extension End {
-    @inlinable
-    public borrowing func parse(_ input: inout Input) throws(Failure) {
-        guard input.isEmpty else {
-            throw .expectedEnd(remaining: input.parserRemainingCount)
+    extension End {
+        @inlinable
+        public borrowing func parse(_ input: inout Input) throws(Failure) {
+            guard input.isEmpty else {
+                throw .expectedEnd(remaining: input.parserRemainingCount)
+            }
         }
     }
-}
 
+    extension Parser::End where Input: Collection.Slice.`Protocol` {
 
-extension Parser::End where Input: Collection.Slice.`Protocol` {
-
-    public enum Error: Swift::Error, Equatable {
-        case expectedEnd(remaining: Int)
+        public enum Error: Swift::Error, Equatable {
+            case expectedEnd(remaining: Int)
+        }
     }
-}
 #endif

@@ -1,34 +1,33 @@
 #if IteratorLeaves
-public import Parser_Core
-public import Iterator
+    public import Parser_Core
+    public import Iterator
 
-extension Parser::First {
+    extension Parser::First {
 
-    public struct Element<Source: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parsing
-    where Source.Element: Copyable & Escapable, Source.Failure == Never {
+        public struct Element<Source: Iterator.`Protocol` & ~Copyable & ~Escapable>: Parsing
+        where Source.Element: Copyable & Escapable, Source.Failure == Never {
 
+            public typealias Output = Source.Element
 
-        public typealias Output = Source.Element
+            public typealias Failure = Parser::EndOfInput.Error
 
-        public typealias Failure = Parser::EndOfInput.Error
-
-        @inlinable
-        public init() {}
-    }
-}
-
-extension Parser::First.Element where Source: ~Copyable & ~Escapable {
-    public typealias Input = Source
-}
-
-extension Parser::First.Element where Source: ~Copyable & ~Escapable {
-    @inlinable
-    public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
-        guard let element = input.next() else {
-            throw .unexpected(expected: "any element")
+            @inlinable
+            public init() {}
         }
-
-        return element
     }
-}
+
+    extension Parser::First.Element where Source: ~Copyable & ~Escapable {
+        public typealias Input = Source
+    }
+
+    extension Parser::First.Element where Source: ~Copyable & ~Escapable {
+        @inlinable
+        public borrowing func parse(_ input: inout Source) throws(Failure) -> Output {
+            guard let element = input.next() else {
+                throw .unexpected(expected: "any element")
+            }
+
+            return element
+        }
+    }
 #endif

@@ -1,73 +1,72 @@
 #if CollectionLeaves
-public import Parser_Core
-public import Collection
+    public import Parser_Core
+    public import Collection
 
-extension Parser::Prefix {
+    extension Parser::Prefix {
 
-    public struct While<Input: Collection.Slice.`Protocol`>: Parsing
-    where Input.Element: Copyable {
+        public struct While<Input: Collection.Slice.`Protocol`>: Parsing
+        where Input.Element: Copyable {
 
+            @usableFromInline
+            let minLength: Int
 
-        @usableFromInline
-        let minLength: Int
+            @usableFromInline
+            let maxLength: Int
 
-        @usableFromInline
-        let maxLength: Int
+            @usableFromInline
+            let predicate: (Input.Element) -> Bool
 
-        @usableFromInline
-        let predicate: (Input.Element) -> Bool
+            @inlinable
+            public init(
+                minLength: Int = 0,
+                maxLength: Int? = nil,
+                _ predicate: @escaping (Input.Element) -> Bool
+            ) {
+                self.minLength = minLength
+                self.maxLength = maxLength ?? .max
+                self.predicate = predicate
+            }
+        }
+    }
 
+    extension Parser::Prefix.While {
+        public typealias Output = Input
+
+        public typealias Failure = Error
+    }
+
+    extension Parser::Prefix.While {
         @inlinable
-        public init(
-            minLength: Int = 0,
-            maxLength: Int? = nil,
-            _ predicate: @escaping (Input.Element) -> Bool
-        ) {
-            self.minLength = minLength
-            self.maxLength = maxLength ?? .max
-            self.predicate = predicate
-        }
-    }
-}
+        public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+            var count = 0
+            var endIndex = input.startIndex
 
-extension Parser::Prefix.While {
-    public typealias Output = Input
-
-    public typealias Failure = Error
-}
-
-extension Parser::Prefix.While {
-    @inlinable
-    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-        var count = 0
-        var endIndex = input.startIndex
-
-        while endIndex < input.endIndex {
-            if count >= maxLength {
-                break
+            while endIndex < input.endIndex {
+                if count >= maxLength {
+                    break
+                }
+                guard predicate(input[endIndex]) else {
+                    break
+                }
+                input.formIndex(after: &endIndex)
+                count += 1
             }
-            guard predicate(input[endIndex]) else {
-                break
+
+            guard count >= minLength else {
+                throw .countTooLow(expected: minLength, got: count)
             }
-            input.formIndex(after: &endIndex)
-            count += 1
+
+            let result = input[input.startIndex..<endIndex]
+            input = input[endIndex...]
+            return result
         }
+    }
 
-        guard count >= minLength else {
-            throw .countTooLow(expected: minLength, got: count)
+    extension Parser::Prefix.While {
+
+        public enum Error: Swift::Error, Equatable {
+
+            case countTooLow(expected: Int, got: Int)
         }
-
-        let result = input[input.startIndex..<endIndex]
-        input = input[endIndex...]
-        return result
     }
-}
-
-extension Parser::Prefix.While {
-
-    public enum Error: Swift::Error, Equatable {
-
-        case countTooLow(expected: Int, got: Int)
-    }
-}
 #endif

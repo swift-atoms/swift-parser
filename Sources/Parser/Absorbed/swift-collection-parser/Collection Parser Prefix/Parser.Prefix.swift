@@ -1,3 +1,3 @@
 #if CollectionLeaves
-public enum Prefix {}
+    public enum Prefix {}
 #endif

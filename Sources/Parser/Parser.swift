@@ -1,6 +1,6 @@
 #if Map
-public import Parser_Core
-public import Either
+    public import Parser_Core
+    public import Either
 #endif
 
 public struct Parser<
@@ -35,7 +35,9 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
     where
         P.Input: ~Copyable & ~Escapable,
         P.Output: ~Copyable & Escapable,
-        P.Input == Input, P.Output == Output, P.Failure == Failure
+        P.Input == Input,
+        P.Output == Output,
+        P.Failure == Failure
     {
         let composition = build()
         self._parse = { input throws(Failure) in
@@ -45,53 +47,69 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
 }
 
 #if Map
-extension Parser
-where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
+    extension Parser
+    where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable {
 
-    @inlinable
-    public init<P: Parsing & ~Copyable>(
-        _ transform: @escaping (consuming P.Output) -> Output,
-        @Builder<Input> _ build: () -> P
-    ) where P.Input: ~Copyable & ~Escapable,
+        @inlinable
+        public init<P: Parsing & ~Copyable>(
+            _ transform: @escaping (consuming P.Output) -> Output,
+            @Builder<Input> _ build: () -> P
+        )
+        where
+            P.Input: ~Copyable & ~Escapable,
             P.Output: ~Copyable & ~Escapable,
-            P.Input == Input, P.Failure == Failure {
-        self.init { build().map(transform) }
+            P.Input == Input,
+            P.Failure == Failure
+        {
+            self.init { build().map(transform) }
+        }
+
+        @inlinable
+        @_disfavoredOverload
+        public init<P: Parsing & ~Copyable, TransformFailure: Swift::Error>(
+            _ transform: @escaping (consuming P.Output) throws(TransformFailure) -> Output,
+            @Builder<Input> _ build: () -> P
+        )
+        where
+            P.Input: ~Copyable & ~Escapable,
+            P.Output: ~Copyable & ~Escapable,
+            P.Input == Input,
+            Failure == Either<P.Failure, TransformFailure>
+        {
+            self.init { build().map(transform) }
+        }
+
+        @inlinable
+        public init<P: Parsing & ~Copyable>(
+            _ transform: @escaping (consuming P.Output) throws(Failure) -> Output,
+            @Builder<Input> _ build: () -> P
+        )
+        where
+            P.Input: ~Copyable & ~Escapable,
+            P.Output: ~Copyable & ~Escapable,
+            P.Input == Input,
+            P.Failure == Never
+        {
+            self.init { build().map(transform) }
+        }
     }
 
-    @inlinable
-    @_disfavoredOverload
-    public init<P: Parsing & ~Copyable, TransformFailure: Swift::Error>(
-        _ transform: @escaping (consuming P.Output) throws(TransformFailure) -> Output,
-        @Builder<Input> _ build: () -> P
-    ) where P.Input: ~Copyable & ~Escapable,
-            P.Output: ~Copyable & ~Escapable,
-            P.Input == Input, Failure == Either<P.Failure, TransformFailure> {
-        self.init { build().map(transform) }
-    }
+    extension Parser
+    where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable, Failure == Never {
 
-    @inlinable
-    public init<P: Parsing & ~Copyable>(
-        _ transform: @escaping (consuming P.Output) throws(Failure) -> Output,
-        @Builder<Input> _ build: () -> P
-    ) where P.Input: ~Copyable & ~Escapable,
+        @inlinable
+        public init<P: Parsing & ~Copyable>(
+            _ transform: @escaping (consuming P.Output) -> Output,
+            @Builder<Input> _ build: () -> P
+        )
+        where
+            P.Input: ~Copyable & ~Escapable,
             P.Output: ~Copyable & ~Escapable,
-            P.Input == Input, P.Failure == Never {
-        self.init { build().map(transform) }
+            P.Input == Input,
+            P.Failure == Never
+        {
+            self.init { build().map(transform) }
+        }
     }
-}
-
-extension Parser
-where Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable, Failure == Never {
-
-    @inlinable
-    public init<P: Parsing & ~Copyable>(
-        _ transform: @escaping (consuming P.Output) -> Output,
-        @Builder<Input> _ build: () -> P
-    ) where P.Input: ~Copyable & ~Escapable,
-            P.Output: ~Copyable & ~Escapable,
-            P.Input == Input, P.Failure == Never {
-        self.init { build().map(transform) }
-    }
-}
 
 #endif

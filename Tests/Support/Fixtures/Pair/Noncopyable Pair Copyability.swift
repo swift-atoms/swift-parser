@@ -1,5 +1,5 @@
-import Parser
 import Pair
+import Parser
 
 struct Linear: ~Copyable, Parsing {
 }

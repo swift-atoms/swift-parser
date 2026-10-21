@@ -1,4 +1,5 @@
 public import Parser_Core
+
 extension Swift::Slice where Base.Element: Equatable {
 
     public struct Parser<Input: Swift::Collection>: Parser::Parsing

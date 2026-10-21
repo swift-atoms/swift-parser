@@ -15,7 +15,6 @@ public protocol Parsing<Input, Output, Failure>: ~Copyable {
     borrowing func parse(_ input: inout Input) throws(Failure) -> Output
 }
 
-
 extension Parsing
 where
     Self: ~Copyable,

@@ -1,4 +1,5 @@
 public import Parser_Core
+
 extension Swift::Collection where Element: Equatable {
 
     @inlinable

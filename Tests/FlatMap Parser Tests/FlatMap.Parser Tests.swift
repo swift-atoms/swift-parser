@@ -1,85 +1,85 @@
 #if FlatMap
-import FlatMap
-import Either
-import Parser
-import Testing
+    import FlatMap
+    import Either
+    import Parser
+    import Testing
 
-@Suite
-struct `Parser flat maps select downstream operations and distinguish stage failures` {
+    @Suite
+    struct `Parser flat maps select downstream operations and distinguish stage failures` {
 
-    @Test
-    func `the downstream parser depends on the upstream output`() throws(any Swift::Error) {
-        var input: Substring = "2ab!"
-        let output = try Counted().parse(&input)
-        #expect(output == "ab")
-        #expect(input == "!")
-    }
+        @Test
+        func `the downstream parser depends on the upstream output`() throws(any Swift::Error) {
+            var input: Substring = "2ab!"
+            let output = try Counted().parse(&input)
+            #expect(output == "ab")
+            #expect(input == "!")
+        }
 
-    @Test
-    func `an upstream failure is the left branch`() {
-        var input: Substring = ""
-        #expect(throws: Either<DigitError, TakeError>.left(.empty)) {
-            try Counted().parse(&input)
+        @Test
+        func `an upstream failure is the left branch`() {
+            var input: Substring = ""
+            #expect(throws: Either<DigitError, TakeError>.left(.empty)) {
+                try Counted().parse(&input)
+            }
+        }
+
+        @Test
+        func `a downstream failure is the right branch`() {
+            var input: Substring = "3a"
+            #expect(throws: Either<DigitError, TakeError>.right(.short)) {
+                try Counted().parse(&input)
+            }
         }
     }
 
-    @Test
-    func `a downstream failure is the right branch`() {
-        var input: Substring = "3a"
-        #expect(throws: Either<DigitError, TakeError>.right(.short)) {
-            try Counted().parse(&input)
+    private struct Counted: Parsing {
+    }
+
+    extension Counted {
+        typealias Failure = Either<DigitError, TakeError>
+    }
+
+    extension Counted {
+        var body: some Parsing<Substring, Substring, Either<DigitError, TakeError>> {
+            Digit().flatMap { count in Take(count) }
         }
     }
-}
 
-private struct Counted: Parsing {
-}
-
-extension Counted {
-    typealias Failure = Either<DigitError, TakeError>
-}
-
-extension Counted {
-    var body: some Parsing<Substring, Substring, Either<DigitError, TakeError>> {
-        Digit().flatMap { count in Take(count) }
+    private enum DigitError: Swift::Error, Equatable {
+        case empty
     }
-}
 
-private enum DigitError: Swift::Error, Equatable {
-    case empty
-}
-
-private enum TakeError: Swift::Error, Equatable {
-    case short
-}
-
-private struct Digit: Parsing {
-}
-
-extension Digit {
-    borrowing func parse(_ input: inout Substring) throws(DigitError) -> Int {
-        guard let first = input.first, let value = first.wholeNumberValue else { throw .empty }
-        input = input.dropFirst()
-        return value
+    private enum TakeError: Swift::Error, Equatable {
+        case short
     }
-}
 
-private struct Take: Parsing {
-
-    let count: Int
-
-    init(_ count: Int) {
-        self.count = count
+    private struct Digit: Parsing {
     }
-}
 
-extension Take {
-    borrowing func parse(_ input: inout Substring) throws(TakeError) -> Substring {
-        guard input.count >= count else { throw .short }
-        let output = input.prefix(count)
-        input = input.dropFirst(count)
-        return output
+    extension Digit {
+        borrowing func parse(_ input: inout Substring) throws(DigitError) -> Int {
+            guard let first = input.first, let value = first.wholeNumberValue else { throw .empty }
+            input = input.dropFirst()
+            return value
+        }
     }
-}
+
+    private struct Take: Parsing {
+
+        let count: Int
+
+        init(_ count: Int) {
+            self.count = count
+        }
+    }
+
+    extension Take {
+        borrowing func parse(_ input: inout Substring) throws(TakeError) -> Substring {
+            guard input.count >= count else { throw .short }
+            let output = input.prefix(count)
+            input = input.dropFirst(count)
+            return output
+        }
+    }
 
 #endif

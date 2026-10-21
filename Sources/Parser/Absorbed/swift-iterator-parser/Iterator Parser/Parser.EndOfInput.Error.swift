@@ -1,9 +1,9 @@
 #if IteratorLeaves
-extension Parser::EndOfInput {
+    extension Parser::EndOfInput {
 
-    public enum Error: Swift::Error, Equatable {
+        public enum Error: Swift::Error, Equatable {
 
-        case unexpected(expected: String)
+            case unexpected(expected: String)
+        }
     }
-}
 #endif

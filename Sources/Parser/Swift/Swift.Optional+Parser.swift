@@ -1,4 +1,5 @@
 public import Parser_Core
+
 extension Swift::Optional
 where
     Wrapped: Parser::Parsing,
@@ -8,15 +9,14 @@ where
 
     public struct Parser: Parser::Parsing {
 
-
         public typealias Input = Wrapped.Input
 
         public typealias Failure = Wrapped.Failure
 
-        public let wrapped: Swift::Optional<Wrapped>
+        public let wrapped: Wrapped?
 
         @inlinable
-        public init(_ wrapped: Swift::Optional<Wrapped>) {
+        public init(_ wrapped: Wrapped?) {
             self.wrapped = wrapped
         }
     }

@@ -17,7 +17,8 @@ extension Compiler {
             let direct = products.appendingPathComponent(
                 "Parser.swiftmodule"
             )
-            let modules = products
+            let modules =
+                products
                 .appendingPathComponent("Modules")
                 .appendingPathComponent("Parser.swiftmodule")
             if FileManager.default.fileExists(atPath: direct.path)
@@ -29,7 +30,8 @@ extension Compiler {
         }
 
         let direct = products.appendingPathComponent("Parser.swiftmodule")
-        let modules = products
+        let modules =
+            products
             .appendingPathComponent("Modules")
             .appendingPathComponent("Parser.swiftmodule")
         try #require(

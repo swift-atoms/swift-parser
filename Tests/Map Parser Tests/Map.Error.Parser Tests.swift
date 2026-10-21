@@ -1,198 +1,198 @@
 #if Map && Append && Skip && FlatMap
-import Map
-import Parser
-import Either
-import Testing
+    import Map
+    import Parser
+    import Either
+    import Testing
 
-@Suite
-struct `Parser error maps transform failure branches and preserve successful outputs` {
+    @Suite
+    struct `Parser error maps transform failure branches and preserve successful outputs` {
 
-    @Test
-    func `error map rewrites the upstream failure`() {
-        let parser = Remapped()
-        requireFailure(parser, DownstreamFailure.self)
+        @Test
+        func `error map rewrites the upstream failure`() {
+            let parser = Remapped()
+            requireFailure(parser, DownstreamFailure.self)
 
-        var input = 0
-        #expect(throws: DownstreamFailure.upstream) {
-            try parser.parse(&input)
-        }
-    }
-
-    @Test
-    func `error map leaves a successful output untouched`() throws(any Swift::Error) {
-        let parser = RemappedSuccess()
-        requireFailure(parser, DownstreamFailure.self)
-
-        var input = 41
-        let output = try parser.parse(&input)
-
-        #expect(output == 41)
-    }
-
-    @Test
-    func `error map flattens an Either produced by map`() {
-        let parser = Flattened()
-        requireFailure(parser, DownstreamFailure.self)
-
-        var input = 0
-        #expect(throws: DownstreamFailure.upstream) {
-            try parser.parse(&input)
-        }
-    }
-
-    @Test
-    func `error map reaches the transform side of an Either`() {
-        let parser = FlattenedTransform()
-        requireFailure(parser, DownstreamFailure.self)
-
-        var input = 0
-        #expect(throws: DownstreamFailure.transform) {
-            try parser.parse(&input)
-        }
-    }
-
-}
-
-private func requireFailure<
-    P: Parsing,
-    Failure: Swift::Error
->(
-    _ parser: borrowing P,
-    _: Failure.Type
-)
-where
-    P.Input: ~Copyable & ~Escapable,
-    P.Output: ~Copyable & ~Escapable,
-    P.Failure == Failure
-{}
-
-private struct Remapped: Parsing {
-}
-
-extension Remapped {
-    typealias Input = Int
-
-    typealias Output = Int
-
-    typealias Failure = DownstreamFailure
-}
-
-extension Remapped {
-    var body: some Parsing<Int, Int, DownstreamFailure> {
-        Fail().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
-    }
-}
-
-private struct RemappedSuccess: Parsing {
-}
-
-extension RemappedSuccess {
-    typealias Input = Int
-
-    typealias Output = Int
-
-    typealias Failure = DownstreamFailure
-}
-
-extension RemappedSuccess {
-    var body: some Parsing<Int, Int, DownstreamFailure> {
-        FallibleSucceed().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
-    }
-}
-
-private struct Flattened: Parsing {
-}
-
-extension Flattened {
-    typealias Input = Int
-
-    typealias Output = Int
-
-    typealias Failure = DownstreamFailure
-}
-
-extension Flattened {
-    var body: some Parsing<Int, Int, DownstreamFailure> {
-        Fail()
-            .map { (value: consuming Int) throws(TransformFailure) -> Int in value + 1 }
-            .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
-                switch failure {
-                case .left: return .upstream
-                case .right: return .transform
-                }
+            var input = 0
+            #expect(throws: DownstreamFailure.upstream) {
+                try parser.parse(&input)
             }
-    }
-}
+        }
 
-private struct FlattenedTransform: Parsing {
-}
+        @Test
+        func `error map leaves a successful output untouched`() throws(any Swift::Error) {
+            let parser = RemappedSuccess()
+            requireFailure(parser, DownstreamFailure.self)
 
-extension FlattenedTransform {
-    typealias Input = Int
+            var input = 41
+            let output = try parser.parse(&input)
 
-    typealias Output = Int
+            #expect(output == 41)
+        }
 
-    typealias Failure = DownstreamFailure
-}
+        @Test
+        func `error map flattens an Either produced by map`() {
+            let parser = Flattened()
+            requireFailure(parser, DownstreamFailure.self)
 
-extension FlattenedTransform {
-    var body: some Parsing<Int, Int, DownstreamFailure> {
-        FallibleSucceed()
-            .map { (_: consuming Int) throws(TransformFailure) -> Int in throw .failed }
-            .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
-                switch failure {
-                case .left: return .upstream
-                case .right: return .transform
-                }
+            var input = 0
+            #expect(throws: DownstreamFailure.upstream) {
+                try parser.parse(&input)
             }
+        }
+
+        @Test
+        func `error map reaches the transform side of an Either`() {
+            let parser = FlattenedTransform()
+            requireFailure(parser, DownstreamFailure.self)
+
+            var input = 0
+            #expect(throws: DownstreamFailure.transform) {
+                try parser.parse(&input)
+            }
+        }
+
     }
-}
 
-private enum UpstreamFailure: Swift::Error, Equatable {
-    case failed
-}
+    private func requireFailure<
+        P: Parsing,
+        Failure: Swift::Error
+    >(
+        _ parser: borrowing P,
+        _: Failure.Type
+    )
+    where
+        P.Input: ~Copyable & ~Escapable,
+        P.Output: ~Copyable & ~Escapable,
+        P.Failure == Failure
+    {}
 
-private enum TransformFailure: Swift::Error, Equatable {
-    case failed
-}
-
-private enum DownstreamFailure: Swift::Error, Equatable {
-    case upstream
-    case transform
-}
-
-private struct Fail: Parsing {
-}
-
-extension Fail {
-    typealias Input = Int
-
-    typealias Output = Int
-
-    typealias Failure = UpstreamFailure
-}
-
-extension Fail {
-    borrowing func parse(_ input: inout Int) throws(UpstreamFailure) -> Int {
-        throw .failed
+    private struct Remapped: Parsing {
     }
-}
 
-private struct FallibleSucceed: Parsing {
-}
+    extension Remapped {
+        typealias Input = Int
 
-extension FallibleSucceed {
-    typealias Input = Int
+        typealias Output = Int
 
-    typealias Output = Int
-
-    typealias Failure = UpstreamFailure
-}
-
-extension FallibleSucceed {
-    borrowing func parse(_ input: inout Int) throws(UpstreamFailure) -> Int {
-        input
+        typealias Failure = DownstreamFailure
     }
-}
+
+    extension Remapped {
+        var body: some Parsing<Int, Int, DownstreamFailure> {
+            Fail().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
+        }
+    }
+
+    private struct RemappedSuccess: Parsing {
+    }
+
+    extension RemappedSuccess {
+        typealias Input = Int
+
+        typealias Output = Int
+
+        typealias Failure = DownstreamFailure
+    }
+
+    extension RemappedSuccess {
+        var body: some Parsing<Int, Int, DownstreamFailure> {
+            FallibleSucceed().mapFailure { (_: UpstreamFailure) -> DownstreamFailure in .upstream }
+        }
+    }
+
+    private struct Flattened: Parsing {
+    }
+
+    extension Flattened {
+        typealias Input = Int
+
+        typealias Output = Int
+
+        typealias Failure = DownstreamFailure
+    }
+
+    extension Flattened {
+        var body: some Parsing<Int, Int, DownstreamFailure> {
+            Fail()
+                .map { (value: consuming Int) throws(TransformFailure) -> Int in value + 1 }
+                .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
+                    switch failure {
+                    case .left: return .upstream
+                    case .right: return .transform
+                    }
+                }
+        }
+    }
+
+    private struct FlattenedTransform: Parsing {
+    }
+
+    extension FlattenedTransform {
+        typealias Input = Int
+
+        typealias Output = Int
+
+        typealias Failure = DownstreamFailure
+    }
+
+    extension FlattenedTransform {
+        var body: some Parsing<Int, Int, DownstreamFailure> {
+            FallibleSucceed()
+                .map { (_: consuming Int) throws(TransformFailure) -> Int in throw .failed }
+                .mapFailure { (failure: Either<UpstreamFailure, TransformFailure>) -> DownstreamFailure in
+                    switch failure {
+                    case .left: return .upstream
+                    case .right: return .transform
+                    }
+                }
+        }
+    }
+
+    private enum UpstreamFailure: Swift::Error, Equatable {
+        case failed
+    }
+
+    private enum TransformFailure: Swift::Error, Equatable {
+        case failed
+    }
+
+    private enum DownstreamFailure: Swift::Error, Equatable {
+        case upstream
+        case transform
+    }
+
+    private struct Fail: Parsing {
+    }
+
+    extension Fail {
+        typealias Input = Int
+
+        typealias Output = Int
+
+        typealias Failure = UpstreamFailure
+    }
+
+    extension Fail {
+        borrowing func parse(_ input: inout Int) throws(UpstreamFailure) -> Int {
+            throw .failed
+        }
+    }
+
+    private struct FallibleSucceed: Parsing {
+    }
+
+    extension FallibleSucceed {
+        typealias Input = Int
+
+        typealias Output = Int
+
+        typealias Failure = UpstreamFailure
+    }
+
+    extension FallibleSucceed {
+        borrowing func parse(_ input: inout Int) throws(UpstreamFailure) -> Int {
+            input
+        }
+    }
 
 #endif

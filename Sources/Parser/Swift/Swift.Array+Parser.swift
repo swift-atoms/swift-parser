@@ -1,4 +1,5 @@
 public import Parser_Core
+
 extension Swift.Array where Element: Equatable {
 
     public struct Parser<Input: Swift::Collection>: Parser::Parsing
@@ -7,12 +8,12 @@ extension Swift.Array where Element: Equatable {
         public typealias Output = Void
         public typealias Failure = Error
 
-        public typealias Error = Swift::Slice<Swift::Array<Element>>.Parser<Input>.Error
+        public typealias Error = Swift::Slice<[Element]>.Parser<Input>.Error
 
-        public let wrapped: Swift::Array<Element>
+        public let wrapped: [Element]
 
         @inlinable
-        public init(_ wrapped: Swift::Array<Element>) {
+        public init(_ wrapped: [Element]) {
             self.wrapped = wrapped
         }
 
@@ -27,7 +28,7 @@ extension Parser::Builder
 where Input: Swift::Collection, Input.SubSequence == Input, Input.Element: Equatable {
     @inlinable
     public static func buildExpression(
-        _ literal: Swift::Array<Input.Element>
+        _ literal: [Input.Element]
     ) -> Swift::Array<Input.Element>.Parser<Input> {
         .init(literal)
     }
