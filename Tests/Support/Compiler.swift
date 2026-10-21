@@ -63,17 +63,18 @@ extension Compiler {
             process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
             let launcher = ["swiftc"]
         #endif
-        process.arguments = launcher + [
-            "-emit-module",
-            "-emit-module-path", output.appendingPathComponent("Proof.swiftmodule").path,
-            "-swift-version", "6",
-            "-strict-memory-safety",
-            "-enable-experimental-feature", "Lifetimes",
-            "-module-name", "Proof",
-            "-I", products.path,
-            "-I", products.appendingPathComponent("Modules").path,
-            fixture.path,
-        ]
+        process.arguments =
+            launcher + [
+                "-emit-module",
+                "-emit-module-path", output.appendingPathComponent("Proof.swiftmodule").path,
+                "-swift-version", "6",
+                "-strict-memory-safety",
+                "-enable-experimental-feature", "Lifetimes",
+                "-module-name", "Proof",
+                "-I", products.path,
+                "-I", products.appendingPathComponent("Modules").path,
+                fixture.path,
+            ]
         process.standardError = standardError
         try process.run()
 

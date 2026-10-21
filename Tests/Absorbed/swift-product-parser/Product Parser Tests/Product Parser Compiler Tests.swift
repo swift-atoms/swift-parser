@@ -42,15 +42,16 @@
                 process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
                 let launcher = ["swiftc"]
             #endif
-            process.arguments = launcher + [
-                "-typecheck",
-                "-D", "Product",
-                "-swift-version", "6",
-                "-enable-experimental-feature", "Lifetimes",
-                "-enable-experimental-feature", "MoveOnlyTuples",
-                "-module-name", "ProductParserCapabilityProof",
-                fixture.path,
-            ]
+            process.arguments =
+                launcher + [
+                    "-typecheck",
+                    "-D", "Product",
+                    "-swift-version", "6",
+                    "-enable-experimental-feature", "Lifetimes",
+                    "-enable-experimental-feature", "MoveOnlyTuples",
+                    "-module-name", "ProductParserCapabilityProof",
+                    fixture.path,
+                ]
             process.standardError = standardError
             try process.run()
             process.waitUntilExit()
