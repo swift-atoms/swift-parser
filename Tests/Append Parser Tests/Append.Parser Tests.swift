@@ -111,7 +111,7 @@
             }
             let parser = append.parser(number, number)
             var input = 0
-            let result: Span<Int> = parser.parse(&input)
+            let result = parser.parse(&input)
             #expect(result[0] == 10)
             #expect(result[1] == 20)
             #expect(input == 2)
