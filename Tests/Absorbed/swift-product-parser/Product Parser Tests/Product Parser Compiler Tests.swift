@@ -43,7 +43,7 @@
                     .lazy
                     .map { URL(fileURLWithPath: String($0)).appendingPathComponent("swiftc.exe") }
                     .first { FileManager.default.fileExists(atPath: $0.path) }
-                process.executableURL = try #require(compiler)
+                process.executableURL = compiler
                 let launcher: [String] = []
             #else
                 process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
