@@ -102,16 +102,19 @@
         }
 
         @Test
-        func `final output can borrow from the stored append operation`() {
+        func `final output identifies an extent in caller-owned storage`() {
             let storage = [10, 20]
-            let append = Append<Int, Int, Span<Int>, Never> { _, _ in storage.span }
+            let append = Append<Int, Int, Range<Int>, Never> { first, last in
+                (first - 1)..<last
+            }
             let number = Parser<Int, Int, Never> { input in
                 input += 1
                 return input
             }
             let parser = append.parser(number, number)
             var input = 0
-            let result = parser.parse(&input)
+            let extent = parser.parse(&input)
+            let result = storage.span.extracting(extent)
             #expect(result[0] == 10)
             #expect(result[1] == 20)
             #expect(input == 2)

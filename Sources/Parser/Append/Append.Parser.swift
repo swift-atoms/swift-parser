@@ -7,7 +7,7 @@
     where
         Accumulated: ~Copyable & Escapable,
         Next: ~Copyable & Escapable,
-        Output: ~Copyable & ~Escapable
+        Output: ~Copyable & Escapable
     {
 
         public typealias AppendFailure = Failure
@@ -54,7 +54,6 @@
             }
 
             @inlinable
-            @_lifetime(borrow self)
             public borrowing func parse(_ input: inout Input) throws(ParseFailure) -> Output {
                 let head: Accumulated
                 do throws(A.Failure) {
@@ -131,7 +130,7 @@
     where
         Accumulated: ~Copyable & Escapable,
         Next: ~Copyable & Escapable,
-        Output: ~Copyable & ~Escapable,
+        Output: ~Copyable & Escapable,
         A: Parsing<A.Input, A.Output, A.Failure> & Copyable,
         N: Parsing<N.Input, N.Output, N.Failure> & Copyable,
         A.Input: ~Copyable & ~Escapable,
