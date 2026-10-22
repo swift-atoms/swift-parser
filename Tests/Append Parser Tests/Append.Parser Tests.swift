@@ -102,22 +102,16 @@
         }
 
         @Test
-        func `final output can borrow from the stored append operation`() throws(
-            Either<Either<Never, Never>, Never>
-        ) {
+        func `final output can borrow from the stored append operation`() {
             let storage = [10, 20]
             let append = Append<Int, Int, Span<Int>, Never> { _, _ in storage.span }
             let number = Parser<Int, Int, Never> { input in
                 input += 1
                 return input
             }
-            let parser:
-                Append<Int, Int, Span<Int>, Never>.Parser<
-                    Parser<Int, Int, Never>, Parser<Int, Int, Never>,
-                    Either<Either<Never, Never>, Never>
-                > = append.parser(number, number)
+            let parser = append.parser(number, number)
             var input = 0
-            let result = try parser.parse(&input)
+            let result: Span<Int> = parser.parse(&input)
             #expect(result[0] == 10)
             #expect(result[1] == 20)
             #expect(input == 2)
