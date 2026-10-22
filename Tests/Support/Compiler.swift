@@ -57,8 +57,9 @@ extension Compiler {
             process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
             let launcher = ["swiftc"]
         #elseif os(Windows)
-            process.executableURL = URL(fileURLWithPath: "swiftc.exe")
-            let launcher: [String] = []
+            let command = try #require(ProcessInfo.processInfo.environment["ComSpec"])
+            process.executableURL = URL(fileURLWithPath: command)
+            let launcher = ["/d", "/c", "swiftc"]
         #else
             process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
             let launcher = ["swiftc"]
