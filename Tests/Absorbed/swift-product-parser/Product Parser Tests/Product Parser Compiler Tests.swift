@@ -38,12 +38,12 @@
             #elseif os(Windows)
                 let environment = ProcessInfo.processInfo.environment
                 let path = try #require(environment["PATH"] ?? environment["Path"])
-                process.executableURL = try #require(
+                let compiler =
                     path.split(separator: ";")
-                        .lazy
-                        .map { URL(fileURLWithPath: String($0)).appendingPathComponent("swiftc.exe") }
-                        .first { FileManager.default.fileExists(atPath: $0.path) }
-                )
+                    .lazy
+                    .map { URL(fileURLWithPath: String($0)).appendingPathComponent("swiftc.exe") }
+                    .first { FileManager.default.fileExists(atPath: $0.path) }
+                process.executableURL = try #require(compiler)
                 let launcher: [String] = []
             #else
                 process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
