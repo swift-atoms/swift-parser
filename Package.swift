@@ -173,41 +173,32 @@ let package = Package(
             name: "Parser",
             dependencies: [
                 .target(name: "Parser Core"),
-                .product(name: "Tagged", package: "swift-tagged", condition: .when(traits: ["Tagged"])),
-                .product(name: "Checkpoint", package: "swift-checkpoint", condition: .when(traits: ["Choice", "Repetition"])),
-                .product(name: "Repetition", package: "swift-repetition", condition: .when(traits: ["Collection", "Iterator", "Predicate", "Repetition"])),
-                .product(name: "Cardinal", package: "swift-cardinal", condition: .when(traits: ["Collection", "Iterator", "Predicate", "Repetition"])),
-                .product(name: "Append", package: "swift-append", condition: .when(traits: ["Append"])),
-                .product(
-                    name: "Either",
-                    package: "swift-either",
-                    condition: .when(traits: [
-                        "Append", "CollectionLeaves", "Either", "FlatMap", "Iterator", "IteratorLeaves", "Lazy", "Map", "Optic", "Pair", "Predicate", "Product", "Repetition", "Search", "Skip",
-                    ])
-                ),
-                .product(name: "Pair", package: "swift-pair", condition: .when(traits: ["Pair"])),
-                .product(name: "Skip", package: "swift-skip", condition: .when(traits: ["Skip"])),
-                .product(name: "Always", package: "swift-always", condition: .when(traits: ["Always"])),
-                .product(name: "FlatMap", package: "swift-flatmap", condition: .when(traits: ["FlatMap"])),
-                .product(name: "Lazy", package: "swift-lazy", condition: .when(traits: ["Lazy"])),
-                .product(name: "Map", package: "swift-map", condition: .when(traits: ["Map"])),
-                .product(name: "Optic", package: "swift-optic", condition: .when(traits: ["Optic"])),
-                .product(name: "Predicate", package: "swift-predicate", condition: .when(traits: ["Collection", "Either", "Iterator", "Predicate", "Repetition"])),
-                .product(name: "Search", package: "swift-search", condition: .when(traits: ["Collection", "Either", "Iterator", "Search"])),
-                .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Either", "Iterator", "IteratorLeaves", "Predicate", "Repetition", "Search"])),
-                .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["Collection", "CollectionLeaves", "Predicate", "Repetition", "Search"])),
-                .product(name: "Product", package: "swift-product", condition: .when(traits: ["Product"])),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Repetition", package: "swift-repetition"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Append", package: "swift-append"), .product(name: "Either", package: "swift-either"),
+                .product(name: "Pair", package: "swift-pair"),
+                .product(name: "Skip", package: "swift-skip"),
+                .product(name: "Always", package: "swift-always"),
+                .product(name: "FlatMap", package: "swift-flatmap"),
+                .product(name: "Lazy", package: "swift-lazy"),
+                .product(name: "Map", package: "swift-map"),
+                .product(name: "Optic", package: "swift-optic"),
+                .product(name: "Predicate", package: "swift-predicate"),
+                .product(name: "Search", package: "swift-search"), .product(name: "Iterator", package: "swift-iterator"), .product(name: "Collection", package: "swift-collection"),
+                .product(name: "Product", package: "swift-product"),
             ]
         ),
         .target(
             name: "Parser Test Support",
             dependencies: [
                 .target(name: "Parser"),
-                .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["Collection", "Iterator", "Repetition"])),
-                .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Collection", "Iterator", "Repetition"])),
-                .product(name: "Index", package: "swift-index", condition: .when(traits: ["Collection", "Iterator", "Repetition"])),
-                .product(name: "Ordinal", package: "swift-ordinal", condition: .when(traits: ["Collection", "Iterator", "Repetition"])),
-                .product(name: "Tagged", package: "swift-tagged", condition: .when(traits: ["Collection", "Iterator", "Repetition"])),
+                .product(name: "Collection", package: "swift-collection"),
+                .product(name: "Iterator", package: "swift-iterator"),
+                .product(name: "Index", package: "swift-index"),
+                .product(name: "Ordinal", package: "swift-ordinal"),
+                .product(name: "Tagged", package: "swift-tagged"),
             ],
             path: "Tests/Support",
             resources: [.copy("Fixtures")]
@@ -330,11 +321,8 @@ let package = Package(
         .target(
             name: "Collection Parser Test Support",
             dependencies: [
-                .product(name: "Collection", package: "swift-collection", condition: .when(traits: ["CollectionLeaves"])),
-                .product(name: "Index", package: "swift-index", condition: .when(traits: ["CollectionLeaves"])),
-                .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["CollectionLeaves"])),
-                .product(name: "Ordinal", package: "swift-ordinal", condition: .when(traits: ["CollectionLeaves"])), .target(name: "Parser"),
-                .product(name: "Tagged", package: "swift-tagged", condition: .when(traits: ["CollectionLeaves"])),
+                .product(name: "Collection", package: "swift-collection"), .product(name: "Index", package: "swift-index"), .product(name: "Iterator", package: "swift-iterator"),
+                .product(name: "Ordinal", package: "swift-ordinal"), .target(name: "Parser"), .product(name: "Tagged", package: "swift-tagged"),
             ],
             path: "Tests/Absorbed/swift-collection-parser/Support"
         ),
@@ -380,13 +368,7 @@ let package = Package(
             ],
             path: "Tests/Approved Cursor Parsing/Cursor Parser Invariant Tests"
         ),
-        .target(
-            name: "Cursor Parser Test Support",
-            dependencies: [
-                .target(name: "Parser"), .product(name: "Cursor", package: "swift-cursor", condition: .when(traits: ["Always", "Choice", "Either", "FlatMap", "IteratorLeaves", "Map", "Repetition"])),
-            ],
-            path: "Tests/Approved Cursor Parsing/Support"
-        ),
+        .target(name: "Cursor Parser Test Support", dependencies: [.target(name: "Parser"), .product(name: "Cursor", package: "swift-cursor")], path: "Tests/Approved Cursor Parsing/Support"),
         .testTarget(
             name: "Approved Cursor Parser Optionally Tests",
             dependencies: [
