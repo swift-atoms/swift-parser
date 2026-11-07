@@ -4,52 +4,56 @@
     import Either
     import Testing
 
-    @Suite
-    struct `Parser builder blocks infer input and preserve body output and failure` {
+enum `Parser Builder Tests` {}
 
-        @Test
-        func `a block accepts twelve elements`() throws(any Swift::Error) {
-            var input: Substring = "abcdefghijkZ"
+extension `Parser Builder Tests` {
+        @Suite
+        struct `Parser builder blocks infer input and preserve body output and failure` {
 
-            let output = try Parser::Parser {
-                Ignore("a")
-                Ignore("b")
-                Ignore("c")
-                Ignore("d")
-                Ignore("e")
-                Ignore("f")
-                Ignore("g")
-                Ignore("h")
-                Ignore("i")
-                Ignore("j")
-                Ignore("k")
-                Literal("Z")
+            @Test
+            func `a block accepts twelve elements`() throws(any Swift::Error) {
+                var input: Substring = "abcdefghijkZ"
+
+                let output = try Parser::Parser {
+                    Ignore("a")
+                    Ignore("b")
+                    Ignore("c")
+                    Ignore("d")
+                    Ignore("e")
+                    Ignore("f")
+                    Ignore("g")
+                    Ignore("h")
+                    Ignore("i")
+                    Ignore("j")
+                    Ignore("k")
+                    Literal("Z")
+                }
+                .parse(&input)
+
+                #expect(output == "Z")
+                #expect(input.isEmpty)
             }
-            .parse(&input)
 
-            #expect(output == "Z")
-            #expect(input.isEmpty)
-        }
-
-        @Test
-        func `a block infers its input from the elements`() throws(any Swift::Error) {
-            var input: Substring = "aZ"
-            let sequence = Parser::Parser {
-                Ignore("a")
-                Literal("Z")
+            @Test
+            func `a block infers its input from the elements`() throws(any Swift::Error) {
+                var input: Substring = "aZ"
+                let sequence = Parser::Parser {
+                    Ignore("a")
+                    Literal("Z")
+                }
+                #expect(try sequence.parse(&input) == "Z")
             }
-            #expect(try sequence.parse(&input) == "Z")
-        }
 
-        @Test
-        func `a block's failure is its body's failure`() {
-            let sequence = Parser::Parser {
-                Ignore("a")
-                Literal("Z")
+            @Test
+            func `a block's failure is its body's failure`() {
+                let sequence = Parser::Parser {
+                    Ignore("a")
+                    Literal("Z")
+                }
+                requireFailure(sequence, Mismatch.self)
             }
-            requireFailure(sequence, Mismatch.self)
         }
-    }
+}
 
     private func requireFailure<P: Parsing, Failure: Swift::Error>(
         _: borrowing P,
@@ -89,19 +93,21 @@
         }
     }
 
-    @Suite
-    struct `Parser builder blocks nest within bodies over nonescapable cursors` {
+extension `Parser Builder Tests` {
+        @Suite
+        struct `Parser builder blocks nest within bodies over nonescapable cursors` {
 
-        @Test
-        func `a block nests inside a body over a nonescapable cursor`() throws(any Swift::Error) {
-            let bytes: [UInt8] = [0x28, 7, 0x29, 0x2E]
-            var cursor = Cursor(bytes.span)
-            let value = try Sentence().parse(&cursor)
-            let end = cursor.index
-            #expect(value == 7)
-            #expect(end == 4)
+            @Test
+            func `a block nests inside a body over a nonescapable cursor`() throws(any Swift::Error) {
+                let bytes: [UInt8] = [0x28, 7, 0x29, 0x2E]
+                var cursor = Cursor(bytes.span)
+                let value = try Sentence().parse(&cursor)
+                let end = cursor.index
+                #expect(value == 7)
+                #expect(end == 4)
+            }
         }
-    }
+}
 
     private struct Sentence: Parsing {
         typealias Failure = ByteMismatch

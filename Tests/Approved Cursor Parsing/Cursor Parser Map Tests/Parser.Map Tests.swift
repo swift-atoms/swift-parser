@@ -5,13 +5,17 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `Map.Parser.Transform` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Map Tests` {}
 
-    extension `Map.Parser.Transform`.Unit {
+extension `Parser.Map Tests` {
+        @Suite
+        struct `Map.Parser.Transform` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Map Tests`.`Map.Parser.Transform`.Unit {
         @Test
         func `transforms output of upstream parser`() throws(any Swift::Error) {
             let parser = Parser::First.Element<ArraySlice<UInt8>>()
@@ -35,7 +39,7 @@
         }
     }
 
-    extension `Map.Parser.Transform`.`Edge Case` {
+    extension `Parser.Map Tests`.`Map.Parser.Transform`.`Edge Case` {
         @Test
         func `upstream failure propagates through map`() {
             let parser = Parser::First.Element<ArraySlice<UInt8>>()

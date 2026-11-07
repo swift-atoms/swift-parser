@@ -7,16 +7,27 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `Parser.Invariant` {
+enum `Parser.Invariant Tests` {}
+
+extension `Parser.Invariant Tests` {
+        @Suite
+        struct `Parser.Invariant` {
+        }
+}
+
+    extension `Parser.Invariant Tests`.`Parser.Invariant` {
         @Suite struct `Input Position` {}
+
         @Suite struct Algebra {}
+
         @Suite struct `Error Propagation` {}
+
         @Suite struct `Checkpoint Restore` {}
+
         @Suite struct Boundary {}
     }
 
-    extension `Parser.Invariant`.`Input Position` {
+    extension `Parser.Invariant Tests`.`Parser.Invariant`.`Input Position` {
         @Test
         func `Always does not advance input`() throws {
             let parser = Always<Int>.Parser<ArraySlice<UInt8>>(99)
@@ -144,7 +155,7 @@
         }
     }
 
-    extension `Parser.Invariant`.Algebra {
+    extension `Parser.Invariant Tests`.`Parser.Invariant`.Algebra {
         @Test
         func `map identity law`() throws(any Swift::Error) {
             let base = Parser::First.Element<ArraySlice<UInt8>>()
@@ -213,7 +224,7 @@
         }
     }
 
-    extension `Parser.Invariant`.`Error Propagation` {
+    extension `Parser.Invariant Tests`.`Parser.Invariant`.`Error Propagation` {
         @Test
         func `FlatMap tags upstream error as left`() throws {
             let parser = Parser::First.Element<ArraySlice<UInt8>>()
@@ -272,7 +283,7 @@
         }
     }
 
-    extension `Parser.Invariant`.`Checkpoint Restore` {
+    extension `Parser.Invariant Tests`.`Parser.Invariant`.`Checkpoint Restore` {
         @Test
         func `OneOf.Two restores position on first-branch failure`() throws(any Swift::Error) {
             let parser = Parser::OneOf.Two(
@@ -326,7 +337,7 @@
         }
     }
 
-    extension `Parser.Invariant`.Boundary {
+    extension `Parser.Invariant Tests`.`Parser.Invariant`.Boundary {
         @Test
         func `empty input - First.Element fails`() throws {
             let parser = Parser::First.Element<ArraySlice<UInt8>>()
@@ -399,7 +410,7 @@
 
     private enum ClassifiedFailure: Swift::Error, Equatable { case mismatch, committed }
 
-    extension `Parser.Invariant`.Boundary {
+    extension `Parser.Invariant Tests`.`Parser.Invariant`.Boundary {
         @Test func zeroMaximumDoesNotAttemptElementOrSeparator() throws {
             let element = Parser::Parser<ArraySlice<UInt8>, UInt8, ClassifiedFailure> { _ throws(ClassifiedFailure) in
                 Issue.record("maximum zero must not execute the element")

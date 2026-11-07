@@ -112,173 +112,179 @@
         _: borrowing Pair<A, N>.Parser<F>
     ) where A.Input == N.Input, A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable, A.Output: ~Copyable & Escapable, N.Output: ~Copyable & Escapable {}
 
-    @Suite
-    struct `Parser sequences preserve noncopyable owners across tuple and Pair composition` {
-        @Test
-        func `fresh owners retain flat tuple append and skipped marker semantics`() throws {
-            let life = Lifetime()
-            let p = build {
-                Value(id: 1, life: life)
-                Marker(id: 2, life: life)
-                Value(id: 3, life: life)
-                Marker(id: 4, life: life)
-            }
-            requireSkip(p)
-            requireAppend(p.accumulated)
-            var input = 0
-            let first = try p.parse(&input)
-            let second = try p.parse(&input)
-            #expect(first == (1, 3))
-            #expect(second == (5, 7))
-            #expect(input == 8)
-            #expect(life.owners.isEmpty)
-            discard(p)
-            #expect(life.owners.sorted() == [1, 2, 3, 4])
-        }
-        @Test
-        func `fresh token owners retain left nested Pair results and shared failure`() throws {
-            let life = Lifetime()
-            let p = build {
-                TokenParser(id: 1, life: life)
-                TokenParser(id: 2, life: life)
-                TokenParser(id: 3, life: life)
-            }
-            requirePair(p)
-            var input = 0
-            let first = try p.parse(&input)
-            #expect(first.first.first.value == 1)
-            #expect(first.first.second.value == 2)
-            #expect(first.second.value == 3)
-            discard(first)
-            let second = try p.parse(&input)
-            #expect(second.first.first.value == 4)
-            #expect(second.first.second.value == 5)
-            #expect(second.second.value == 6)
-            discard(second)
-            #expect(life.values.sorted() == [1, 2, 3, 4, 5, 6])
-            #expect(life.owners.isEmpty)
-            discard(p)
-            #expect(life.owners.sorted() == [1, 2, 3])
-        }
-        @Test(arguments: [1, 2, 3])
-        func `tuple failures preserve nested branches and exact consumption`(_ failed: Int) {
-            let life = Lifetime()
-            let p = build {
-                Value(id: 1, life: life, fail: failed == 1)
-                Marker(id: 2, life: life, fail: failed == 2)
-                Value(id: 3, life: life, fail: failed == 3)
-            }
-            var input = 0
-            do {
-                _ = try p.parse(&input)
-                Issue.record("expected failure")
-            } catch {
-                switch (failed, error) {
-                case (1, .left(.left(.rejected(1)))): break
-                case (2, .left(.right(.rejected(2)))): break
-                case (3, .right(.rejected(3))): break
-                default: Issue.record("wrong failure branch")
-                }
-            }
-            #expect(input == failed)
-            #expect(life.owners.isEmpty)
-            discard(p)
-            #expect(life.owners.sorted() == [1, 2, 3])
-        }
-        @Test(arguments: [1, 2, 3])
-        func `Pair failures destroy prior results and retain owners`(_ failed: Int) {
-            let life = Lifetime()
-            let p = build {
-                TokenParser(id: 1, life: life, fail: failed == 1)
-                OtherTokenParser(id: 2, life: life, fail: failed == 2)
-                TokenParser(id: 3, life: life, fail: failed == 3)
-            }
-            var input = 0
-            do {
-                let output = try p.parse(&input)
-                discard(output)
-                Issue.record("expected failure")
-            } catch {
-                switch (failed, error) {
-                case (1, .left(.left(.rejected(1)))): break
-                case (2, .left(.right(.rejected(2)))): break
-                case (3, .right(.rejected(3))): break
-                default: Issue.record("wrong failure branch")
-                }
-            }
-            #expect(input == failed)
-            #expect(life.values.sorted() == Array(1..<failed))
-            #expect(life.owners.isEmpty)
-            discard(p)
-            #expect(life.owners.sorted() == [1, 2, 3])
-        }
-        @Test
-        func `copyable owners preserve checked Copyable sequences with tuple and Pair outputs`() {
-            let tuple = build {
-                CopyValue()
-                CopyMarker()
-                CopyValue()
-            }
-            requireCopyable(tuple)
-            requireAppend(tuple)
-            let tupleCopy = tuple
-            var input = 0
-            #expect(tuple.parse(&input) == (1, 3))
-            #expect(tupleCopy.parse(&input) == (4, 6))
-            let life = Lifetime()
-            let pair = build {
-                CopyTokenParser(life: life)
-                CopyTokenParser(life: life)
-            }
-            requireCopyable(pair)
-            requirePair(pair)
-            let pairCopy = pair
-            discard(pair.parse(&input))
-            discard(pairCopy.parse(&input))
-            #expect(life.values.sorted() == [7, 8, 9, 10])
-        }
-        @Test
-        func `a noncopyable result followed by Void keeps the existing Pair shape`() throws {
-            let life = Lifetime()
-            let p = build {
-                TokenParser(id: 1, life: life)
-                Marker(id: 2, life: life)
-            }
-            requirePair(p)
-            var input = 0
-            let result = try p.parse(&input)
-            #expect(result.first.value == 1)
-            #expect(input == 2)
-            discard(result)
-            discard(p)
-            #expect(life.values == [1])
-            #expect(life.owners.sorted() == [1, 2])
-        }
-    }
+enum `Pair Parser Owner Tests` {}
 
-    @Suite
-    struct `Pair parsers consume both stored owners` {
-        @Test
-        func `consuming a Pair transfers both owners and preserves a shared failure`() throws {
-            let life = Lifetime()
-            let owners = Pair(TokenParser(id: 1, life: life), TokenParser(id: 2, life: life, fail: true))
-            let p = owners.parser()
-            var input = 0
-            do {
-                let result = try p.parse(&input)
-                discard(result)
-                Issue.record("expected failure")
-            } catch {
-                let failure: Value.Error = error
-                #expect(failure == .rejected(2))
+extension `Pair Parser Owner Tests` {
+        @Suite
+        struct `Parser sequences preserve noncopyable owners across tuple and Pair composition` {
+            @Test
+            func `fresh owners retain flat tuple append and skipped marker semantics`() throws {
+                let life = Lifetime()
+                let p = build {
+                    Value(id: 1, life: life)
+                    Marker(id: 2, life: life)
+                    Value(id: 3, life: life)
+                    Marker(id: 4, life: life)
+                }
+                requireSkip(p)
+                requireAppend(p.accumulated)
+                var input = 0
+                let first = try p.parse(&input)
+                let second = try p.parse(&input)
+                #expect(first == (1, 3))
+                #expect(second == (5, 7))
+                #expect(input == 8)
+                #expect(life.owners.isEmpty)
+                discard(p)
+                #expect(life.owners.sorted() == [1, 2, 3, 4])
             }
-            #expect(input == 2)
-            #expect(life.values == [1])
-            #expect(life.owners.isEmpty)
-            discard(p)
-            #expect(life.owners.sorted() == [1, 2])
+            @Test
+            func `fresh token owners retain left nested Pair results and shared failure`() throws {
+                let life = Lifetime()
+                let p = build {
+                    TokenParser(id: 1, life: life)
+                    TokenParser(id: 2, life: life)
+                    TokenParser(id: 3, life: life)
+                }
+                requirePair(p)
+                var input = 0
+                let first = try p.parse(&input)
+                #expect(first.first.first.value == 1)
+                #expect(first.first.second.value == 2)
+                #expect(first.second.value == 3)
+                discard(first)
+                let second = try p.parse(&input)
+                #expect(second.first.first.value == 4)
+                #expect(second.first.second.value == 5)
+                #expect(second.second.value == 6)
+                discard(second)
+                #expect(life.values.sorted() == [1, 2, 3, 4, 5, 6])
+                #expect(life.owners.isEmpty)
+                discard(p)
+                #expect(life.owners.sorted() == [1, 2, 3])
+            }
+            @Test(arguments: [1, 2, 3])
+            func `tuple failures preserve nested branches and exact consumption`(_ failed: Int) {
+                let life = Lifetime()
+                let p = build {
+                    Value(id: 1, life: life, fail: failed == 1)
+                    Marker(id: 2, life: life, fail: failed == 2)
+                    Value(id: 3, life: life, fail: failed == 3)
+                }
+                var input = 0
+                do {
+                    _ = try p.parse(&input)
+                    Issue.record("expected failure")
+                } catch {
+                    switch (failed, error) {
+                    case (1, .left(.left(.rejected(1)))): break
+                    case (2, .left(.right(.rejected(2)))): break
+                    case (3, .right(.rejected(3))): break
+                    default: Issue.record("wrong failure branch")
+                    }
+                }
+                #expect(input == failed)
+                #expect(life.owners.isEmpty)
+                discard(p)
+                #expect(life.owners.sorted() == [1, 2, 3])
+            }
+            @Test(arguments: [1, 2, 3])
+            func `Pair failures destroy prior results and retain owners`(_ failed: Int) {
+                let life = Lifetime()
+                let p = build {
+                    TokenParser(id: 1, life: life, fail: failed == 1)
+                    OtherTokenParser(id: 2, life: life, fail: failed == 2)
+                    TokenParser(id: 3, life: life, fail: failed == 3)
+                }
+                var input = 0
+                do {
+                    let output = try p.parse(&input)
+                    discard(output)
+                    Issue.record("expected failure")
+                } catch {
+                    switch (failed, error) {
+                    case (1, .left(.left(.rejected(1)))): break
+                    case (2, .left(.right(.rejected(2)))): break
+                    case (3, .right(.rejected(3))): break
+                    default: Issue.record("wrong failure branch")
+                    }
+                }
+                #expect(input == failed)
+                #expect(life.values.sorted() == Array(1..<failed))
+                #expect(life.owners.isEmpty)
+                discard(p)
+                #expect(life.owners.sorted() == [1, 2, 3])
+            }
+            @Test
+            func `copyable owners preserve checked Copyable sequences with tuple and Pair outputs`() {
+                let tuple = build {
+                    CopyValue()
+                    CopyMarker()
+                    CopyValue()
+                }
+                requireCopyable(tuple)
+                requireAppend(tuple)
+                let tupleCopy = tuple
+                var input = 0
+                #expect(tuple.parse(&input) == (1, 3))
+                #expect(tupleCopy.parse(&input) == (4, 6))
+                let life = Lifetime()
+                let pair = build {
+                    CopyTokenParser(life: life)
+                    CopyTokenParser(life: life)
+                }
+                requireCopyable(pair)
+                requirePair(pair)
+                let pairCopy = pair
+                discard(pair.parse(&input))
+                discard(pairCopy.parse(&input))
+                #expect(life.values.sorted() == [7, 8, 9, 10])
+            }
+            @Test
+            func `a noncopyable result followed by Void keeps the existing Pair shape`() throws {
+                let life = Lifetime()
+                let p = build {
+                    TokenParser(id: 1, life: life)
+                    Marker(id: 2, life: life)
+                }
+                requirePair(p)
+                var input = 0
+                let result = try p.parse(&input)
+                #expect(result.first.value == 1)
+                #expect(input == 2)
+                discard(result)
+                discard(p)
+                #expect(life.values == [1])
+                #expect(life.owners.sorted() == [1, 2])
+            }
         }
-    }
+}
+
+extension `Pair Parser Owner Tests` {
+        @Suite
+        struct `Pair parsers consume both stored owners` {
+            @Test
+            func `consuming a Pair transfers both owners and preserves a shared failure`() throws {
+                let life = Lifetime()
+                let owners = Pair(TokenParser(id: 1, life: life), TokenParser(id: 2, life: life, fail: true))
+                let p = owners.parser()
+                var input = 0
+                do {
+                    let result = try p.parse(&input)
+                    discard(result)
+                    Issue.record("expected failure")
+                } catch {
+                    let failure: Value.Error = error
+                    #expect(failure == .rejected(2))
+                }
+                #expect(input == 2)
+                #expect(life.values == [1])
+                #expect(life.owners.isEmpty)
+                discard(p)
+                #expect(life.owners.sorted() == [1, 2])
+            }
+        }
+}
 
     private func build<P: Parsing & ~Copyable>(
         @Parser::Builder<Int> _ make: () -> P

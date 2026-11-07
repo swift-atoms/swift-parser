@@ -5,13 +5,17 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `Parser::OneOf.Two` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.OneOf.Two Tests` {}
 
-    extension `Parser::OneOf.Two`.Unit {
+extension `Parser.OneOf.Two Tests` {
+        @Suite
+        struct `Parser::OneOf.Two` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.OneOf.Two Tests`.`Parser::OneOf.Two`.Unit {
         @Test
         func `returns first parser result when it succeeds`() throws(any Swift::Error) {
             let parser = Parser::OneOf.Two(
@@ -43,7 +47,7 @@
         }
     }
 
-    extension `Parser::OneOf.Two`.`Edge Case` {
+    extension `Parser.OneOf.Two Tests`.`Parser::OneOf.Two`.`Edge Case` {
         @Test
         func `fails when both alternatives fail`() {
             let parser = Parser::OneOf.Two(

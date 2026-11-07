@@ -1,20 +1,24 @@
 import Parser
 import Testing
 
-@Suite
-struct `Builder preserves the concrete parser expression` {
-    @Test
-    func `an explicit builder returns the original concrete operation`() {
-        let parser: Count = count()
-        var input: Substring = "swift"
+enum `Builder Tests` {}
 
-        #expect(parser.parse(&input) == 5)
-        #expect(input == "swift")
-    }
+extension `Builder Tests` {
+    @Suite
+    struct `Builder preserves the concrete parser expression` {
+        @Test
+        func `an explicit builder returns the original concrete operation`() {
+            let parser: Count = count()
+            var input: Substring = "swift"
 
-    @Builder<Substring>
-    private func count() -> Count {
-        Count()
+            #expect(parser.parse(&input) == 5)
+            #expect(input == "swift")
+        }
+
+        @Builder<Substring>
+        private func count() -> Count {
+            Count()
+        }
     }
 }
 

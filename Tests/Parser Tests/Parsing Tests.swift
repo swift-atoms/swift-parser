@@ -1,31 +1,35 @@
 import Parser
 import Testing
 
-@Suite
-struct `Parsing forwards expressive bodies to their operations` {
-    @Test
-    func `a leaf implements parsing directly`() throws {
-        var input: Substring = "abc"
-        let output = try Literal("a").parse(&input)
-        #expect(output == "a")
-        #expect(input == "bc")
-    }
+enum `Parsing Tests` {}
 
-    @Test
-    func `a computed body composes through the inferred result builder`() throws {
-        var input: Substring = "abc"
-        let output = try Prefix().parse(&input)
-        #expect(output == "a")
-        #expect(input == "bc")
-    }
-
-    @Test
-    func `a computed body preserves its typed failure`() {
-        var input: Substring = "bc"
-        #expect(throws: LiteralError.expected("a")) {
-            try Prefix().parse(&input)
+extension `Parsing Tests` {
+    @Suite
+    struct `Parsing forwards expressive bodies to their operations` {
+        @Test
+        func `a leaf implements parsing directly`() throws {
+            var input: Substring = "abc"
+            let output = try Literal("a").parse(&input)
+            #expect(output == "a")
+            #expect(input == "bc")
         }
-        #expect(input == "bc")
+
+        @Test
+        func `a computed body composes through the inferred result builder`() throws {
+            var input: Substring = "abc"
+            let output = try Prefix().parse(&input)
+            #expect(output == "a")
+            #expect(input == "bc")
+        }
+
+        @Test
+        func `a computed body preserves its typed failure`() {
+            var input: Substring = "bc"
+            #expect(throws: LiteralError.expected("a")) {
+                try Prefix().parse(&input)
+            }
+            #expect(input == "bc")
+        }
     }
 }
 
@@ -59,22 +63,24 @@ extension Prefix {
     }
 }
 
-@Suite
-struct `Parser bodies preserve noncopyable stored owners` {
+extension `Parsing Tests` {
+    @Suite
+    struct `Parser bodies preserve noncopyable stored owners` {
 
-    @Test
-    func `default body forwarding borrows a stored noncopyable owner`() throws {
-        let lifetime = Lifetime()
-        let parser = BodyOwner(lifetime)
-        var input = 0
+        @Test
+        func `default body forwarding borrows a stored noncopyable owner`() throws {
+            let lifetime = Lifetime()
+            let parser = BodyOwner(lifetime)
+            var input = 0
 
-        #expect(try parser.parse(&input) == 1)
-        #expect(try parser.parse(&input) == 2)
-        #expect(lifetime.destroyed == 0)
+            #expect(try parser.parse(&input) == 1)
+            #expect(try parser.parse(&input) == 2)
+            #expect(lifetime.destroyed == 0)
 
-        discard(parser)
+            discard(parser)
 
-        #expect(lifetime.destroyed == 1)
+            #expect(lifetime.destroyed == 1)
+        }
     }
 }
 
@@ -108,7 +114,7 @@ private struct BodyOwner: ~Copyable, Parsing {
 
 private func discard<T: ~Copyable>(_ value: consuming T) {}
 
-extension `Parsing forwards expressive bodies to their operations` {
+extension `Parsing Tests`.`Parsing forwards expressive bodies to their operations` {
     @Test
     func `body inference preserves scoped noncopyable input and typed failure`() throws {
         let values = [7]

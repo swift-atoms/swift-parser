@@ -5,13 +5,17 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `Parser::Many.Separated` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Many.Separated Tests` {}
 
-    extension `Parser::Many.Separated`.Unit {
+extension `Parser.Many.Separated Tests` {
+        @Suite
+        struct `Parser::Many.Separated` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Many.Separated Tests`.`Parser::Many.Separated`.Unit {
         @Test
         func `parses comma-separated bytes`() throws(any Swift::Error) {
             let parser = Parser::Many.Separated(rejected: { _ in true }, separatorRejected: { _ in true }) {
@@ -44,7 +48,7 @@
         }
     }
 
-    extension `Parser::Many.Separated`.`Edge Case` {
+    extension `Parser.Many.Separated Tests`.`Parser::Many.Separated`.`Edge Case` {
         @Test
         func `empty input returns empty array`() throws(any Swift::Error) {
             let parser = Parser::Many.Separated(rejected: { _ in true }, separatorRejected: { _ in true }) {

@@ -4,106 +4,110 @@
     import Either
     import Testing
 
-    @Suite
-    struct `Flat map retains its upstream and creates a downstream for each call` {
-        @Test(arguments: [false, true])
-        func `both construction styles reuse a linear upstream and destroy each downstream once`(_ fluent: Bool) throws {
-            let lifetime = Lifetime()
-            let parser = makeParser(fluent: fluent, lifetime: lifetime)
-            var input = 0
+enum `FlatMap.Parser Owner Tests` {}
 
-            for expected in [3, 7] {
-                let output = try parser.parse(&input)
-                #expect(output.number == expected)
+extension `FlatMap.Parser Owner Tests` {
+        @Suite
+        struct `Flat map retains its upstream and creates a downstream for each call` {
+            @Test(arguments: [false, true])
+            func `both construction styles reuse a linear upstream and destroy each downstream once`(_ fluent: Bool) throws {
+                let lifetime = Lifetime()
+                let parser = makeParser(fluent: fluent, lifetime: lifetime)
+                var input = 0
+
+                for expected in [3, 7] {
+                    let output = try parser.parse(&input)
+                    #expect(output.number == expected)
+                    #expect(lifetime.upstreamDestroyed == 0)
+                    #expect(lifetime.downstreamCreated == lifetime.downstreamDestroyed)
+                    #expect(lifetime.seedsCreated == lifetime.seedsDestroyed)
+                    discard(output)
+                }
+
+                #expect(input == 4)
+                #expect(lifetime.downstreamCreated == 2)
+                #expect(lifetime.resultsCreated == 2 && lifetime.resultsDestroyed == 2)
+                discard(parser)
+                #expect(lifetime.upstreamDestroyed == 1)
+            }
+
+            @Test(arguments: [false, true])
+            func `upstream failure retains consumption without constructing a downstream`(_ fluent: Bool) {
+                let lifetime = Lifetime()
+                let parser = makeParser(fluent: fluent, failing: .upstream, lifetime: lifetime)
+                var input = 0
+
+                do throws(Either<Remapped, Downstream.Error>) {
+                    let output = try parser.parse(&input)
+                    discard(output)
+                    Issue.record("The upstream unexpectedly succeeded")
+                } catch {
+                    #expect(error == .left(.upstream(.rejected(1))))
+                }
+
+                #expect(input == 1)
+                #expect(lifetime.errorMaps == 1)
+                #expect(lifetime.downstreamCreated == 0)
+                #expect(lifetime.downstreamDestroyed == 0)
+                #expect(lifetime.seedsCreated == 0)
                 #expect(lifetime.upstreamDestroyed == 0)
-                #expect(lifetime.downstreamCreated == lifetime.downstreamDestroyed)
-                #expect(lifetime.seedsCreated == lifetime.seedsDestroyed)
-                discard(output)
+                discard(parser)
+                #expect(lifetime.upstreamDestroyed == 1)
             }
 
-            #expect(input == 4)
-            #expect(lifetime.downstreamCreated == 2)
-            #expect(lifetime.resultsCreated == 2 && lifetime.resultsDestroyed == 2)
-            discard(parser)
-            #expect(lifetime.upstreamDestroyed == 1)
+            @Test(arguments: [false, true])
+            func `downstream failure destroys its owner and the consumed seed while retaining the upstream`(_ fluent: Bool) {
+                let lifetime = Lifetime()
+                let parser = makeParser(fluent: fluent, failing: .downstream, lifetime: lifetime)
+                var input = 0
+
+                do throws(Either<Remapped, Downstream.Error>) {
+                    let output = try parser.parse(&input)
+                    discard(output)
+                    Issue.record("The downstream unexpectedly succeeded")
+                } catch {
+                    #expect(error == .right(.rejected(2)))
+                }
+
+                #expect(input == 2)
+                #expect(lifetime.errorMaps == 0)
+                #expect(lifetime.downstreamCreated == 1 && lifetime.downstreamDestroyed == 1)
+                #expect(lifetime.seedsCreated == 1 && lifetime.seedsDestroyed == 1)
+                #expect(lifetime.resultsCreated == 0)
+                #expect(lifetime.upstreamDestroyed == 0)
+                discard(parser)
+                #expect(lifetime.upstreamDestroyed == 1)
+            }
+
+            @Test(arguments: [false, true])
+            func `a copyable upstream makes the wrapper copyable even when downstream owners are linear`(_ fluent: Bool) throws {
+                let lifetime = Lifetime()
+                let upstream = Parser<Int, Int, Never> { input in
+                    input += 1
+                    return input
+                }
+                let transform = { (number: consuming Int) in
+                    Downstream(seed: Seed(number: number, lifetime: lifetime), fails: false, lifetime: lifetime)
+                }
+                let parser: FlatMap::FlatMap<Parser<Int, Int, Never>.Output, Downstream>.Parser<Parser<Int, Int, Never>>
+                if fluent {
+                    parser = upstream.flatMap(transform)
+                } else {
+                    parser = FlatMap::FlatMap.Parser(upstream: upstream, transform: transform)
+                }
+                requireCopyable(parser)
+                let copied = parser
+                var input = 0
+                let first = try parser.parse(&input)
+                let second = try copied.parse(&input)
+                #expect(first.number == 3 && second.number == 7)
+                #expect(lifetime.downstreamCreated == 2 && lifetime.downstreamDestroyed == 2)
+                discard(first)
+                discard(second)
+                #expect(lifetime.resultsDestroyed == 2)
+            }
         }
-
-        @Test(arguments: [false, true])
-        func `upstream failure retains consumption without constructing a downstream`(_ fluent: Bool) {
-            let lifetime = Lifetime()
-            let parser = makeParser(fluent: fluent, failing: .upstream, lifetime: lifetime)
-            var input = 0
-
-            do throws(Either<Remapped, Downstream.Error>) {
-                let output = try parser.parse(&input)
-                discard(output)
-                Issue.record("The upstream unexpectedly succeeded")
-            } catch {
-                #expect(error == .left(.upstream(.rejected(1))))
-            }
-
-            #expect(input == 1)
-            #expect(lifetime.errorMaps == 1)
-            #expect(lifetime.downstreamCreated == 0)
-            #expect(lifetime.downstreamDestroyed == 0)
-            #expect(lifetime.seedsCreated == 0)
-            #expect(lifetime.upstreamDestroyed == 0)
-            discard(parser)
-            #expect(lifetime.upstreamDestroyed == 1)
-        }
-
-        @Test(arguments: [false, true])
-        func `downstream failure destroys its owner and the consumed seed while retaining the upstream`(_ fluent: Bool) {
-            let lifetime = Lifetime()
-            let parser = makeParser(fluent: fluent, failing: .downstream, lifetime: lifetime)
-            var input = 0
-
-            do throws(Either<Remapped, Downstream.Error>) {
-                let output = try parser.parse(&input)
-                discard(output)
-                Issue.record("The downstream unexpectedly succeeded")
-            } catch {
-                #expect(error == .right(.rejected(2)))
-            }
-
-            #expect(input == 2)
-            #expect(lifetime.errorMaps == 0)
-            #expect(lifetime.downstreamCreated == 1 && lifetime.downstreamDestroyed == 1)
-            #expect(lifetime.seedsCreated == 1 && lifetime.seedsDestroyed == 1)
-            #expect(lifetime.resultsCreated == 0)
-            #expect(lifetime.upstreamDestroyed == 0)
-            discard(parser)
-            #expect(lifetime.upstreamDestroyed == 1)
-        }
-
-        @Test(arguments: [false, true])
-        func `a copyable upstream makes the wrapper copyable even when downstream owners are linear`(_ fluent: Bool) throws {
-            let lifetime = Lifetime()
-            let upstream = Parser<Int, Int, Never> { input in
-                input += 1
-                return input
-            }
-            let transform = { (number: consuming Int) in
-                Downstream(seed: Seed(number: number, lifetime: lifetime), fails: false, lifetime: lifetime)
-            }
-            let parser: FlatMap::FlatMap<Parser<Int, Int, Never>.Output, Downstream>.Parser<Parser<Int, Int, Never>>
-            if fluent {
-                parser = upstream.flatMap(transform)
-            } else {
-                parser = FlatMap::FlatMap.Parser(upstream: upstream, transform: transform)
-            }
-            requireCopyable(parser)
-            let copied = parser
-            var input = 0
-            let first = try parser.parse(&input)
-            let second = try copied.parse(&input)
-            #expect(first.number == 3 && second.number == 7)
-            #expect(lifetime.downstreamCreated == 2 && lifetime.downstreamDestroyed == 2)
-            discard(first)
-            discard(second)
-            #expect(lifetime.resultsDestroyed == 2)
-        }
-    }
+}
 
     private func makeParser(
         fluent: Bool,

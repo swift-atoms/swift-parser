@@ -123,223 +123,227 @@
         )
     }
 
-    @Suite
-    struct `Optic Parser` {
+enum `Optic Parser Tests` {}
 
-        @Test
-        func `Adapter with two total stages remains exactly nonthrowing`() {
-            let adapter = Optic<Int, String, String, Int>.Adapter(
-                forward: String.init,
-                backward: String.init
-            )
-            let parser = Succeed(output: 42).map(forward: adapter)
-            requireFailure(parser, Never.self)
+extension `Optic Parser Tests` {
+        @Suite
+        struct `Optic Parser` {
 
-            var input: Void = ()
-            #expect(parser.parse(&input) == "42")
-        }
+            @Test
+            func `Adapter with two total stages remains exactly nonthrowing`() {
+                let adapter = Optic<Int, String, String, Int>.Adapter(
+                    forward: String.init,
+                    backward: String.init
+                )
+                let parser = Succeed(output: 42).map(forward: adapter)
+                requireFailure(parser, Never.self)
 
-        @Test
-        func `Adapter ignores backward failure`() {
-            let adapter = Optic<Int, String, String, Int>.Adapter(
-                forward: String.init,
-                backward: { _ throws(BackwardFailure) in throw .unused }
-            )
-            let parser = Succeed(output: 42).map(forward: adapter)
-            requireFailure(parser, Never.self)
-
-            var input: Void = ()
-            #expect(parser.parse(&input) == "42")
-        }
-
-        @Test
-        func `Adapter preserves a fallible upstream when forward is total`() {
-            let adapter = Optic<Int, String, String, Int>.Adapter(
-                forward: String.init,
-                backward: String.init
-            )
-            let parser = Fail<Int>().map(forward: adapter)
-            requireFailure(parser, UpstreamFailure.self)
-
-            var input: Void = ()
-            #expect(throws: UpstreamFailure.upstream) {
-                try parser.parse(&input)
+                var input: Void = ()
+                #expect(parser.parse(&input) == "42")
             }
-        }
 
-        @Test
-        func `Adapter uses only forward failure for a nonthrowing upstream`() {
-            let adapter = Optic<Int, Int, String, String>.Adapter(
-                forward: { value throws(TransformFailure) in throw .transform(value) },
-                backward: { Int($0) ?? 0 }
-            )
-            let parser = Succeed(output: 42).map(forward: adapter)
-            requireFailure(parser, TransformFailure.self)
+            @Test
+            func `Adapter ignores backward failure`() {
+                let adapter = Optic<Int, String, String, Int>.Adapter(
+                    forward: String.init,
+                    backward: { _ throws(BackwardFailure) in throw .unused }
+                )
+                let parser = Succeed(output: 42).map(forward: adapter)
+                requireFailure(parser, Never.self)
 
-            var input: Void = ()
-            #expect(throws: TransformFailure.transform(42)) {
-                try parser.parse(&input)
+                var input: Void = ()
+                #expect(parser.parse(&input) == "42")
             }
-        }
 
-        @Test
-        func `Adapter combines two fallible stages with Either`() {
-            let adapter = Optic<Int, Int, String, String>.Adapter(
-                forward: { value throws(TransformFailure) in throw .transform(value) },
-                backward: { Int($0) ?? 0 }
-            )
-            let parser = Fail<Int>().map(forward: adapter)
-            requireFailure(parser, Either<UpstreamFailure, TransformFailure>.self)
+            @Test
+            func `Adapter preserves a fallible upstream when forward is total`() {
+                let adapter = Optic<Int, String, String, Int>.Adapter(
+                    forward: String.init,
+                    backward: String.init
+                )
+                let parser = Fail<Int>().map(forward: adapter)
+                requireFailure(parser, UpstreamFailure.self)
 
-            var input: Void = ()
-            #expect(throws: Either<UpstreamFailure, TransformFailure>.left(.upstream)) {
-                try parser.parse(&input)
+                var input: Void = ()
+                #expect(throws: UpstreamFailure.upstream) {
+                    try parser.parse(&input)
+                }
             }
-        }
 
-        @Test
-        func `Adapter forward consumes noncopyable nonescapable parser output`() {
-            let adapter = Optic<ScopedToken, Int, Int, Int>.Adapter(
-                forward: { token in token.value + 1 },
-                backward: { $0 - 1 }
-            )
-            let parser = Linear().map(forward: adapter)
-            requireFailure(parser, Never.self)
+            @Test
+            func `Adapter uses only forward failure for a nonthrowing upstream`() {
+                let adapter = Optic<Int, Int, String, String>.Adapter(
+                    forward: { value throws(TransformFailure) in throw .transform(value) },
+                    backward: { Int($0) ?? 0 }
+                )
+                let parser = Succeed(output: 42).map(forward: adapter)
+                requireFailure(parser, TransformFailure.self)
 
-            var input = 41
-            #expect(parser.parse(&input) == 42)
-        }
+                var input: Void = ()
+                #expect(throws: TransformFailure.transform(42)) {
+                    try parser.parse(&input)
+                }
+            }
 
-        @Test
-        func `Isomorphism forward adds no failure`() {
-            let parser = Succeed(output: Substring("route"))
-                .map(forward: String.isomorphisms.substring)
-            requireFailure(parser, Never.self)
+            @Test
+            func `Adapter combines two fallible stages with Either`() {
+                let adapter = Optic<Int, Int, String, String>.Adapter(
+                    forward: { value throws(TransformFailure) in throw .transform(value) },
+                    backward: { Int($0) ?? 0 }
+                )
+                let parser = Fail<Int>().map(forward: adapter)
+                requireFailure(parser, Either<UpstreamFailure, TransformFailure>.self)
 
-            var input: Void = ()
-            #expect(parser.parse(&input) == "route")
-        }
+                var input: Void = ()
+                #expect(throws: Either<UpstreamFailure, TransformFailure>.left(.upstream)) {
+                    try parser.parse(&input)
+                }
+            }
 
-        @Test
-        func `Prism lossless matching preserves unmatched target`() {
-            let parser = Succeed(output: Node.empty).map(matching: leaf)
-            requireFailure(parser, Never.self)
+            @Test
+            func `Adapter forward consumes noncopyable nonescapable parser output`() {
+                let adapter = Optic<ScopedToken, Int, Int, Int>.Adapter(
+                    forward: { token in token.value + 1 },
+                    backward: { $0 - 1 }
+                )
+                let parser = Linear().map(forward: adapter)
+                requireFailure(parser, Never.self)
 
-            var input: Void = ()
-            #expect(parser.parse(&input) == .left(.empty))
-        }
+                var input = 41
+                #expect(parser.parse(&input) == 42)
+            }
 
-        @Test
-        func `RawRepresentable Prism preserves an invalid raw value`() {
-            let parser = Succeed(output: 42).map(matching: Digit.prisms.rawValue)
-            requireFailure(parser, Never.self)
+            @Test
+            func `Isomorphism forward adds no failure`() {
+                let parser = Succeed(output: Substring("route"))
+                    .map(forward: String.isomorphisms.substring)
+                requireFailure(parser, Never.self)
 
-            var input: Void = ()
-            #expect(parser.parse(&input) == .left(42))
-        }
+                var input: Void = ()
+                #expect(parser.parse(&input) == "route")
+            }
 
-        @Test
-        func `Prism rejecting matching turns unmatched target into failure`() {
-            let parser = Succeed(output: Node.empty).map(
-                matching: leaf,
-                failure: { node -> TransformFailure in
-                    switch node {
-                    case .empty: .transform(0)
-                    case .leaf(let value): .transform(value)
+            @Test
+            func `Prism lossless matching preserves unmatched target`() {
+                let parser = Succeed(output: Node.empty).map(matching: leaf)
+                requireFailure(parser, Never.self)
+
+                var input: Void = ()
+                #expect(parser.parse(&input) == .left(.empty))
+            }
+
+            @Test
+            func `RawRepresentable Prism preserves an invalid raw value`() {
+                let parser = Succeed(output: 42).map(matching: Digit.prisms.rawValue)
+                requireFailure(parser, Never.self)
+
+                var input: Void = ()
+                #expect(parser.parse(&input) == .left(42))
+            }
+
+            @Test
+            func `Prism rejecting matching turns unmatched target into failure`() {
+                let parser = Succeed(output: Node.empty).map(
+                    matching: leaf,
+                    failure: { node -> TransformFailure in
+                        switch node {
+                        case .empty: .transform(0)
+                        case .leaf(let value): .transform(value)
+                        }
                     }
+                )
+                requireFailure(parser, TransformFailure.self)
+
+                var input: Void = ()
+                #expect(throws: TransformFailure.transform(0)) {
+                    try parser.parse(&input)
                 }
-            )
-            requireFailure(parser, TransformFailure.self)
-
-            var input: Void = ()
-            #expect(throws: TransformFailure.transform(0)) {
-                try parser.parse(&input)
             }
-        }
 
-        @Test
-        func `Prism rejecting matching consumes a noncopyable target`() {
-            let parser = UnmatchedParser().map(
-                matching: unmatched,
-                failure: { target -> TransformFailure in
-                    .transform(target.value)
+            @Test
+            func `Prism rejecting matching consumes a noncopyable target`() {
+                let parser = UnmatchedParser().map(
+                    matching: unmatched,
+                    failure: { target -> TransformFailure in
+                        .transform(target.value)
+                    }
+                )
+                requireFailure(parser, TransformFailure.self)
+
+                var input = 42
+                #expect(throws: TransformFailure.transform(42)) {
+                    try parser.parse(&input)
                 }
-            )
-            requireFailure(parser, TransformFailure.self)
-
-            var input = 42
-            #expect(throws: TransformFailure.transform(42)) {
-                try parser.parse(&input)
-            }
-        }
-
-        @Test
-        func `Prism rejecting matching combines upstream and match failures`() {
-            let parser = Fail<Node>().map(
-                matching: leaf,
-                failure: { _ in TransformFailure.transform(0) }
-            )
-            requireFailure(parser, Either<UpstreamFailure, TransformFailure>.self)
-
-            var input: Void = ()
-            #expect(throws: Either<UpstreamFailure, TransformFailure>.left(.upstream)) {
-                try parser.parse(&input)
-            }
-        }
-
-        @Test
-        func `Prism rejecting with an impossible failure preserves upstream failure`() {
-            func impossible(_ node: consuming Node) -> Never {
-                fatalError("unreachable: upstream fails before Prism matching")
             }
 
-            let parser = Fail<Node>().map(
-                matching: leaf,
-                failure: impossible
-            )
-            requireFailure(parser, UpstreamFailure.self)
+            @Test
+            func `Prism rejecting matching combines upstream and match failures`() {
+                let parser = Fail<Node>().map(
+                    matching: leaf,
+                    failure: { _ in TransformFailure.transform(0) }
+                )
+                requireFailure(parser, Either<UpstreamFailure, TransformFailure>.self)
 
-            var input: Void = ()
-            #expect(throws: UpstreamFailure.upstream) {
-                try parser.parse(&input)
-            }
-        }
-
-        @Test
-        func `Prism rejecting with two impossible failures remains exactly nonthrowing`() {
-            func impossible(_ node: consuming Node) -> Never {
-                fatalError("unreachable: the Prism matches")
+                var input: Void = ()
+                #expect(throws: Either<UpstreamFailure, TransformFailure>.left(.upstream)) {
+                    try parser.parse(&input)
+                }
             }
 
-            let parser = Succeed(output: Node.leaf(7)).map(
-                matching: leaf,
-                failure: impossible
-            )
-            requireFailure(parser, Never.self)
+            @Test
+            func `Prism rejecting with an impossible failure preserves upstream failure`() {
+                func impossible(_ node: consuming Node) -> Never {
+                    fatalError("unreachable: upstream fails before Prism matching")
+                }
 
-            var input: Void = ()
-            #expect(parser.parse(&input) == 7)
+                let parser = Fail<Node>().map(
+                    matching: leaf,
+                    failure: impossible
+                )
+                requireFailure(parser, UpstreamFailure.self)
+
+                var input: Void = ()
+                #expect(throws: UpstreamFailure.upstream) {
+                    try parser.parse(&input)
+                }
+            }
+
+            @Test
+            func `Prism rejecting with two impossible failures remains exactly nonthrowing`() {
+                func impossible(_ node: consuming Node) -> Never {
+                    fatalError("unreachable: the Prism matches")
+                }
+
+                let parser = Succeed(output: Node.leaf(7)).map(
+                    matching: leaf,
+                    failure: impossible
+                )
+                requireFailure(parser, Never.self)
+
+                var input: Void = ()
+                #expect(parser.parse(&input) == 7)
+            }
+
+            @Test
+            func `Prism embedding adds no failure`() {
+                let parser = Succeed(output: 7).map(embedding: leaf)
+                requireFailure(parser, Never.self)
+
+                var input: Void = ()
+                #expect(parser.parse(&input) == .leaf(7))
+            }
+
+            @Test
+            func `Fixed embedding does not inherit reverse mismatch`() {
+                let fixed = Optic<Int, Int, Void, Void>.Prism.fixed(42)
+                let parser = Succeed(output: ()).map(embedding: fixed)
+                requireFailure(parser, Never.self)
+
+                var input: Void = ()
+                #expect(parser.parse(&input) == 42)
+            }
         }
-
-        @Test
-        func `Prism embedding adds no failure`() {
-            let parser = Succeed(output: 7).map(embedding: leaf)
-            requireFailure(parser, Never.self)
-
-            var input: Void = ()
-            #expect(parser.parse(&input) == .leaf(7))
-        }
-
-        @Test
-        func `Fixed embedding does not inherit reverse mismatch`() {
-            let fixed = Optic<Int, Int, Void, Void>.Prism.fixed(42)
-            let parser = Succeed(output: ()).map(embedding: fixed)
-            requireFailure(parser, Never.self)
-
-            var input: Void = ()
-            #expect(parser.parse(&input) == 42)
-        }
-    }
+}
 
     private func requireFailure<P: Parsing, E: Swift.Error>(
         _ parser: borrowing P,

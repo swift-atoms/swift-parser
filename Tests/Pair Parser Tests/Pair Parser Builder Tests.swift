@@ -4,88 +4,94 @@
     import Pair
     import Testing
 
-    @Suite
-    struct `Pair Parser Builder Tests` {
+extension `Pair Parser Builder Tests`.`Pair Parser Builder Tests` {
+        @Suite
+        struct `Pair Parser Builder Tests` {
 
-        @Test
-        func `two noncopyable values pair up in order`() throws(any Swift::Error) {
-            var input: Substring = "ab"
-            let output = try Tokens().parse(&input)
-            #expect(output.first.value == "a")
-            #expect(output.second.value == "b")
-            #expect(input.isEmpty)
-        }
+            @Test
+            func `two noncopyable values pair up in order`() throws(any Swift::Error) {
+                var input: Substring = "ab"
+                let output = try Tokens().parse(&input)
+                #expect(output.first.value == "a")
+                #expect(output.second.value == "b")
+                #expect(input.isEmpty)
+            }
 
-        @Test
-        func `the first failure is the left branch`() {
-            var input: Substring = "xb"
-            #expect(throws: Either<Mismatch, Other>.left(.expected("a"))) {
-                _ = try MixedTokens().parse(&input)
+            @Test
+            func `the first failure is the left branch`() {
+                var input: Substring = "xb"
+                #expect(throws: Either<Mismatch, Other>.left(.expected("a"))) {
+                    _ = try MixedTokens().parse(&input)
+                }
+            }
+
+            @Test
+            func `the second failure is the right branch`() {
+                var input: Substring = "ax"
+                #expect(throws: Either<Mismatch, Other>.right(.expected("b"))) {
+                    _ = try MixedTokens().parse(&input)
+                }
+            }
+
+            @Test
+            func `equally typed failures collapse`() {
+                requireFailure(Tokens(), Mismatch.self)
+                requireFailure(ThreeTokens(), Mismatch.self)
+            }
+
+            @Test
+            func `noncopyable values nest to the left`() throws(any Swift::Error) {
+                var input: Substring = "abc"
+                let output = try ThreeTokens().parse(&input)
+                #expect(output.first.first.value == "a")
+                #expect(output.first.second.value == "b")
+                #expect(output.second.value == "c")
             }
         }
+}
 
-        @Test
-        func `the second failure is the right branch`() {
-            var input: Substring = "ax"
-            #expect(throws: Either<Mismatch, Other>.right(.expected("b"))) {
-                _ = try MixedTokens().parse(&input)
+extension `Pair Parser Builder Tests`.`Pair Parser Builder Tests` {
+        @Suite
+        struct `Pair Parser Builder Resolution` {
+
+            @Test
+            func `copyable values resolve to the atom's Append`() throws(any Swift::Error) {
+                let node = Builder<Substring>.buildPartialBlock(accumulated: Literal("a"), next: Literal("b"))
+                requireAppend(node)
+                var input: Substring = "ab"
+                let output = try node.parse(&input)
+                #expect(output.0 == "a")
+                #expect(output.1 == "b")
+            }
+
+            @Test
+            func `a noncopyable value resolves to Pair.Parser`() throws(any Swift::Error) {
+                let node = Builder<Substring>.buildPartialBlock(accumulated: TokenLiteral("a"), next: Literal("b"))
+                requirePair(node)
+                var input: Substring = "ab"
+                let output = try node.parse(&input)
+                #expect(output.first.value == "a")
+                #expect(output.second == "b")
             }
         }
+}
 
-        @Test
-        func `equally typed failures collapse`() {
-            requireFailure(Tokens(), Mismatch.self)
-            requireFailure(ThreeTokens(), Mismatch.self)
+extension `Pair Parser Builder Tests`.`Pair Parser Builder Tests` {
+        @Suite
+        struct `Pair Parser Nonescapable Input` {
+
+            @Test
+            func `two noncopyable values pair up from a nonescapable cursor`() throws(any Swift::Error) {
+                let bytes: [UInt8] = [3, 4]
+                var cursor = Cursor(bytes.span)
+                let pair = try TwoBytes().parse(&cursor)
+                let end = cursor.index
+                #expect(pair.first.value == 3)
+                #expect(pair.second.value == 4)
+                #expect(end == 2)
+            }
         }
-
-        @Test
-        func `noncopyable values nest to the left`() throws(any Swift::Error) {
-            var input: Substring = "abc"
-            let output = try ThreeTokens().parse(&input)
-            #expect(output.first.first.value == "a")
-            #expect(output.first.second.value == "b")
-            #expect(output.second.value == "c")
-        }
-    }
-
-    @Suite
-    struct `Pair Parser Builder Resolution` {
-
-        @Test
-        func `copyable values resolve to the atom's Append`() throws(any Swift::Error) {
-            let node = Builder<Substring>.buildPartialBlock(accumulated: Literal("a"), next: Literal("b"))
-            requireAppend(node)
-            var input: Substring = "ab"
-            let output = try node.parse(&input)
-            #expect(output.0 == "a")
-            #expect(output.1 == "b")
-        }
-
-        @Test
-        func `a noncopyable value resolves to Pair.Parser`() throws(any Swift::Error) {
-            let node = Builder<Substring>.buildPartialBlock(accumulated: TokenLiteral("a"), next: Literal("b"))
-            requirePair(node)
-            var input: Substring = "ab"
-            let output = try node.parse(&input)
-            #expect(output.first.value == "a")
-            #expect(output.second == "b")
-        }
-    }
-
-    @Suite
-    struct `Pair Parser Nonescapable Input` {
-
-        @Test
-        func `two noncopyable values pair up from a nonescapable cursor`() throws(any Swift::Error) {
-            let bytes: [UInt8] = [3, 4]
-            var cursor = Cursor(bytes.span)
-            let pair = try TwoBytes().parse(&cursor)
-            let end = cursor.index
-            #expect(pair.first.value == 3)
-            #expect(pair.second.value == 4)
-            #expect(end == 2)
-        }
-    }
+}
 
     private func requireFailure<P: Parsing, Failure: Swift::Error>(
         _: borrowing P,

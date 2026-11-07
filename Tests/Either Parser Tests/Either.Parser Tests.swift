@@ -4,45 +4,49 @@
     import Testing
     import Parser_Test_Support
 
-    @Suite
-    struct `Either Parser` {
+enum `Either.Parser Tests` {}
 
-        @Test
-        func `parses the selected left parser`() throws(any Swift.Error) {
-            var input: Substring = "abc"
+extension `Either.Parser Tests` {
+        @Suite
+        struct `Either Parser` {
 
-            let output = try branch(true).parse(&input)
+            @Test
+            func `parses the selected left parser`() throws(any Swift.Error) {
+                var input: Substring = "abc"
 
-            #expect(output == "a")
-            #expect(input == "bc")
-        }
+                let output = try branch(true).parse(&input)
 
-        @Test
-        func `parses the selected right parser`() throws(any Swift.Error) {
-            var input: Substring = "bac"
+                #expect(output == "a")
+                #expect(input == "bc")
+            }
 
-            let output = try branch(false).parse(&input)
+            @Test
+            func `parses the selected right parser`() throws(any Swift.Error) {
+                var input: Substring = "bac"
 
-            #expect(output == "b")
-            #expect(input == "ac")
-        }
+                let output = try branch(false).parse(&input)
 
-        @Test
-        func `a failing left branch reports Either left`() {
-            var input: Substring = "xbc"
-            #expect(throws: Either<LiteralError, LiteralError>.left(.expected("a"))) {
-                try branch(true).parse(&input)
+                #expect(output == "b")
+                #expect(input == "ac")
+            }
+
+            @Test
+            func `a failing left branch reports Either left`() {
+                var input: Substring = "xbc"
+                #expect(throws: Either<LiteralError, LiteralError>.left(.expected("a"))) {
+                    try branch(true).parse(&input)
+                }
+            }
+
+            @Test
+            func `a failing right branch reports Either right`() {
+                var input: Substring = "xac"
+                #expect(throws: Either<LiteralError, LiteralError>.right(.expected("b"))) {
+                    try branch(false).parse(&input)
+                }
             }
         }
-
-        @Test
-        func `a failing right branch reports Either right`() {
-            var input: Substring = "xac"
-            #expect(throws: Either<LiteralError, LiteralError>.right(.expected("b"))) {
-                try branch(false).parse(&input)
-            }
-        }
-    }
+}
 
     @Builder<Substring>
     private func branch(_ useLeft: Bool) -> Either<Literal, Literal>.Parser {
@@ -84,7 +88,7 @@
         }
     }
 
-    extension `Either Parser` {
+    extension `Either.Parser Tests`.`Either Parser` {
         @Test func `a body preserves conditional syntax`() throws {
             var input: Substring = "abc"
             #expect(try Selected(useLeft: true).parse(&input) == "a")
@@ -128,7 +132,7 @@
         }
     }
 
-    extension `Either Parser` {
+    extension `Either.Parser Tests`.`Either Parser` {
         @Test(arguments: [true, false])
         func `noncopyable branches are borrowed repeatedly and destroyed once`(_ useLeft: Bool) throws {
             let lifetime = Lifetime()
@@ -149,7 +153,7 @@
         }
     }
 
-    extension `Either Parser` {
+    extension `Either.Parser Tests`.`Either Parser` {
         @Test func `conditional scoped results survive module emission`() throws {
             let result = try Compiler.emitFixture(named: "Scoped Result.swift", in: "Either")
             #expect(result.status == 0, "\(result.diagnostic)")

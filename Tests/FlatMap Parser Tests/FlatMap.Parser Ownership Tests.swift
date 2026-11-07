@@ -4,69 +4,73 @@
     import Parser
     import Testing
 
-    @Suite
-    struct `Direct and fluent flat map preserve noncopyable results` {
-        @Test(arguments: [false, true])
-        func `successful results remain alive until consumed and are destroyed once`(_ fluent: Bool) throws {
-            let lifetime = Lifetime()
-            let parser = makeParser(fluent: fluent, lifetime: lifetime)
-            requireFailure(parser, Either<Seed.Error, Finish.Error>.self)
-            requireCopyable(parser)
-            var input = 10
+enum `FlatMap.Parser Ownership Tests` {}
 
-            let output = try parser.parse(&input)
+extension `FlatMap.Parser Ownership Tests` {
+        @Suite
+        struct `Direct and fluent flat map preserve noncopyable results` {
+            @Test(arguments: [false, true])
+            func `successful results remain alive until consumed and are destroyed once`(_ fluent: Bool) throws {
+                let lifetime = Lifetime()
+                let parser = makeParser(fluent: fluent, lifetime: lifetime)
+                requireFailure(parser, Either<Seed.Error, Finish.Error>.self)
+                requireCopyable(parser)
+                var input = 10
 
-            #expect(input == 13)
-            #expect(output.value == 24)
-            #expect(lifetime.transforms == 1)
-            #expect(lifetime.created == [.upstream, .downstream])
-            #expect(lifetime.destroyed == [.upstream])
-
-            let value = consumeValue(output)
-            #expect(value == 24)
-            #expect(lifetime.destroyed == [.upstream, .downstream])
-        }
-
-        @Test(arguments: [false, true])
-        func `upstream failure retains consumption and destroys its temporary value once`(_ fluent: Bool) {
-            let lifetime = Lifetime()
-            let parser = makeParser(fluent: fluent, failing: .upstream, lifetime: lifetime)
-            var input = 10
-
-            do throws(Either<Seed.Error, Finish.Error>) {
                 let output = try parser.parse(&input)
-                _ = consumeValue(output)
-                Issue.record("Upstream failure unexpectedly succeeded")
-            } catch {
-                #expect(error == .left(.rejected(11)))
+
+                #expect(input == 13)
+                #expect(output.value == 24)
+                #expect(lifetime.transforms == 1)
+                #expect(lifetime.created == [.upstream, .downstream])
+                #expect(lifetime.destroyed == [.upstream])
+
+                let value = consumeValue(output)
+                #expect(value == 24)
+                #expect(lifetime.destroyed == [.upstream, .downstream])
             }
 
-            #expect(input == 11)
-            #expect(lifetime.transforms == 0)
-            #expect(lifetime.created == [.upstream])
-            #expect(lifetime.destroyed == [.upstream])
-        }
+            @Test(arguments: [false, true])
+            func `upstream failure retains consumption and destroys its temporary value once`(_ fluent: Bool) {
+                let lifetime = Lifetime()
+                let parser = makeParser(fluent: fluent, failing: .upstream, lifetime: lifetime)
+                var input = 10
 
-        @Test(arguments: [false, true])
-        func `downstream failure retains both stages of consumption and destroys each value once`(_ fluent: Bool) {
-            let lifetime = Lifetime()
-            let parser = makeParser(fluent: fluent, failing: .downstream, lifetime: lifetime)
-            var input = 10
+                do throws(Either<Seed.Error, Finish.Error>) {
+                    let output = try parser.parse(&input)
+                    _ = consumeValue(output)
+                    Issue.record("Upstream failure unexpectedly succeeded")
+                } catch {
+                    #expect(error == .left(.rejected(11)))
+                }
 
-            do throws(Either<Seed.Error, Finish.Error>) {
-                let output = try parser.parse(&input)
-                _ = consumeValue(output)
-                Issue.record("Downstream failure unexpectedly succeeded")
-            } catch {
-                #expect(error == .right(.rejected(13)))
+                #expect(input == 11)
+                #expect(lifetime.transforms == 0)
+                #expect(lifetime.created == [.upstream])
+                #expect(lifetime.destroyed == [.upstream])
             }
 
-            #expect(input == 13)
-            #expect(lifetime.transforms == 1)
-            #expect(lifetime.created == [.upstream, .downstream])
-            #expect(lifetime.destroyed == [.upstream, .downstream])
+            @Test(arguments: [false, true])
+            func `downstream failure retains both stages of consumption and destroys each value once`(_ fluent: Bool) {
+                let lifetime = Lifetime()
+                let parser = makeParser(fluent: fluent, failing: .downstream, lifetime: lifetime)
+                var input = 10
+
+                do throws(Either<Seed.Error, Finish.Error>) {
+                    let output = try parser.parse(&input)
+                    _ = consumeValue(output)
+                    Issue.record("Downstream failure unexpectedly succeeded")
+                } catch {
+                    #expect(error == .right(.rejected(13)))
+                }
+
+                #expect(input == 13)
+                #expect(lifetime.transforms == 1)
+                #expect(lifetime.created == [.upstream, .downstream])
+                #expect(lifetime.destroyed == [.upstream, .downstream])
+            }
         }
-    }
+}
 
     private func makeParser(
         fluent: Bool,

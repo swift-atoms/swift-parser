@@ -5,13 +5,17 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `Parser::Not` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Not Tests` {}
 
-    extension `Parser::Not`.Unit {
+extension `Parser.Not Tests` {
+        @Suite
+        struct `Parser::Not` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Not Tests`.`Parser::Not`.Unit {
         @Test
         func `succeeds when upstream fails`() throws(any Swift::Error) {
             let parser = Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.not(rejected: { _ in true })
@@ -34,7 +38,7 @@
         }
     }
 
-    extension `Parser::Not`.`Edge Case` {
+    extension `Parser.Not Tests`.`Parser::Not`.`Edge Case` {
         @Test
         func `fails when upstream succeeds`() {
             let parser = Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.not(rejected: { _ in true })

@@ -3,53 +3,57 @@
     import Parser
     import Testing
 
-    @Suite
-    struct `Parser bodies process twelve elements and stop at the first mismatch` {
+enum `Skip.Parser Arity Tests` {}
 
-        @Test
-        func `a twelve element body parses every element`() throws(any Swift::Error) {
-            var input: Substring = "abcdefghijkZ"
+extension `Skip.Parser Arity Tests` {
+        @Suite
+        struct `Parser bodies process twelve elements and stop at the first mismatch` {
 
-            let output = try TwelveElements().parse(&input)
+            @Test
+            func `a twelve element body parses every element`() throws(any Swift::Error) {
+                var input: Substring = "abcdefghijkZ"
 
-            #expect(output == "Z")
-            #expect(input.isEmpty)
-        }
+                let output = try TwelveElements().parse(&input)
 
-        @Test
-        func `a twelve element body stops at the first mismatch`() {
-            var input: Substring = "abcdefghiXkZ"
-
-            do {
-                _ = try TwelveElements().parse(&input)
-                Issue.record("Expected the tenth element to reject the input")
-            } catch {
-                #expect(input == "XkZ")
+                #expect(output == "Z")
+                #expect(input.isEmpty)
             }
-        }
 
-        @Test
-        func `a twelve element body of void elements parses every element`() throws(any Swift::Error) {
-            var input: Substring = "abcdefghijkl"
+            @Test
+            func `a twelve element body stops at the first mismatch`() {
+                var input: Substring = "abcdefghiXkZ"
 
-            try TwelveVoidElements().parse(&input)
+                do {
+                    _ = try TwelveElements().parse(&input)
+                    Issue.record("Expected the tenth element to reject the input")
+                } catch {
+                    #expect(input == "XkZ")
+                }
+            }
 
-            #expect(input.isEmpty)
-        }
+            @Test
+            func `a twelve element body of void elements parses every element`() throws(any Swift::Error) {
+                var input: Substring = "abcdefghijkl"
 
-        @Test
-        func `a twelve element body of void elements stops at the first mismatch`() {
-            var input: Substring = "abcdefghijXl"
-
-            do {
                 try TwelveVoidElements().parse(&input)
-                Issue.record("Expected the eleventh element to reject the input")
-            } catch {
-                #expect(input == "Xl")
-            }
-        }
 
-    }
+                #expect(input.isEmpty)
+            }
+
+            @Test
+            func `a twelve element body of void elements stops at the first mismatch`() {
+                var input: Substring = "abcdefghijXl"
+
+                do {
+                    try TwelveVoidElements().parse(&input)
+                    Issue.record("Expected the eleventh element to reject the input")
+                } catch {
+                    #expect(input == "Xl")
+                }
+            }
+
+        }
+}
 
     private struct TwelveElements: Parsing {
         typealias Input = Substring

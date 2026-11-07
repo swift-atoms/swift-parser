@@ -11,12 +11,19 @@
         case b
     }
 
-    @Suite
-    struct `Parser::OneOf.Sequence` {
+enum `Parser.OneOf.Sequence Tests` {}
+
+extension `Parser.OneOf.Sequence Tests` {
+        @Suite
+        struct `Parser::OneOf.Sequence` {
+        }
+}
+
+    extension `Parser.OneOf.Sequence Tests`.`Parser::OneOf.Sequence` {
         @Suite struct `Builder Propagation` {}
     }
 
-    extension `Parser::OneOf.Sequence`.`Builder Propagation` {
+    extension `Parser.OneOf.Sequence Tests`.`Parser::OneOf.Sequence`.`Builder Propagation` {
 
         @Test
         func `builder-composed alternation parses through the first matching branch`() throws(any Swift::Error) {

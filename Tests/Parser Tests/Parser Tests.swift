@@ -2,81 +2,85 @@ import Parser
 import Parser_Test_Support
 import Testing
 
-@Suite
-struct `Parser supports function and builder construction` {
-    @Test
-    func `copies retain the same noncopyable implementation until the last copy is released`() {
-        let count = Count()
-        do {
-            let copy: Parser<Int, Value, Never>
+enum `Parser Tests` {}
+
+extension `Parser Tests` {
+    @Suite
+    struct `Parser supports function and builder construction` {
+        @Test
+        func `copies retain the same noncopyable implementation until the last copy is released`() {
+            let count = Count()
+            do {
+                let copy: Parser<Int, Value, Never>
+                do {
+                    let parser = Parser { Owner(count: count) }
+                    copy = parser
+                    var input = 0
+                    let output = parser.parse(&input)
+                    #expect(output.value == 1)
+                }
+                #expect(count.destroyed == 0)
+                var input = 10
+                let output = copy.parse(&input)
+                #expect(output.value == 11)
+            }
+            #expect(count.destroyed == 1)
+        }
+
+        @Test
+        func `builder infers channels and runs once`() {
+            let count = Count()
+            let parser = Parser {
+                count.build()
+            }
+            requireParsing(parser)
+            var input = 3
+            #expect(parser.parse(&input) == 3)
+            #expect(parser.parse(&input) == 4)
+            #expect(input == 5)
+            #expect(count.builds == 1)
+        }
+
+        @Test
+        func `explicit channels accept a builder and preserve typed failure`() {
+            let parser = Parser<Int, Int, Rejected> {
+                Parser<Int, Int, Rejected> { input throws(Rejected) in
+                    input += 1
+                    throw .invalid
+                }
+            }
+            var input = 0
+            do throws(Rejected) {
+                _ = try parser.parse(&input)
+                Issue.record("Expected rejection")
+            } catch {
+                #expect(error == .invalid)
+            }
+            #expect(input == 1)
+        }
+
+        @Test
+        func `builder retains a noncopyable owner and produces noncopyable outputs`() {
+            let count = Count()
             do {
                 let parser = Parser { Owner(count: count) }
-                copy = parser
                 var input = 0
-                let output = parser.parse(&input)
-                #expect(output.value == 1)
+                let first = parser.parse(&input)
+                let second = parser.parse(&input)
+                #expect(first.value == 1)
+                #expect(second.value == 2)
+                #expect(count.destroyed == 0)
             }
-            #expect(count.destroyed == 0)
-            var input = 10
-            let output = copy.parse(&input)
-            #expect(output.value == 11)
+            #expect(count.destroyed == 1)
         }
-        #expect(count.destroyed == 1)
-    }
 
-    @Test
-    func `builder infers channels and runs once`() {
-        let count = Count()
-        let parser = Parser {
-            count.build()
+        @Test
+        func `direct construction produces noncopyable outputs`() {
+            let parser = Parser<Int, Value, Never> { Value(value: $0) }
+            var input = 42
+            let result = parser.parse(&input)
+            #expect(result.value == 42)
         }
-        requireParsing(parser)
-        var input = 3
-        #expect(parser.parse(&input) == 3)
-        #expect(parser.parse(&input) == 4)
-        #expect(input == 5)
-        #expect(count.builds == 1)
-    }
-
-    @Test
-    func `explicit channels accept a builder and preserve typed failure`() {
-        let parser = Parser<Int, Int, Rejected> {
-            Parser<Int, Int, Rejected> { input throws(Rejected) in
-                input += 1
-                throw .invalid
-            }
-        }
-        var input = 0
-        do throws(Rejected) {
-            _ = try parser.parse(&input)
-            Issue.record("Expected rejection")
-        } catch {
-            #expect(error == .invalid)
-        }
-        #expect(input == 1)
-    }
-
-    @Test
-    func `builder retains a noncopyable owner and produces noncopyable outputs`() {
-        let count = Count()
-        do {
-            let parser = Parser { Owner(count: count) }
-            var input = 0
-            let first = parser.parse(&input)
-            let second = parser.parse(&input)
-            #expect(first.value == 1)
-            #expect(second.value == 2)
-            #expect(count.destroyed == 0)
-        }
-        #expect(count.destroyed == 1)
-    }
-
-    @Test
-    func `direct construction produces noncopyable outputs`() {
-        let parser = Parser<Int, Value, Never> { Value(value: $0) }
-        var input = 42
-        let result = parser.parse(&input)
-        #expect(result.value == 42)
     }
 }
 
@@ -113,36 +117,38 @@ extension Owner {
     }
 }
 
-@Suite
-struct `Parser closures consume input and preserve typed failure` {
+extension `Parser Tests` {
+    @Suite
+    struct `Parser closures consume input and preserve typed failure` {
 
-    @Test
-    func `a closure parses and consumes input`() throws(any Swift.Error) {
-        let parser = Parser<Substring, Character, ParseFailure> { input throws(ParseFailure) in
-            guard let first = input.first else { throw .empty }
-            input = input.dropFirst()
-            return first
+        @Test
+        func `a closure parses and consumes input`() throws(any Swift.Error) {
+            let parser = Parser<Substring, Character, ParseFailure> { input throws(ParseFailure) in
+                guard let first = input.first else { throw .empty }
+                input = input.dropFirst()
+                return first
+            }
+            var input: Substring = "ab"
+            #expect(try parser.parse(&input) == "a")
+            #expect(input == "b")
         }
-        var input: Substring = "ab"
-        #expect(try parser.parse(&input) == "a")
-        #expect(input == "b")
-    }
 
-    @Test
-    func `a nonthrowing closure needs no try`() {
-        let pure = Parser<Substring, Int, Never> { input in input.count }
-        var input: Substring = "abc"
-        #expect(pure.parse(&input) == 3)
-    }
-
-    @Test
-    func `a closure propagates its typed failure`() {
-        let parser = Parser<Substring, Character, ParseFailure> { _ throws(ParseFailure) in
-            throw .empty
+        @Test
+        func `a nonthrowing closure needs no try`() {
+            let pure = Parser<Substring, Int, Never> { input in input.count }
+            var input: Substring = "abc"
+            #expect(pure.parse(&input) == 3)
         }
-        var input: Substring = ""
-        #expect(throws: ParseFailure.empty) {
-            try parser.parse(&input)
+
+        @Test
+        func `a closure propagates its typed failure`() {
+            let parser = Parser<Substring, Character, ParseFailure> { _ throws(ParseFailure) in
+                throw .empty
+            }
+            var input: Substring = ""
+            #expect(throws: ParseFailure.empty) {
+                try parser.parse(&input)
+            }
         }
     }
 }
@@ -152,92 +158,96 @@ private enum ParseFailure: Swift.Error, Equatable {
 }
 
 #if os(macOS)
-    @Suite
-    private struct `Parser ownership and lifetime constraints survive module emission` {
+extension `Parser Tests` {
+        @Suite
+        private struct `Parser ownership and lifetime constraints survive module emission` {
 
-        @Test(arguments: ["Escaping Parser Input.swift"])
-        func `concrete parser results cannot outlive input`(_ fixture: String) throws {
-            let diagnostic = try Compiler.emissionFailure(named: fixture)
-            #expect(diagnostic.contains("escapes its scope"), "\(diagnostic)")
-        }
+            @Test(arguments: ["Escaping Parser Input.swift"])
+            func `concrete parser results cannot outlive input`(_ fixture: String) throws {
+                let diagnostic = try Compiler.emissionFailure(named: fixture)
+                #expect(diagnostic.contains("escapes its scope"), "\(diagnostic)")
+            }
 
-        @Test
-        func `concrete parser supports scoped input and direct scoped output`() throws {
-            let result = try Compiler.emitFixture(named: "Scoped Parser Construction.swift")
-            #expect(result.status == 0, "\(result.diagnostic)")
-        }
+            @Test
+            func `concrete parser supports scoped input and direct scoped output`() throws {
+                let result = try Compiler.emitFixture(named: "Scoped Parser Construction.swift")
+                #expect(result.status == 0, "\(result.diagnostic)")
+            }
 
-        @Test
-        func `a parser builder cannot consume an owner captured from outside`() throws {
-            let diagnostic = try Compiler.emissionFailure(named: "Captured Parser Owner.swift")
-            #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
+            @Test
+            func `a parser builder cannot consume an owner captured from outside`() throws {
+                let diagnostic = try Compiler.emissionFailure(named: "Captured Parser Owner.swift")
+                #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
+            }
         }
-    }
+}
 #endif
 
 #if Map
-    @Suite
-    private struct `Parser mapping initializers preserve failures` {
-        private enum ConstructionFailure: Swift.Error, Equatable { case invalid }
+extension `Parser Tests` {
+        @Suite
+        private struct `Parser mapping initializers preserve failures` {
+            private enum ConstructionFailure: Swift.Error, Equatable { case invalid }
 
-        @Test func `nonthrowing construction preserves parsing failure`() throws {
-            let parser = Parser(String.init) {
-                Parser<Substring, Int, ParseFailure> { input throws(ParseFailure) in
-                    guard !input.isEmpty else { throw .empty }
-                    return input.count
-                }
-            }
-            requireFailure(parser, ParseFailure.self)
-            var input: Substring = "abc"
-            #expect(try parser.parse(&input) == "3")
-            input = ""
-            #expect(throws: ParseFailure.empty) { try parser.parse(&input) }
-        }
-
-        #if Either
-            @Test func `two throwing stages preserve the source of failure`() {
-                let parser = Parser({ (value: consuming Int) throws(ConstructionFailure) -> String in
-                    throw .invalid
-                }) {
+            @Test func `nonthrowing construction preserves parsing failure`() throws {
+                let parser = Parser(String.init) {
                     Parser<Substring, Int, ParseFailure> { input throws(ParseFailure) in
                         guard !input.isEmpty else { throw .empty }
                         return input.count
                     }
                 }
-                requireFailure(parser, Either<ParseFailure, ConstructionFailure>.self)
-                var input: Substring = ""
-                #expect(throws: Either<ParseFailure, ConstructionFailure>.left(.empty)) {
-                    try parser.parse(&input)
-                }
-                input = "abc"
-                #expect(throws: Either<ParseFailure, ConstructionFailure>.right(.invalid)) {
-                    try parser.parse(&input)
-                }
+                requireFailure(parser, ParseFailure.self)
+                var input: Substring = "abc"
+                #expect(try parser.parse(&input) == "3")
+                input = ""
+                #expect(throws: ParseFailure.empty) { try parser.parse(&input) }
             }
-        #endif
 
-        @Test func `infallible parsing introduces no Never branch`() {
-            let parser = Parser({ (_: consuming Int) throws(ConstructionFailure) -> String in
-                throw .invalid
-            }) { Parser<Substring, Int, Never> { $0.count } }
-            requireFailure(parser, ConstructionFailure.self)
-            var input: Substring = "abc"
-            #expect(throws: ConstructionFailure.invalid) { try parser.parse(&input) }
-        }
+            #if Either
+                @Test func `two throwing stages preserve the source of failure`() {
+                    let parser = Parser({ (value: consuming Int) throws(ConstructionFailure) -> String in
+                        throw .invalid
+                    }) {
+                        Parser<Substring, Int, ParseFailure> { input throws(ParseFailure) in
+                            guard !input.isEmpty else { throw .empty }
+                            return input.count
+                        }
+                    }
+                    requireFailure(parser, Either<ParseFailure, ConstructionFailure>.self)
+                    var input: Substring = ""
+                    #expect(throws: Either<ParseFailure, ConstructionFailure>.left(.empty)) {
+                        try parser.parse(&input)
+                    }
+                    input = "abc"
+                    #expect(throws: Either<ParseFailure, ConstructionFailure>.right(.invalid)) {
+                        try parser.parse(&input)
+                    }
+                }
+            #endif
 
-        @Test func `fully infallible construction remains nonthrowing and builds once`() {
-            var builds = 0
-            let parser = Parser(String.init) {
-                let _ = { builds += 1 }()
-                Parser<Substring, Int, Never> { $0.count }
+            @Test func `infallible parsing introduces no Never branch`() {
+                let parser = Parser({ (_: consuming Int) throws(ConstructionFailure) -> String in
+                    throw .invalid
+                }) { Parser<Substring, Int, Never> { $0.count } }
+                requireFailure(parser, ConstructionFailure.self)
+                var input: Substring = "abc"
+                #expect(throws: ConstructionFailure.invalid) { try parser.parse(&input) }
             }
-            requireFailure(parser, Never.self)
-            var input: Substring = "abc"
-            #expect(parser.parse(&input) == "3")
-            #expect(parser.parse(&input) == "3")
-            #expect(builds == 1)
-        }
 
-        private func requireFailure<I, O, F>(_ parser: Parser<I, O, F>, _: F.Type) {}
-    }
+            @Test func `fully infallible construction remains nonthrowing and builds once`() {
+                var builds = 0
+                let parser = Parser(String.init) {
+                    let _ = { builds += 1 }()
+                    Parser<Substring, Int, Never> { $0.count }
+                }
+                requireFailure(parser, Never.self)
+                var input: Substring = "abc"
+                #expect(parser.parse(&input) == "3")
+                #expect(parser.parse(&input) == "3")
+                #expect(builds == 1)
+            }
+
+            private func requireFailure<I, O, F>(_ parser: Parser<I, O, F>, _: F.Type) {}
+        }
+}
 #endif

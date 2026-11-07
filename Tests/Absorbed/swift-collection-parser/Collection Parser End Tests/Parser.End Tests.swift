@@ -4,13 +4,17 @@
     import Collection_Parser_Test_Support
     import Testing
 
-    @Suite
-    struct `Parser::End` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.End Tests` {}
 
-    extension `Parser::End`.Unit {
+extension `Parser.End Tests` {
+        @Suite
+        struct `Parser::End` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.End Tests`.`Parser::End`.Unit {
         @Test
         func `succeeds on empty input`() throws(any Swift::Error) {
             let parser = Parser::End<CollectionParserTest.Input>()
@@ -20,7 +24,7 @@
         }
     }
 
-    extension `Parser::End`.`Edge Case` {
+    extension `Parser.End Tests`.`Parser::End`.`Edge Case` {
         @Test
         func `fails with remaining input`() {
             let parser = Parser::End<CollectionParserTest.Input>()

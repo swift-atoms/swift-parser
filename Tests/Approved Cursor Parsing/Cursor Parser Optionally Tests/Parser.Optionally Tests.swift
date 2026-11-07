@@ -5,13 +5,17 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `Parser::Optionally` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Optionally Tests` {}
 
-    extension `Parser::Optionally`.Unit {
+extension `Parser.Optionally Tests` {
+        @Suite
+        struct `Parser::Optionally` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Optionally Tests`.`Parser::Optionally`.Unit {
         @Test
         func `returns value when parser succeeds`() throws {
             let parser = Parser::Optionally<Parser::First.Where<ArraySlice<UInt8>>>(rejected: { _ in true }) {
@@ -38,7 +42,7 @@
         }
     }
 
-    extension `Parser::Optionally`.`Edge Case` {
+    extension `Parser.Optionally Tests`.`Parser::Optionally`.`Edge Case` {
         @Test
         func `backtracks on failure`() throws {
             let parser = Parser::Optionally<Parser::First.Where<ArraySlice<UInt8>>>(rejected: { _ in true }) {

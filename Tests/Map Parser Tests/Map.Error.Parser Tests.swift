@@ -4,54 +4,58 @@
     import Either
     import Testing
 
-    @Suite
-    struct `Parser error maps transform failure branches and preserve successful outputs` {
+enum `Map.Error.Parser Tests` {}
 
-        @Test
-        func `error map rewrites the upstream failure`() {
-            let parser = Remapped()
-            requireFailure(parser, DownstreamFailure.self)
+extension `Map.Error.Parser Tests` {
+        @Suite
+        struct `Parser error maps transform failure branches and preserve successful outputs` {
 
-            var input = 0
-            #expect(throws: DownstreamFailure.upstream) {
-                try parser.parse(&input)
+            @Test
+            func `error map rewrites the upstream failure`() {
+                let parser = Remapped()
+                requireFailure(parser, DownstreamFailure.self)
+
+                var input = 0
+                #expect(throws: DownstreamFailure.upstream) {
+                    try parser.parse(&input)
+                }
             }
-        }
 
-        @Test
-        func `error map leaves a successful output untouched`() throws(any Swift::Error) {
-            let parser = RemappedSuccess()
-            requireFailure(parser, DownstreamFailure.self)
+            @Test
+            func `error map leaves a successful output untouched`() throws(any Swift::Error) {
+                let parser = RemappedSuccess()
+                requireFailure(parser, DownstreamFailure.self)
 
-            var input = 41
-            let output = try parser.parse(&input)
+                var input = 41
+                let output = try parser.parse(&input)
 
-            #expect(output == 41)
-        }
-
-        @Test
-        func `error map flattens an Either produced by map`() {
-            let parser = Flattened()
-            requireFailure(parser, DownstreamFailure.self)
-
-            var input = 0
-            #expect(throws: DownstreamFailure.upstream) {
-                try parser.parse(&input)
+                #expect(output == 41)
             }
-        }
 
-        @Test
-        func `error map reaches the transform side of an Either`() {
-            let parser = FlattenedTransform()
-            requireFailure(parser, DownstreamFailure.self)
+            @Test
+            func `error map flattens an Either produced by map`() {
+                let parser = Flattened()
+                requireFailure(parser, DownstreamFailure.self)
 
-            var input = 0
-            #expect(throws: DownstreamFailure.transform) {
-                try parser.parse(&input)
+                var input = 0
+                #expect(throws: DownstreamFailure.upstream) {
+                    try parser.parse(&input)
+                }
             }
-        }
 
-    }
+            @Test
+            func `error map reaches the transform side of an Either`() {
+                let parser = FlattenedTransform()
+                requireFailure(parser, DownstreamFailure.self)
+
+                var input = 0
+                #expect(throws: DownstreamFailure.transform) {
+                    try parser.parse(&input)
+                }
+            }
+
+        }
+}
 
     private func requireFailure<
         P: Parsing,

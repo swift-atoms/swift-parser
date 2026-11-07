@@ -4,96 +4,100 @@
     import Either
     import Testing
 
-    @Suite
-    struct `Parser skip and append preserve tuple shape and stage failures` {
+enum `Skip.Parser Tests` {}
 
-        @Test
-        func `a void then a value is the value`() throws(any Swift::Error) {
-            var input: Substring = "<x"
-            let output = try LeadingSkip().parse(&input)
-            #expect(output == "x")
-            #expect(input.isEmpty)
-            requireOutput(LeadingSkip(), Character.self)
-        }
+extension `Skip.Parser Tests` {
+        @Suite
+        struct `Parser skip and append preserve tuple shape and stage failures` {
 
-        @Test
-        func `a value then a void is the value`() throws(any Swift::Error) {
-            var input: Substring = "x>"
-            let output = try TrailingSkip().parse(&input)
-            #expect(output == "x")
-            #expect(input.isEmpty)
-            requireOutput(TrailingSkip(), Character.self)
-        }
+            @Test
+            func `a void then a value is the value`() throws(any Swift::Error) {
+                var input: Substring = "<x"
+                let output = try LeadingSkip().parse(&input)
+                #expect(output == "x")
+                #expect(input.isEmpty)
+                requireOutput(LeadingSkip(), Character.self)
+            }
 
-        @Test
-        func `two voids are Void`() throws(any Swift::Error) {
-            var input: Substring = "<>"
-            try VoidPair().parse(&input)
-            #expect(input.isEmpty)
-            requireOutput(VoidPair(), Void.self)
-        }
+            @Test
+            func `a value then a void is the value`() throws(any Swift::Error) {
+                var input: Substring = "x>"
+                let output = try TrailingSkip().parse(&input)
+                #expect(output == "x")
+                #expect(input.isEmpty)
+                requireOutput(TrailingSkip(), Character.self)
+            }
 
-        @Test
-        func `values separated by voids are one flat tuple`() throws(any Swift::Error) {
-            var input: Substring = "a,b,c"
-            let output = try Three().parse(&input)
-            #expect(output.0 == "a")
-            #expect(output.1 == "b")
-            #expect(output.2 == "c")
-            #expect(input.isEmpty)
-            requireOutput(Three(), (Character, Character, Character).self)
-        }
+            @Test
+            func `two voids are Void`() throws(any Swift::Error) {
+                var input: Substring = "<>"
+                try VoidPair().parse(&input)
+                #expect(input.isEmpty)
+                requireOutput(VoidPair(), Void.self)
+            }
 
-        @Test
-        func `leading and trailing voids around two values are a pair tuple`() throws(any Swift::Error) {
-            var input: Substring = "<ab>"
-            let output = try Framed().parse(&input)
-            #expect(output.0 == "a")
-            #expect(output.1 == "b")
-            #expect(input.isEmpty)
-            requireOutput(Framed(), (Character, Character).self)
-        }
+            @Test
+            func `values separated by voids are one flat tuple`() throws(any Swift::Error) {
+                var input: Substring = "a,b,c"
+                let output = try Three().parse(&input)
+                #expect(output.0 == "a")
+                #expect(output.1 == "b")
+                #expect(output.2 == "c")
+                #expect(input.isEmpty)
+                requireOutput(Three(), (Character, Character, Character).self)
+            }
 
-        @Test
-        func `differently typed failures nest in Either`() {
-            requireFailure(MixedFailures(), Either<Mismatch, Other>.self)
-        }
+            @Test
+            func `leading and trailing voids around two values are a pair tuple`() throws(any Swift::Error) {
+                var input: Substring = "<ab>"
+                let output = try Framed().parse(&input)
+                #expect(output.0 == "a")
+                #expect(output.1 == "b")
+                #expect(input.isEmpty)
+                requireOutput(Framed(), (Character, Character).self)
+            }
 
-        @Test
-        func `equally typed failures collapse through every step`() {
-            requireFailure(LeadingSkip(), Mismatch.self)
-            requireFailure(TrailingSkip(), Mismatch.self)
-            requireFailure(VoidPair(), Mismatch.self)
-            requireFailure(Three(), Mismatch.self)
-            requireFailure(Framed(), Mismatch.self)
-            requireFailure(Sixteen(), Mismatch.self)
-        }
+            @Test
+            func `differently typed failures nest in Either`() {
+                requireFailure(MixedFailures(), Either<Mismatch, Other>.self)
+            }
 
-        @Test
-        func `a leading skip failure surfaces the skipped element's error`() {
-            var input: Substring = "!x"
-            #expect(throws: Mismatch.expected("<")) {
-                try LeadingSkip().parse(&input)
+            @Test
+            func `equally typed failures collapse through every step`() {
+                requireFailure(LeadingSkip(), Mismatch.self)
+                requireFailure(TrailingSkip(), Mismatch.self)
+                requireFailure(VoidPair(), Mismatch.self)
+                requireFailure(Three(), Mismatch.self)
+                requireFailure(Framed(), Mismatch.self)
+                requireFailure(Sixteen(), Mismatch.self)
+            }
+
+            @Test
+            func `a leading skip failure surfaces the skipped element's error`() {
+                var input: Substring = "!x"
+                #expect(throws: Mismatch.expected("<")) {
+                    try LeadingSkip().parse(&input)
+                }
+            }
+
+            @Test
+            func `a trailing skip failure surfaces after the value parsed`() {
+                var input: Substring = "x!"
+                #expect(throws: Mismatch.expected(">")) {
+                    try TrailingSkip().parse(&input)
+                }
+                #expect(input == "!")
+            }
+
+            @Test
+            func `a sixteen element body is a flat sixteen tuple`() throws(any Swift::Error) {
+                var input: Substring = ",a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,"
+                let output = try Sixteen().parse(&input)
+                #expect(output == ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"])
+                #expect(input.isEmpty)
             }
         }
-
-        @Test
-        func `a trailing skip failure surfaces after the value parsed`() {
-            var input: Substring = "x!"
-            #expect(throws: Mismatch.expected(">")) {
-                try TrailingSkip().parse(&input)
-            }
-            #expect(input == "!")
-        }
-
-        @Test
-        func `a sixteen element body is a flat sixteen tuple`() throws(any Swift::Error) {
-            var input: Substring = ",a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,"
-            let output = try Sixteen().parse(&input)
-            #expect(output == ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"])
-            #expect(input.isEmpty)
-        }
-    }
+}
 
     private func requireOutput<P: Parsing, Output>(
         _: borrowing P,
@@ -281,32 +285,34 @@
         }
     }
 
-    @Suite
-    struct `Parser skip and append preserve values and failures over nonescapable cursors` {
+extension `Skip.Parser Tests` {
+        @Suite
+        struct `Parser skip and append preserve values and failures over nonescapable cursors` {
 
-        @Test
-        func `Append and Skip pass a value through a nonescapable cursor`() throws(any Swift::Error) {
-            let bytes: [UInt8] = [0x3C, 7, 0x3E]
-            var cursor = Cursor(bytes.span)
-            let value = try FramedByte().parse(&cursor)
-            let end = cursor.index
-            #expect(value == 7)
-            #expect(end == 3)
-        }
-
-        @Test
-        func `a skipped marker failure surfaces through a nonescapable cursor`() {
-            let bytes: [UInt8] = [0x3C, 7, 0x21]
-            var cursor = Cursor(bytes.span)
-            var failure: ByteMismatch?
-            do {
-                _ = try FramedByte().parse(&cursor)
-            } catch {
-                failure = error
+            @Test
+            func `Append and Skip pass a value through a nonescapable cursor`() throws(any Swift::Error) {
+                let bytes: [UInt8] = [0x3C, 7, 0x3E]
+                var cursor = Cursor(bytes.span)
+                let value = try FramedByte().parse(&cursor)
+                let end = cursor.index
+                #expect(value == 7)
+                #expect(end == 3)
             }
-            #expect(failure == .expected(0x3E))
+
+            @Test
+            func `a skipped marker failure surfaces through a nonescapable cursor`() {
+                let bytes: [UInt8] = [0x3C, 7, 0x21]
+                var cursor = Cursor(bytes.span)
+                var failure: ByteMismatch?
+                do {
+                    _ = try FramedByte().parse(&cursor)
+                } catch {
+                    failure = error
+                }
+                #expect(failure == .expected(0x3E))
+            }
         }
-    }
+}
 
     private struct FramedByte: Parsing {
         typealias Failure = ByteMismatch

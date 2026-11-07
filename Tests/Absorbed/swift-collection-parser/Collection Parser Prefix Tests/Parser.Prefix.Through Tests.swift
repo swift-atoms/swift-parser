@@ -4,13 +4,17 @@
     import Collection_Parser_Test_Support
     import Testing
 
-    @Suite
-    struct `Parser::Prefix.Through` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Prefix.Through Tests` {}
 
-    extension `Parser::Prefix.Through`.Unit {
+extension `Parser.Prefix.Through Tests` {
+        @Suite
+        struct `Parser::Prefix.Through` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Prefix.Through Tests`.`Parser::Prefix.Through`.Unit {
         @Test
         func `consumes through delimiter including it`() throws(any Swift::Error) {
             let parser = Parser::Prefix.Through<CollectionParserTest.Input>([UInt8(ascii: "\n")])
@@ -33,7 +37,7 @@
         }
     }
 
-    extension `Parser::Prefix.Through`.`Edge Case` {
+    extension `Parser.Prefix.Through Tests`.`Parser::Prefix.Through`.`Edge Case` {
         @Test
         func `fails when delimiter not found`() {
             let parser = Parser::Prefix.Through<CollectionParserTest.Input>([0xFF])

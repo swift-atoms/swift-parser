@@ -6,13 +6,17 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `FlatMap.Parser` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.FlatMap Tests` {}
 
-    extension `FlatMap.Parser`.Unit {
+extension `Parser.FlatMap Tests` {
+        @Suite
+        struct `FlatMap.Parser` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.FlatMap Tests`.`FlatMap.Parser`.Unit {
         @Test
         func `chains parsers where second depends on first output`() throws(any Swift::Error) {
             let parser = Parser::First.Element<ArraySlice<UInt8>>()
@@ -28,7 +32,7 @@
         }
     }
 
-    extension `FlatMap.Parser`.`Edge Case` {
+    extension `Parser.FlatMap Tests`.`FlatMap.Parser`.`Edge Case` {
         @Test
         func `upstream failure prevents downstream execution`() {
             let parser = Parser::First.Element<ArraySlice<UInt8>>()

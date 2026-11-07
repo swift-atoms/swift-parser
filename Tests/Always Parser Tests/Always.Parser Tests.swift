@@ -3,13 +3,17 @@
     import Parser
     import Testing
 
-    @Suite
-    struct `Always.Parser` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Always.Parser Tests` {}
 
-    extension `Always.Parser`.Unit {
+extension `Always.Parser Tests` {
+        @Suite
+        struct `Always.Parser` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Always.Parser Tests`.`Always.Parser`.Unit {
         @Test
         func `returns provided value without consuming input`() {
             let parser = Always<Int>.Parser<[UInt8]>(42)
@@ -40,7 +44,7 @@
         }
     }
 
-    extension `Always.Parser`.`Edge Case` {
+    extension `Always.Parser Tests`.`Always.Parser`.`Edge Case` {
         @Test
         func `succeeds on empty input`() {
             let parser = Always<String>.Parser<[UInt8]>("hello")

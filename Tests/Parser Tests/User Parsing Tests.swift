@@ -1,39 +1,43 @@
 import Parser
 import Testing
 
-@Suite
-struct `User parsing from Substring` {
-    @Test
-    func `a builder parses a name and age into a user`() throws {
-        let parser = Parser {
-            User.Parser()
+enum `User Parsing Tests` {}
+
+extension `User Parsing Tests` {
+    @Suite
+    struct `User parsing from Substring` {
+        @Test
+        func `a builder parses a name and age into a user`() throws {
+            let parser = Parser {
+                User.Parser()
+            }
+            var input: Substring = "Alice,42"
+
+            let user = try parser.parse(&input)
+
+            #expect(user == User(name: "Alice", age: 42))
+            #expect(input.isEmpty)
         }
-        var input: Substring = "Alice,42"
 
-        let user = try parser.parse(&input)
+        @Test
+        func `parsing a user preserves the remaining input`() throws {
+            var input: Substring = "Alice,42;Bob,35"
 
-        #expect(user == User(name: "Alice", age: 42))
-        #expect(input.isEmpty)
-    }
+            let user = try User.Parser().parse(&input)
 
-    @Test
-    func `parsing a user preserves the remaining input`() throws {
-        var input: Substring = "Alice,42;Bob,35"
-
-        let user = try User.Parser().parse(&input)
-
-        #expect(user == User(name: "Alice", age: 42))
-        #expect(input == ";Bob,35")
-    }
-
-    @Test(arguments: ["", ",42", "Alice", "Alice,", "Alice,-1", "Alice,abc"])
-    func `an invalid record fails without consuming input`(_ text: String) {
-        var input = text[...]
-
-        #expect(throws: User.Parser.Failure.invalidRecord) {
-            try User.Parser().parse(&input)
+            #expect(user == User(name: "Alice", age: 42))
+            #expect(input == ";Bob,35")
         }
-        #expect(input == text[...])
+
+        @Test(arguments: ["", ",42", "Alice", "Alice,", "Alice,-1", "Alice,abc"])
+        func `an invalid record fails without consuming input`(_ text: String) {
+            var input = text[...]
+
+            #expect(throws: User.Parser.Failure.invalidRecord) {
+                try User.Parser().parse(&input)
+            }
+            #expect(input == text[...])
+        }
     }
 }
 

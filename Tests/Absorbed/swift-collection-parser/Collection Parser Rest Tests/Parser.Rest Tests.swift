@@ -4,13 +4,17 @@
     import Collection_Parser_Test_Support
     import Testing
 
-    @Suite
-    struct `Parser::Rest` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Rest Tests` {}
 
-    extension `Parser::Rest`.Unit {
+extension `Parser.Rest Tests` {
+        @Suite
+        struct `Parser::Rest` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Rest Tests`.`Parser::Rest`.Unit {
         @Test
         func `consumes all remaining input`() {
             let parser = Parser::Rest<CollectionParserTest.Input>()
@@ -23,7 +27,7 @@
         }
     }
 
-    extension `Parser::Rest`.`Edge Case` {
+    extension `Parser.Rest Tests`.`Parser::Rest`.`Edge Case` {
         @Test
         func `returns empty slice on empty input`() {
             let parser = Parser::Rest<CollectionParserTest.Input>()

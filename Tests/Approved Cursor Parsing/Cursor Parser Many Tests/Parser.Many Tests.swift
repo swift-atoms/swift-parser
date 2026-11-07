@@ -6,13 +6,17 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `Parser::Many` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Many Tests` {}
 
-    extension `Parser::Many`.Unit {
+extension `Parser.Many Tests` {
+        @Suite
+        struct `Parser::Many` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Many Tests`.`Parser::Many`.Unit {
         @Test
         func `zero or more collects all matching elements`() throws(any Swift::Error) {
             let parser = Parser::Many(rejected: { _ in true }) {
@@ -52,7 +56,7 @@
         }
     }
 
-    extension `Parser::Many`.`Edge Case` {
+    extension `Parser.Many Tests`.`Parser::Many`.`Edge Case` {
 
         @Test
         func `terminates after a non-consuming success`() throws(any Swift::Error) {

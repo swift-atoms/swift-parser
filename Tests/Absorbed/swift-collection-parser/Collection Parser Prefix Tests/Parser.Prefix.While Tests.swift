@@ -5,13 +5,17 @@
     import Collection_Parser_Test_Support
     import Testing
 
-    @Suite
-    struct `Parser::Prefix.While` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Prefix.While Tests` {}
 
-    extension `Parser::Prefix.While`.Unit {
+extension `Parser.Prefix.While Tests` {
+        @Suite
+        struct `Parser::Prefix.While` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Prefix.While Tests`.`Parser::Prefix.While`.Unit {
         @Test
         func `consumes while predicate holds`() throws(any Swift::Error) {
             let digits = Parser::Prefix.While<CollectionParserTest.Input> {
@@ -38,7 +42,7 @@
         }
     }
 
-    extension `Parser::Prefix.While`.`Edge Case` {
+    extension `Parser.Prefix.While Tests`.`Parser::Prefix.While`.`Edge Case` {
         @Test
         func `returns empty when predicate immediately fails`() throws(any Swift::Error) {
             let parser = Parser::Prefix.While<CollectionParserTest.Input> { _ in false }

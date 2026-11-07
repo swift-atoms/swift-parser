@@ -24,68 +24,72 @@
         }
     }
 
-    @Suite struct `Repetition Parser Tests` {
-        @Test func rejectedIterationIsRestored() throws {
-            let bounds: ClosedRange<Cardinal> = 2...5
-            let parser: ClosedRange<Cardinal>.Parser<Step, Rejected, Fatal> = bounds.parser { Step() }
-            var input: Substring = "12xrest"
-            #expect(try parser.parse(&input) == ["1", "2"])
-            #expect(input == "xrest")
-        }
-        @Test func fatalErrorsPropagateRatherThanStopping() {
-            let bounds: PartialRangeFrom<Cardinal> = 0...
-            let parser = bounds.parser { Step() }
-            var input: Substring = "12!rest"
-            #expect(throws: Either<Repetition<PartialRangeFrom<Cardinal>, Step>.Error, Fatal>.right(.unavailable)) {
-                _ = try parser.parse(&input)
+enum `Repetition.Parser Tests` {}
+
+extension `Repetition.Parser Tests` {
+        @Suite struct `Repetition Parser Tests` {
+            @Test func rejectedIterationIsRestored() throws {
+                let bounds: ClosedRange<Cardinal> = 2...5
+                let parser: ClosedRange<Cardinal>.Parser<Step, Rejected, Fatal> = bounds.parser { Step() }
+                var input: Substring = "12xrest"
+                #expect(try parser.parse(&input) == ["1", "2"])
+                #expect(input == "xrest")
             }
-            #expect(input == "rest")
-        }
-        @Test func minimumFailureRestoresOnlyTheRejectedIteration() {
-            let bounds: ClosedRange<Cardinal> = 2...5
-            let parser = bounds.parser { Step() }
-            var input: Substring = "1xrest"
-            #expect(throws: Either<Repetition<ClosedRange<Cardinal>, Step>.Error, Fatal>.left(.insufficient(actual: 1))) {
-                _ = try parser.parse(&input)
-            }
-            #expect(input == "xrest")
-        }
-        @Test func noProgressIsAnError() {
-            let bounds: PartialRangeFrom<Cardinal> = 0...
-            let parser = bounds.parser {
-                Parser<Substring, Int, Either<Rejected, Fatal>> { _ in 1 }
-            }
-            var input: Substring = "abc"
-            do {
-                _ = try parser.parse(&input)
-                Issue.record("Expected no-progress error")
-            } catch {
-                switch error {
-                case .left(.noProgress): break
-                default: Issue.record("Unexpected failure")
+            @Test func fatalErrorsPropagateRatherThanStopping() {
+                let bounds: PartialRangeFrom<Cardinal> = 0...
+                let parser = bounds.parser { Step() }
+                var input: Substring = "12!rest"
+                #expect(throws: Either<Repetition<PartialRangeFrom<Cardinal>, Step>.Error, Fatal>.right(.unavailable)) {
+                    _ = try parser.parse(&input)
                 }
+                #expect(input == "rest")
             }
-            #expect(input == "abc")
-        }
-        @Test func upperBoundDoesNotProbeTheNextElement() throws {
-            let bounds: PartialRangeThrough<Cardinal> = ...2
-            let parser = bounds.parser { Step() }
-            var input: Substring = "12!"
-            #expect(try parser.parse(&input) == ["1", "2"])
-            #expect(input == "!")
-        }
-        @Test func exclusiveAndEmptyBoundsAreHandledWithoutUnderflow() throws {
-            let bounds: Range<Cardinal> = 1..<3
-            var input: Substring = "123"
-            #expect(try bounds.parser { Step() }.parse(&input) == ["1", "2"])
-            #expect(input == "3")
-            let empty: PartialRangeUpTo<Cardinal> = ..<0
-            #expect(throws: Either<Repetition<PartialRangeUpTo<Cardinal>, Step>.Error, Fatal>.left(.emptyBounds)) {
-                _ = try empty.parser { Step() }.parse(&input)
+            @Test func minimumFailureRestoresOnlyTheRejectedIteration() {
+                let bounds: ClosedRange<Cardinal> = 2...5
+                let parser = bounds.parser { Step() }
+                var input: Substring = "1xrest"
+                #expect(throws: Either<Repetition<ClosedRange<Cardinal>, Step>.Error, Fatal>.left(.insufficient(actual: 1))) {
+                    _ = try parser.parse(&input)
+                }
+                #expect(input == "xrest")
             }
-            #expect(input == "3")
+            @Test func noProgressIsAnError() {
+                let bounds: PartialRangeFrom<Cardinal> = 0...
+                let parser = bounds.parser {
+                    Parser<Substring, Int, Either<Rejected, Fatal>> { _ in 1 }
+                }
+                var input: Substring = "abc"
+                do {
+                    _ = try parser.parse(&input)
+                    Issue.record("Expected no-progress error")
+                } catch {
+                    switch error {
+                    case .left(.noProgress): break
+                    default: Issue.record("Unexpected failure")
+                    }
+                }
+                #expect(input == "abc")
+            }
+            @Test func upperBoundDoesNotProbeTheNextElement() throws {
+                let bounds: PartialRangeThrough<Cardinal> = ...2
+                let parser = bounds.parser { Step() }
+                var input: Substring = "12!"
+                #expect(try parser.parse(&input) == ["1", "2"])
+                #expect(input == "!")
+            }
+            @Test func exclusiveAndEmptyBoundsAreHandledWithoutUnderflow() throws {
+                let bounds: Range<Cardinal> = 1..<3
+                var input: Substring = "123"
+                #expect(try bounds.parser { Step() }.parse(&input) == ["1", "2"])
+                #expect(input == "3")
+                let empty: PartialRangeUpTo<Cardinal> = ..<0
+                #expect(throws: Either<Repetition<PartialRangeUpTo<Cardinal>, Step>.Error, Fatal>.left(.emptyBounds)) {
+                    _ = try empty.parser { Step() }.parse(&input)
+                }
+                #expect(input == "3")
+            }
         }
-    }
+}
 
     private struct ScopedInput: Restorable, ~Copyable, ~Escapable {
         let values: Span<Int>
@@ -100,7 +104,7 @@
         mutating func seek(to checkpoint: Int) { position = checkpoint }
     }
 
-    extension `Repetition Parser Tests` {
+    extension `Repetition.Parser Tests`.`Repetition Parser Tests` {
         @Test func scopedNoncopyableInputRestoresItsCheckpoint() throws {
             let values = [1, 2, -1, 4]
             var input = ScopedInput(values.span)
@@ -119,7 +123,7 @@
         }
     }
 
-    extension `Repetition Parser Tests` {
+    extension `Repetition.Parser Tests`.`Repetition Parser Tests` {
         @Test func arraySliceRestoresRejectedElement() throws {
             let bounds: PartialRangeFrom<Cardinal> = 0...
             let parser = bounds.parser {
@@ -152,7 +156,7 @@
         func parse(_ input: inout Substring) throws(Failure) -> Character { try Step().parse(&input) }
     }
 
-    extension `Repetition Parser Tests` {
+    extension `Repetition.Parser Tests`.`Repetition Parser Tests` {
         @Test func aBuilderCountsWholeCompositionsAndRestoresPartialRejection() throws {
             let bounds: PartialRangeFrom<Cardinal> = 0...
             let parser = bounds.parser(for: Substring.self) {

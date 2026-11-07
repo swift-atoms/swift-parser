@@ -3,60 +3,64 @@
     import Parser
     import Testing
 
-    @Suite
-    struct `Lazy Parser Tests` {
+enum `Lazy.Parser Tests` {}
 
-        @Test
-        func `defers parser construction until parse time`() throws(any Swift.Error) {
-            final class Box {
-                var built = 0
+extension `Lazy.Parser Tests` {
+        @Suite
+        struct `Lazy Parser Tests` {
+
+            @Test
+            func `defers parser construction until parse time`() throws(any Swift.Error) {
+                final class Box {
+                    var built = 0
+                }
+                let box = Box()
+
+                let lazy = Lazy {
+                    box.built += 1
+                    return Literal("a")
+                }
+                #expect(box.built == 0)
+
+                var input: Substring = "abc"
+                let output = try lazy.parser().parse(&input)
+
+                #expect(output == "a")
+                #expect(input == "bc")
+                #expect(box.built == 1)
             }
-            let box = Box()
 
-            let lazy = Lazy {
-                box.built += 1
-                return Literal("a")
+            @Test
+            func `re-invokes the thunk on every parse`() throws(any Swift.Error) {
+                final class Box {
+                    var built = 0
+                }
+                let box = Box()
+
+                let lazy = Lazy {
+                    box.built += 1
+                    return Literal("a")
+                }
+
+                var input: Substring = "aa"
+                _ = try lazy.parser().parse(&input)
+                _ = try lazy.parser().parse(&input)
+
+                #expect(box.built == 2)
+                #expect(input.isEmpty)
             }
-            #expect(box.built == 0)
 
-            var input: Substring = "abc"
-            let output = try lazy.parser().parse(&input)
+            @Test
+            func `propagates the wrapped parser's failure`() {
+                let lazy = Lazy(Literal("a"))
+                var input: Substring = "b"
 
-            #expect(output == "a")
-            #expect(input == "bc")
-            #expect(box.built == 1)
+                #expect(throws: LiteralError.expected("a")) {
+                    try lazy.parser().parse(&input)
+                }
+            }
         }
-
-        @Test
-        func `re-invokes the thunk on every parse`() throws(any Swift.Error) {
-            final class Box {
-                var built = 0
-            }
-            let box = Box()
-
-            let lazy = Lazy {
-                box.built += 1
-                return Literal("a")
-            }
-
-            var input: Substring = "aa"
-            _ = try lazy.parser().parse(&input)
-            _ = try lazy.parser().parse(&input)
-
-            #expect(box.built == 2)
-            #expect(input.isEmpty)
-        }
-
-        @Test
-        func `propagates the wrapped parser's failure`() {
-            let lazy = Lazy(Literal("a"))
-            var input: Substring = "b"
-
-            #expect(throws: LiteralError.expected("a")) {
-                try lazy.parser().parse(&input)
-            }
-        }
-    }
+}
 
     private enum LiteralError: Swift.Error, Equatable {
         case expected(Character)
@@ -88,7 +92,7 @@
         }
     }
 
-    extension `Lazy Parser Tests` {
+    extension `Lazy.Parser Tests`.`Lazy Parser Tests` {
         @Test func `a body adapts a lazy value`() throws {
             var input: Substring = "abc"
             #expect(try Deferred().parse(&input) == "a")
@@ -121,7 +125,7 @@
         }
     }
 
-    extension `Lazy Parser Tests` {
+    extension `Lazy.Parser Tests`.`Lazy Parser Tests` {
         @Test func `a lazy factory creates and destroys a fresh noncopyable parser per call`() {
             let lifetime = Lifetime()
             let parser = Parser { DeferredOwner(lifetime: lifetime) }
@@ -138,7 +142,7 @@
 
     private enum FactoryError: Swift.Error, Equatable { case unavailable }
 
-    extension `Lazy Parser Tests` {
+    extension `Lazy.Parser Tests`.`Lazy Parser Tests` {
         @Test func `factory failure preserves input and the next parse retries construction`() throws {
             var attempts = 0
             let lazy = Lazy { () throws(FactoryError) -> Literal in

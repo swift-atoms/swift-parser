@@ -4,33 +4,37 @@
     import Parser
     import Testing
 
-    @Suite
-    struct `Parser flat maps select downstream operations and distinguish stage failures` {
+enum `FlatMap.Parser Tests` {}
 
-        @Test
-        func `the downstream parser depends on the upstream output`() throws(any Swift::Error) {
-            var input: Substring = "2ab!"
-            let output = try Counted().parse(&input)
-            #expect(output == "ab")
-            #expect(input == "!")
-        }
+extension `FlatMap.Parser Tests` {
+        @Suite
+        struct `Parser flat maps select downstream operations and distinguish stage failures` {
 
-        @Test
-        func `an upstream failure is the left branch`() {
-            var input: Substring = ""
-            #expect(throws: Either<DigitError, TakeError>.left(.empty)) {
-                try Counted().parse(&input)
+            @Test
+            func `the downstream parser depends on the upstream output`() throws(any Swift::Error) {
+                var input: Substring = "2ab!"
+                let output = try Counted().parse(&input)
+                #expect(output == "ab")
+                #expect(input == "!")
+            }
+
+            @Test
+            func `an upstream failure is the left branch`() {
+                var input: Substring = ""
+                #expect(throws: Either<DigitError, TakeError>.left(.empty)) {
+                    try Counted().parse(&input)
+                }
+            }
+
+            @Test
+            func `a downstream failure is the right branch`() {
+                var input: Substring = "3a"
+                #expect(throws: Either<DigitError, TakeError>.right(.short)) {
+                    try Counted().parse(&input)
+                }
             }
         }
-
-        @Test
-        func `a downstream failure is the right branch`() {
-            var input: Substring = "3a"
-            #expect(throws: Either<DigitError, TakeError>.right(.short)) {
-                try Counted().parse(&input)
-            }
-        }
-    }
+}
 
     private struct Counted: Parsing {
     }

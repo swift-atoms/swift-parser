@@ -4,13 +4,17 @@
     import Collection_Parser_Test_Support
     import Testing
 
-    @Suite
-    struct `Parser::Prefix.UpTo` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Prefix.UpTo Tests` {}
 
-    extension `Parser::Prefix.UpTo`.Unit {
+extension `Parser.Prefix.UpTo Tests` {
+        @Suite
+        struct `Parser::Prefix.UpTo` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Prefix.UpTo Tests`.`Parser::Prefix.UpTo`.Unit {
         @Test
         func `consumes up to delimiter without including it`() {
             let parser = Parser::Prefix.UpTo<CollectionParserTest.Input>([UInt8(ascii: ",")])
@@ -33,7 +37,7 @@
         }
     }
 
-    extension `Parser::Prefix.UpTo`.`Edge Case` {
+    extension `Parser.Prefix.UpTo Tests`.`Parser::Prefix.UpTo`.`Edge Case` {
         @Test
         func `consumes all when delimiter not found`() {
             let parser = Parser::Prefix.UpTo<CollectionParserTest.Input>([0xFF])

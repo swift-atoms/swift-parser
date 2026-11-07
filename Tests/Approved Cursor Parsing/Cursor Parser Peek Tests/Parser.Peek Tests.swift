@@ -5,13 +5,17 @@
     import Cursor
     import Testing
 
-    @Suite
-    struct `Parser::Peek` {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+enum `Parser.Peek Tests` {}
 
-    extension `Parser::Peek`.Unit {
+extension `Parser.Peek Tests` {
+        @Suite
+        struct `Parser::Peek` {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+        }
+}
+
+    extension `Parser.Peek Tests`.`Parser::Peek`.Unit {
         @Test
         func `returns output without consuming input`() throws(any Swift::Error) {
             let parser = Parser::First.Element<ArraySlice<UInt8>>().peek()
@@ -36,7 +40,7 @@
         }
     }
 
-    extension `Parser::Peek`.`Edge Case` {
+    extension `Parser.Peek Tests`.`Parser::Peek`.`Edge Case` {
         @Test
         func `upstream failure does not consume input`() {
             let parser = Parser::First.Where<ArraySlice<UInt8>> { $0 == 0x41 }.peek()

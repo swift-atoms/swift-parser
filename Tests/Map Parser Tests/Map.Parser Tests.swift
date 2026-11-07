@@ -4,122 +4,126 @@
     import Either
     import Testing
 
-    @Suite
-    struct `Parser maps preserve failure types and transfer transformed outputs` {
+enum `Map.Parser Tests` {}
 
-        @Test
-        func `nonthrowing stages remain exactly nonthrowing`() {
-            let parser = Incremented()
-            requireFailure(parser, Never.self)
+extension `Map.Parser Tests` {
+        @Suite
+        struct `Parser maps preserve failure types and transfer transformed outputs` {
 
-            var input = 41
-            let output = parser.parse(&input)
+            @Test
+            func `nonthrowing stages remain exactly nonthrowing`() {
+                let parser = Incremented()
+                requireFailure(parser, Never.self)
 
-            #expect(output == 42)
-        }
+                var input = 41
+                let output = parser.parse(&input)
 
-        @Test
-        func `fallible upstream with nonthrowing transform preserves upstream failure`() {
-            let parser = IncrementedFallibleUpstream()
-            requireFailure(parser, UpstreamFailure.self)
-
-            var input = 0
-            #expect(throws: UpstreamFailure.failed) {
-                try parser.parse(&input)
-            }
-        }
-
-        @Test
-        func `nonthrowing upstream with throwing transform exposes only transform failure`() {
-            let parser = ThrowingTransform()
-            requireFailure(parser, TransformFailure.self)
-
-            var input = 0
-            #expect(throws: TransformFailure.failed) {
-                try parser.parse(&input)
-            }
-        }
-
-        @Test
-        func `two fallible stages use Either`() {
-            let upstream = FallibleUpstreamThrowingTransform()
-            requireFailure(
-                upstream,
-                Either<UpstreamFailure, TransformFailure>.self
-            )
-
-            var upstreamInput = 0
-            #expect {
-                try upstream.parse(&upstreamInput)
-            } throws: { error in
-                guard
-                    let failure = error
-                        as? Either<UpstreamFailure, TransformFailure>
-                else { return false }
-                return failure.left == .failed
+                #expect(output == 42)
             }
 
-            let transform = FallibleUpstreamFailingTransform()
-            requireFailure(
-                transform,
-                Either<UpstreamFailure, TransformFailure>.self
-            )
-            var transformInput = 0
-            #expect {
-                try transform.parse(&transformInput)
-            } throws: { error in
-                guard
-                    let failure = error
-                        as? Either<UpstreamFailure, TransformFailure>
-                else { return false }
-                return failure.right == .failed
+            @Test
+            func `fallible upstream with nonthrowing transform preserves upstream failure`() {
+                let parser = IncrementedFallibleUpstream()
+                requireFailure(parser, UpstreamFailure.self)
+
+                var input = 0
+                #expect(throws: UpstreamFailure.failed) {
+                    try parser.parse(&input)
+                }
+            }
+
+            @Test
+            func `nonthrowing upstream with throwing transform exposes only transform failure`() {
+                let parser = ThrowingTransform()
+                requireFailure(parser, TransformFailure.self)
+
+                var input = 0
+                #expect(throws: TransformFailure.failed) {
+                    try parser.parse(&input)
+                }
+            }
+
+            @Test
+            func `two fallible stages use Either`() {
+                let upstream = FallibleUpstreamThrowingTransform()
+                requireFailure(
+                    upstream,
+                    Either<UpstreamFailure, TransformFailure>.self
+                )
+
+                var upstreamInput = 0
+                #expect {
+                    try upstream.parse(&upstreamInput)
+                } throws: { error in
+                    guard
+                        let failure = error
+                            as? Either<UpstreamFailure, TransformFailure>
+                    else { return false }
+                    return failure.left == .failed
+                }
+
+                let transform = FallibleUpstreamFailingTransform()
+                requireFailure(
+                    transform,
+                    Either<UpstreamFailure, TransformFailure>.self
+                )
+                var transformInput = 0
+                #expect {
+                    try transform.parse(&transformInput)
+                } throws: { error in
+                    guard
+                        let failure = error
+                            as? Either<UpstreamFailure, TransformFailure>
+                    else { return false }
+                    return failure.right == .failed
+                }
+            }
+
+            @Test
+            func `throws Never transform remains exactly nonthrowing`() {
+                let parser = IncrementedByNeverThrowingFunction()
+                requireFailure(parser, Never.self)
+
+                var input = 41
+                let output = parser.parse(&input)
+
+                #expect(output == 42)
+            }
+
+            @Test
+            func `fallible upstream with throws Never transform preserves upstream failure`() {
+                let parser = FallibleUpstreamNeverThrowingFunction()
+                requireFailure(parser, UpstreamFailure.self)
+            }
+
+            @Test
+            func `constructing a parser with a throwing transform is nonthrowing`() {
+                _ = ThrowingTransform().body
+            }
+
+            @Test
+            func `Map consumes noncopyable nonescapable output`() {
+                let parser = IncrementedScopedToken()
+                requireFailure(parser, Never.self)
+
+                var input = 41
+                let output = parser.parse(&input)
+
+                #expect(output == 42)
+            }
+
+            @Test
+            func `Map produces noncopyable output`() {
+                let parser = IncrementedIntoLinearResult()
+                requireFailure(parser, Never.self)
+
+                var input = 41
+                let output = parser.parse(&input)
+
+                #expect(output.value == 42)
             }
         }
-
-        @Test
-        func `throws Never transform remains exactly nonthrowing`() {
-            let parser = IncrementedByNeverThrowingFunction()
-            requireFailure(parser, Never.self)
-
-            var input = 41
-            let output = parser.parse(&input)
-
-            #expect(output == 42)
-        }
-
-        @Test
-        func `fallible upstream with throws Never transform preserves upstream failure`() {
-            let parser = FallibleUpstreamNeverThrowingFunction()
-            requireFailure(parser, UpstreamFailure.self)
-        }
-
-        @Test
-        func `constructing a parser with a throwing transform is nonthrowing`() {
-            _ = ThrowingTransform().body
-        }
-
-        @Test
-        func `Map consumes noncopyable nonescapable output`() {
-            let parser = IncrementedScopedToken()
-            requireFailure(parser, Never.self)
-
-            var input = 41
-            let output = parser.parse(&input)
-
-            #expect(output == 42)
-        }
-
-        @Test
-        func `Map produces noncopyable output`() {
-            let parser = IncrementedIntoLinearResult()
-            requireFailure(parser, Never.self)
-
-            var input = 41
-            let output = parser.parse(&input)
-
-            #expect(output.value == 42)
-        }
-    }
+}
 
     private func requireFailure<
         P: Parsing & ~Copyable,
@@ -314,19 +318,21 @@
         }
     }
 
-    @Suite
-    struct `Parser maps transform values read from a nonescapable cursor` {
+extension `Map.Parser Tests` {
+        @Suite
+        struct `Parser maps transform values read from a nonescapable cursor` {
 
-        @Test
-        func `map transforms a value read from a nonescapable cursor`() throws(any Swift::Error) {
-            let bytes: [UInt8] = [41]
-            var cursor = Cursor(bytes.span)
-            let value = try Successor().parse(&cursor)
-            let end = cursor.index
-            #expect(value == 42)
-            #expect(end == 1)
+            @Test
+            func `map transforms a value read from a nonescapable cursor`() throws(any Swift::Error) {
+                let bytes: [UInt8] = [41]
+                var cursor = Cursor(bytes.span)
+                let value = try Successor().parse(&cursor)
+                let end = cursor.index
+                #expect(value == 42)
+                #expect(end == 1)
+            }
         }
-    }
+}
 
     private struct Successor: Parsing {
         typealias Failure = ByteMismatch

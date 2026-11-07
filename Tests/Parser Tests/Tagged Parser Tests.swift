@@ -2,19 +2,23 @@
     import Parser
     import Testing
 
-    @Suite
-    struct `Tagged Parser` {
+enum `Tagged Parser Tests` {}
 
-        @Test
-        func `an explicit parser lifts its output through the tag`() throws(any Swift.Error) {
-            var input: Substring = "abc"
+extension `Tagged Parser Tests` {
+        @Suite
+        struct `Tagged Parser` {
 
-            let value = try Tagged::Tagged<Field, Token>.Parser(TokenParser()).parse(&input)
+            @Test
+            func `an explicit parser lifts its output through the tag`() throws(any Swift.Error) {
+                var input: Substring = "abc"
 
-            #expect(value.underlying == Token(character: "a"))
-            #expect(input == "bc")
+                let value = try Tagged::Tagged<Field, Token>.Parser(TokenParser()).parse(&input)
+
+                #expect(value.underlying == Token(character: "a"))
+                #expect(input == "bc")
+            }
         }
-    }
+}
 
     private enum Field {}
 
@@ -45,7 +49,7 @@
         }
     }
 
-    extension `Tagged Parser` {
+    extension `Tagged Parser Tests`.`Tagged Parser` {
 
         @Test
         func `the tag surfaces the underlying parser's failure unchanged`() {
