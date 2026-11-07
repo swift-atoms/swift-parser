@@ -1,11 +1,7 @@
 public import Parser_Core
 
 extension Swift::String {
-
     public struct Parser: Parser::Parsing {
-
-        public typealias Error = Swift::Slice<Swift::String>.Parser<Input>.Error
-
         public let wrapped: Swift::String
 
         @inlinable
@@ -13,6 +9,10 @@ extension Swift::String {
             self.wrapped = wrapped
         }
     }
+}
+
+extension Swift.Parser {
+    public typealias Error = Swift::Slice<Swift::String>.Parser<Input>.Error
 }
 
 extension Swift::String.Parser {

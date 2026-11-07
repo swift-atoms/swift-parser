@@ -6,13 +6,7 @@ where
     Wrapped.Input: ~Copyable & ~Escapable,
     Wrapped.Output: ~Copyable & Escapable
 {
-
     public struct Parser: Parser::Parsing {
-
-        public typealias Input = Wrapped.Input
-
-        public typealias Failure = Wrapped.Failure
-
         public let wrapped: Swift::Optional<Wrapped>
 
         @inlinable
@@ -20,6 +14,12 @@ where
             self.wrapped = wrapped
         }
     }
+}
+
+extension Swift.Parser {
+    public typealias Input = Wrapped.Input
+
+    public typealias Failure = Wrapped.Failure
 }
 
 extension Swift::Optional.Parser where Wrapped: Parser::Parsing, Wrapped.Input: ~Copyable & ~Escapable, Wrapped.Output: ~Copyable & Escapable {
@@ -37,7 +37,6 @@ extension Swift::Optional.Parser where Wrapped: Parser::Parsing, Wrapped.Input: 
 }
 
 extension Parser::Builder where Input: ~Copyable & ~Escapable {
-
     @inlinable
     public static func buildIf<P: Parser::Parsing>(
         _ parser: P?

@@ -3,11 +3,12 @@
     public import Collection
 
     public struct End<Input: Collection.Slice.`Protocol`>: Parsing {
-
-        public typealias Failure = Parser::End<Input>.Error
-
         @inlinable
         public init() {}
+    }
+
+    extension End {
+        public typealias Failure = Parser::End<Input>.Error
     }
 
     extension End {
@@ -24,7 +25,6 @@
     }
 
     extension Parser::End where Input: Collection.Slice.`Protocol` {
-
         public enum Error: Swift::Error, Equatable {
             case expectedEnd(remaining: Int)
         }
