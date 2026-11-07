@@ -6,7 +6,7 @@
     import Testing
 
     @Suite struct PredicateIterationParserTests {
-        private enum Fault: Error, Equatable { case source }
+        private enum Fault: Swift.Error, Equatable { case source }
         private struct Input: Iterating {
             var elements: ArraySlice<Int>
             var fails = false

@@ -2,8 +2,8 @@
     import Parser
     import Testing
 
-    private enum Rejected: Error { case mismatch }
-    private enum Fatal: Error, Equatable { case unavailable }
+    private enum Rejected: Swift.Error { case mismatch }
+    private enum Fatal: Swift.Error, Equatable { case unavailable }
     private struct Step: Parsing, ~Copyable {
     }
 

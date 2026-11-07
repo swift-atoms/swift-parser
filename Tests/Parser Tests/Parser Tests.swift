@@ -83,7 +83,7 @@ struct `Parser supports function and builder construction` {
 private func requireParsing<P: Parsing>(_ parser: P)
 where P.Input == Int, P.Output == Int, P.Failure == Never {}
 
-private enum Rejected: Error { case invalid }
+private enum Rejected: Swift.Error { case invalid }
 private struct Value: ~Copyable { let value: Int }
 private final class Count {
     var builds = 0
@@ -117,7 +117,7 @@ extension Owner {
 struct `Parser closures consume input and preserve typed failure` {
 
     @Test
-    func `a closure parses and consumes input`() throws(any Swift::Error) {
+    func `a closure parses and consumes input`() throws(any Swift.Error) {
         let parser = Parser<Substring, Character, ParseFailure> { input throws(ParseFailure) in
             guard let first = input.first else { throw .empty }
             input = input.dropFirst()
@@ -147,7 +147,7 @@ struct `Parser closures consume input and preserve typed failure` {
     }
 }
 
-private enum ParseFailure: Swift::Error, Equatable {
+private enum ParseFailure: Swift.Error, Equatable {
     case empty
 }
 
@@ -178,7 +178,7 @@ private enum ParseFailure: Swift::Error, Equatable {
 #if Map
     @Suite
     private struct `Parser mapping initializers preserve failures` {
-        private enum ConstructionFailure: Error, Equatable { case invalid }
+        private enum ConstructionFailure: Swift.Error, Equatable { case invalid }
 
         @Test func `nonthrowing construction preserves parsing failure`() throws {
             let parser = Parser(String.init) {

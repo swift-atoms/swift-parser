@@ -8,7 +8,7 @@
     struct `Pair Parser Tests` {
 
         @Test
-        func `parses sequentially into a nominal Pair`() throws(any Swift::Error) {
+        func `parses sequentially into a nominal Pair`() throws(any Swift.Error) {
             var input: Substring = "abc"
             let parser: Pair::Pair<Literal, OtherLiteral>.Parser<Either<LiteralError, OtherError>> =
                 Pair::Pair(Literal("a"), OtherLiteral("b")).parser()
@@ -44,7 +44,7 @@
         }
 
         @Test
-        func `equally typed failures collapse`() throws(any Swift::Error) {
+        func `equally typed failures collapse`() throws(any Swift.Error) {
             var input: Substring = "abc"
             let parser: Pair::Pair<Literal, Literal>.Parser<LiteralError> =
                 Pair::Pair(Literal("a"), Literal("b")).parser()
@@ -57,7 +57,7 @@
         }
 
         @Test
-        func `noncopyable parsers produce move-only nominal Pair output`() throws(any Swift::Error) {
+        func `noncopyable parsers produce move-only nominal Pair output`() throws(any Swift.Error) {
             var input: Substring = "abc"
             let parser: Pair::Pair<TokenLiteral, TokenLiteral>.Parser<LiteralError> = Pair::Pair(
                 TokenLiteral(expected: "a"),
@@ -89,11 +89,11 @@
         }
     }
 
-    private enum LiteralError: Error, Equatable {
+    private enum LiteralError: Swift.Error, Equatable {
         case expected(Character)
     }
 
-    private enum OtherError: Error, Equatable {
+    private enum OtherError: Swift.Error, Equatable {
         case expected(Character)
     }
 

@@ -6,7 +6,7 @@
     struct `Tagged Parser` {
 
         @Test
-        func `an explicit parser lifts its output through the tag`() throws(any Swift::Error) {
+        func `an explicit parser lifts its output through the tag`() throws(any Swift.Error) {
             var input: Substring = "abc"
 
             let value = try Tagged::Tagged<Field, Token>.Parser(TokenParser()).parse(&input)
@@ -22,7 +22,7 @@
         let character: Character
     }
 
-    private enum TokenError: Error, Equatable {
+    private enum TokenError: Swift.Error, Equatable {
         case empty
     }
 
@@ -57,7 +57,7 @@
         }
     }
 
-    private func requireFailure<P: Parser::Parsing, Failure: Swift::Error>(
+    private func requireFailure<P: Parser::Parsing, Failure: Swift.Error>(
         _: borrowing P,
         _: Failure.Type
     ) where P.Input: ~Copyable & ~Escapable, P.Output: ~Copyable & ~Escapable, P.Failure == Failure {}

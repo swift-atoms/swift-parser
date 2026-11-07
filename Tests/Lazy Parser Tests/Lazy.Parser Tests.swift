@@ -7,7 +7,7 @@
     struct `Lazy Parser Tests` {
 
         @Test
-        func `defers parser construction until parse time`() throws(any Swift::Error) {
+        func `defers parser construction until parse time`() throws(any Swift.Error) {
             final class Box {
                 var built = 0
             }
@@ -28,7 +28,7 @@
         }
 
         @Test
-        func `re-invokes the thunk on every parse`() throws(any Swift::Error) {
+        func `re-invokes the thunk on every parse`() throws(any Swift.Error) {
             final class Box {
                 var built = 0
             }
@@ -58,7 +58,7 @@
         }
     }
 
-    private enum LiteralError: Error, Equatable {
+    private enum LiteralError: Swift.Error, Equatable {
         case expected(Character)
     }
 
@@ -136,7 +136,7 @@
         }
     }
 
-    private enum FactoryError: Error, Equatable { case unavailable }
+    private enum FactoryError: Swift.Error, Equatable { case unavailable }
 
     extension `Lazy Parser Tests` {
         @Test func `factory failure preserves input and the next parse retries construction`() throws {

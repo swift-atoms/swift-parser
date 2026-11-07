@@ -5,15 +5,15 @@
     import Optic
     import Testing
 
-    private enum UpstreamFailure: Error, Equatable {
+    private enum UpstreamFailure: Swift.Error, Equatable {
         case upstream
     }
 
-    private enum TransformFailure: Error, Equatable {
+    private enum TransformFailure: Swift.Error, Equatable {
         case transform(Int)
     }
 
-    private enum BackwardFailure: Error {
+    private enum BackwardFailure: Swift.Error {
         case unused
     }
 
@@ -341,7 +341,7 @@
         }
     }
 
-    private func requireFailure<P: Parsing, E: Error>(
+    private func requireFailure<P: Parsing, E: Swift.Error>(
         _ parser: borrowing P,
         _ failure: E.Type
     ) where P.Failure == E {}
