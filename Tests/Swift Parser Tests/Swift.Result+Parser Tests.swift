@@ -49,7 +49,7 @@ struct `Swift.Result+Parser Tests` {
     }
 }
 
-private enum Rejected: Error, Equatable { case unavailable, negative }
+private enum Rejected: Swift.Error, Equatable { case unavailable, negative }
 
 private struct Next: Parsing {
     typealias Failure = Rejected
@@ -75,7 +75,6 @@ private struct Selected: Parsing {
 private struct Value: ~Copyable { let value: Int }
 
 private struct Owner: Parsing, ~Copyable {
-
     borrowing func parse(_ input: inout Int) -> Value {
         input += 1
         return Value(value: input)
