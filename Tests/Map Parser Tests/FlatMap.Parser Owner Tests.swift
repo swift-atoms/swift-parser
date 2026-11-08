@@ -90,10 +90,10 @@ extension `FlatMap.Parser Owner Tests` {
                     Downstream(seed: Seed(number: number, lifetime: lifetime), fails: false, lifetime: lifetime)
                 }
                 let parser: FlatMap::FlatMap<Parser<Int, Int, Never>.Output, Downstream>.Parser<Parser<Int, Int, Never>>
-                if fluent {
-                    parser = upstream.flatMap(transform)
+                parser = if fluent {
+                    upstream.flatMap(transform)
                 } else {
-                    parser = FlatMap::FlatMap.Parser(upstream: upstream, transform: transform)
+                    FlatMap::FlatMap.Parser(upstream: upstream, transform: transform)
                 }
                 requireCopyable(parser)
                 let copied = parser
