@@ -1,7 +1,11 @@
 public import Parser_Core
 
 extension Swift::Substring {
+
     public struct Parser: Parser::Parsing {
+
+        public typealias Error = Swift::Slice<Swift::Substring>.Parser<Input>.Error
+
         public let wrapped: Swift::Substring
 
         @inlinable
@@ -9,10 +13,6 @@ extension Swift::Substring {
             self.wrapped = wrapped
         }
     }
-}
-
-extension Swift.Parser {
-    public typealias Error = Swift::Slice<Swift::Substring>.Parser<Input>.Error
 }
 
 extension Swift::Substring.Parser {

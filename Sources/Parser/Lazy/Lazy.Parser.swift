@@ -9,7 +9,12 @@
         Value.Input: ~Copyable & ~Escapable,
         Value.Output: ~Copyable & Escapable
     {
+
         public struct Parser<Failure: Swift::Error>: Parser::Parsing {
+
+            public typealias Input = Value.Input
+            public typealias Output = Value.Output
+
             public let wrapped: Lazy::Lazy<Value, FactoryFailure>
             @usableFromInline internal let factoryFailure: (FactoryFailure) -> Failure
             @usableFromInline internal let parseFailure: (Value.Failure) -> Failure
@@ -41,12 +46,6 @@
             .init(self)
         }
     }
-
-extension Lazy.Parser {
-        public typealias Input = Value.Input
-
-        public typealias Output = Value.Output
-}
 
     extension Lazy::Lazy.Parser where Value: Parser::Parsing & ~Copyable, Value.Input: ~Copyable & ~Escapable, Value.Output: ~Copyable & Escapable {
         @inlinable
