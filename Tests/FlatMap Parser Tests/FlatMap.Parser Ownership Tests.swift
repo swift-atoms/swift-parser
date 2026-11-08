@@ -4,9 +4,9 @@
     import Parser
     import Testing
 
-enum `FlatMap.Parser Ownership Tests` {}
+    enum `FlatMap.Parser Ownership Tests` {}
 
-extension `FlatMap.Parser Ownership Tests` {
+    extension `FlatMap.Parser Ownership Tests` {
         @Suite
         struct `Direct and fluent flat map preserve noncopyable results` {
             @Test(arguments: [false, true])
@@ -70,7 +70,7 @@ extension `FlatMap.Parser Ownership Tests` {
                 #expect(lifetime.destroyed == [.upstream, .downstream])
             }
         }
-}
+    }
 
     private func makeParser(
         fluent: Bool,

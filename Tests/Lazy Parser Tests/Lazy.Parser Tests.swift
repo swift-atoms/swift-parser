@@ -3,9 +3,9 @@
     import Parser
     import Testing
 
-enum `Lazy.Parser Tests` {}
+    enum `Lazy.Parser Tests` {}
 
-extension `Lazy.Parser Tests` {
+    extension `Lazy.Parser Tests` {
         @Suite
         struct `Lazy Parser Tests` {
 
@@ -60,7 +60,7 @@ extension `Lazy.Parser Tests` {
                 }
             }
         }
-}
+    }
 
     private enum LiteralError: Swift.Error, Equatable {
         case expected(Character)

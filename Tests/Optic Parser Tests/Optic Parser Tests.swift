@@ -123,9 +123,9 @@
         )
     }
 
-enum `Optic Parser Tests` {}
+    enum `Optic Parser Tests` {}
 
-extension `Optic Parser Tests` {
+    extension `Optic Parser Tests` {
         @Suite
         struct `Optic Parser` {
 
@@ -343,7 +343,7 @@ extension `Optic Parser Tests` {
                 #expect(parser.parse(&input) == 42)
             }
         }
-}
+    }
 
     private func requireFailure<P: Parsing, E: Swift.Error>(
         _ parser: borrowing P,

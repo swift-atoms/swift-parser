@@ -5,15 +5,15 @@
     import Cursor
     import Testing
 
-enum `Parser.Optionally Tests` {}
+    enum `Parser.Optionally Tests` {}
 
-extension `Parser.Optionally Tests` {
+    extension `Parser.Optionally Tests` {
         @Suite
         struct `Parser::Optionally` {
             @Suite struct Unit {}
             @Suite struct `Edge Case` {}
         }
-}
+    }
 
     extension `Parser.Optionally Tests`.`Parser::Optionally`.Unit {
         @Test

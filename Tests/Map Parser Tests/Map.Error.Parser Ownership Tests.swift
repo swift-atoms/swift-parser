@@ -3,9 +3,9 @@
     import Parser
     import Testing
 
-enum `Map.Error.Parser Ownership Tests` {}
+    enum `Map.Error.Parser Ownership Tests` {}
 
-extension `Map.Error.Parser Ownership Tests` {
+    extension `Map.Error.Parser Ownership Tests` {
         @Suite
         struct `Error mapping preserves parser ownership` {
             @Test
@@ -95,7 +95,7 @@ extension `Map.Error.Parser Ownership Tests` {
                 #expect(original == 7 && remapped == 7)
             }
         }
-}
+    }
 
     private func inspectScopedOutput(_ lifetime: Lifetime) throws {
         let parser = Scoped(lifetime: lifetime).mapFailure { Mapped.upstream($0) }

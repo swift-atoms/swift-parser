@@ -11,13 +11,13 @@
         case b
     }
 
-enum `Parser.OneOf.Sequence Tests` {}
+    enum `Parser.OneOf.Sequence Tests` {}
 
-extension `Parser.OneOf.Sequence Tests` {
+    extension `Parser.OneOf.Sequence Tests` {
         @Suite
         struct `Parser::OneOf.Sequence` {
         }
-}
+    }
 
     extension `Parser.OneOf.Sequence Tests`.`Parser::OneOf.Sequence` {
         @Suite struct `Builder Propagation` {}

@@ -4,9 +4,9 @@
     import Testing
     import Parser_Test_Support
 
-enum `Either.Parser Tests` {}
+    enum `Either.Parser Tests` {}
 
-extension `Either.Parser Tests` {
+    extension `Either.Parser Tests` {
         @Suite
         struct `Either Parser` {
 
@@ -46,7 +46,7 @@ extension `Either.Parser Tests` {
                 }
             }
         }
-}
+    }
 
     @Builder<Substring>
     private func branch(_ useLeft: Bool) -> Either<Literal, Literal>.Parser {

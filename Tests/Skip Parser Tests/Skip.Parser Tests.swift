@@ -4,9 +4,9 @@
     import Either
     import Testing
 
-enum `Skip.Parser Tests` {}
+    enum `Skip.Parser Tests` {}
 
-extension `Skip.Parser Tests` {
+    extension `Skip.Parser Tests` {
         @Suite
         struct `Parser skip and append preserve tuple shape and stage failures` {
 
@@ -97,7 +97,7 @@ extension `Skip.Parser Tests` {
                 #expect(input.isEmpty)
             }
         }
-}
+    }
 
     private func requireOutput<P: Parsing, Output>(
         _: borrowing P,
@@ -285,7 +285,7 @@ extension `Skip.Parser Tests` {
         }
     }
 
-extension `Skip.Parser Tests` {
+    extension `Skip.Parser Tests` {
         @Suite
         struct `Parser skip and append preserve values and failures over nonescapable cursors` {
 
@@ -312,7 +312,7 @@ extension `Skip.Parser Tests` {
                 #expect(failure == .expected(0x3E))
             }
         }
-}
+    }
 
     private struct FramedByte: Parsing {
         typealias Failure = ByteMismatch

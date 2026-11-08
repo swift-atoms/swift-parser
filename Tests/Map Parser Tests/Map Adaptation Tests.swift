@@ -3,9 +3,9 @@
     import Parser
     import Testing
 
-enum `Map Adaptation Tests` {}
+    enum `Map Adaptation Tests` {}
 
-extension `Map Adaptation Tests` {
+    extension `Map Adaptation Tests` {
         @Suite
         struct `Map adapts to parsing` {
             @Test
@@ -24,6 +24,6 @@ extension `Map Adaptation Tests` {
             }
 
         }
-}
+    }
 
 #endif

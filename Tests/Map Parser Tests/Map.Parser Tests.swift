@@ -4,9 +4,9 @@
     import Either
     import Testing
 
-enum `Map.Parser Tests` {}
+    enum `Map.Parser Tests` {}
 
-extension `Map.Parser Tests` {
+    extension `Map.Parser Tests` {
         @Suite
         struct `Parser maps preserve failure types and transfer transformed outputs` {
 
@@ -123,7 +123,7 @@ extension `Map.Parser Tests` {
                 #expect(output.value == 42)
             }
         }
-}
+    }
 
     private func requireFailure<
         P: Parsing & ~Copyable,
@@ -318,7 +318,7 @@ extension `Map.Parser Tests` {
         }
     }
 
-extension `Map.Parser Tests` {
+    extension `Map.Parser Tests` {
         @Suite
         struct `Parser maps transform values read from a nonescapable cursor` {
 
@@ -332,7 +332,7 @@ extension `Map.Parser Tests` {
                 #expect(end == 1)
             }
         }
-}
+    }
 
     private struct Successor: Parsing {
         typealias Failure = ByteMismatch

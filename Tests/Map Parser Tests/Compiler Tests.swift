@@ -2,9 +2,9 @@
     import Parser_Test_Support
     import Testing
 
-enum `Compiler Tests` {}
+    enum `Compiler Tests` {}
 
-extension `Compiler Tests` {
+    extension `Compiler Tests` {
         @Suite
         private struct `Map parser ownership and lifetime constraints survive module emission` {
 
@@ -38,5 +38,5 @@ extension `Compiler Tests` {
                 #expect(diagnostic.contains("'Owned' conform to 'Copyable'"))
             }
         }
-}
+    }
 #endif

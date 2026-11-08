@@ -48,7 +48,7 @@
         }
     }
 
-extension `Pair Parser Builder Tests` {
+    extension `Pair Parser Builder Tests` {
         @Suite
         struct `Pair Parser Builder Resolution` {
 
@@ -72,9 +72,9 @@ extension `Pair Parser Builder Tests` {
                 #expect(output.second == "b")
             }
         }
-}
+    }
 
-extension `Pair Parser Builder Tests` {
+    extension `Pair Parser Builder Tests` {
         @Suite
         struct `Pair Parser Nonescapable Input` {
 
@@ -89,7 +89,7 @@ extension `Pair Parser Builder Tests` {
                 #expect(end == 2)
             }
         }
-}
+    }
 
     private func requireFailure<P: Parsing, Failure: Swift::Error>(
         _: borrowing P,

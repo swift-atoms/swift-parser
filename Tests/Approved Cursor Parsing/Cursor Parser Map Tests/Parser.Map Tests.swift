@@ -5,15 +5,15 @@
     import Cursor
     import Testing
 
-enum `Parser.Map Tests` {}
+    enum `Parser.Map Tests` {}
 
-extension `Parser.Map Tests` {
+    extension `Parser.Map Tests` {
         @Suite
         struct `Map.Parser.Transform` {
             @Suite struct Unit {}
             @Suite struct `Edge Case` {}
         }
-}
+    }
 
     extension `Parser.Map Tests`.`Map.Parser.Transform`.Unit {
         @Test

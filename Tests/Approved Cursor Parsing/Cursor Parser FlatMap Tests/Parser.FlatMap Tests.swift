@@ -6,15 +6,15 @@
     import Cursor
     import Testing
 
-enum `Parser.FlatMap Tests` {}
+    enum `Parser.FlatMap Tests` {}
 
-extension `Parser.FlatMap Tests` {
+    extension `Parser.FlatMap Tests` {
         @Suite
         struct `FlatMap.Parser` {
             @Suite struct Unit {}
             @Suite struct `Edge Case` {}
         }
-}
+    }
 
     extension `Parser.FlatMap Tests`.`FlatMap.Parser`.Unit {
         @Test

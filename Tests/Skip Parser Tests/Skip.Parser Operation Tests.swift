@@ -3,9 +3,9 @@
     import Parser
     import Testing
 
-enum `Skip.Parser Operation Tests` {}
+    enum `Skip.Parser Operation Tests` {}
 
-extension `Skip.Parser Operation Tests` {
+    extension `Skip.Parser Operation Tests` {
         @Suite
         struct `Skip parser operation` {
             @Test
@@ -22,6 +22,6 @@ extension `Skip.Parser Operation Tests` {
             }
 
         }
-}
+    }
 
 #endif

@@ -4,9 +4,9 @@
     import Either
     import Testing
 
-enum `Parser Builder Tests` {}
+    enum `Parser Builder Tests` {}
 
-extension `Parser Builder Tests` {
+    extension `Parser Builder Tests` {
         @Suite
         struct `Parser builder blocks infer input and preserve body output and failure` {
 
@@ -53,7 +53,7 @@ extension `Parser Builder Tests` {
                 requireFailure(sequence, Mismatch.self)
             }
         }
-}
+    }
 
     private func requireFailure<P: Parsing, Failure: Swift::Error>(
         _: borrowing P,
@@ -93,7 +93,7 @@ extension `Parser Builder Tests` {
         }
     }
 
-extension `Parser Builder Tests` {
+    extension `Parser Builder Tests` {
         @Suite
         struct `Parser builder blocks nest within bodies over nonescapable cursors` {
 
@@ -107,7 +107,7 @@ extension `Parser Builder Tests` {
                 #expect(end == 4)
             }
         }
-}
+    }
 
     private struct Sentence: Parsing {
         typealias Failure = ByteMismatch

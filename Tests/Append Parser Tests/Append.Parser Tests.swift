@@ -4,9 +4,9 @@
     import Parser
     import Testing
 
-enum `Append.Parser Tests` {}
+    enum `Append.Parser Tests` {}
 
-extension `Append.Parser Tests` {
+    extension `Append.Parser Tests` {
         @Suite
         struct `Append parser adapters` {
 
@@ -159,6 +159,6 @@ extension `Append.Parser Tests` {
 
             private func discard<T: ~Copyable>(_ value: consuming T) {}
         }
-}
+    }
 
 #endif

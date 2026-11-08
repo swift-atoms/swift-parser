@@ -16,7 +16,7 @@
         }
     }
 
-extension Search.Selection.Parser {
+    extension Search.Selection.Parser {
         public typealias Output = Input
 
         public typealias Failure = Search<Pattern>.Error
@@ -40,7 +40,7 @@ extension Search.Selection.Parser {
             input = input[end...]
             return output
         }
-}
+    }
 
     extension Parser::Builder where Input: Swift::Collection, Input.SubSequence == Input {
         public static func buildExpression<D: Swift::Collection>(_ selection: Search<D>.Selection) -> Search<D>.Selection.Parser<Input>

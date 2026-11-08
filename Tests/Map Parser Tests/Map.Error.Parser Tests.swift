@@ -4,9 +4,9 @@
     import Either
     import Testing
 
-enum `Map.Error.Parser Tests` {}
+    enum `Map.Error.Parser Tests` {}
 
-extension `Map.Error.Parser Tests` {
+    extension `Map.Error.Parser Tests` {
         @Suite
         struct `Parser error maps transform failure branches and preserve successful outputs` {
 
@@ -55,7 +55,7 @@ extension `Map.Error.Parser Tests` {
             }
 
         }
-}
+    }
 
     private func requireFailure<
         P: Parsing,

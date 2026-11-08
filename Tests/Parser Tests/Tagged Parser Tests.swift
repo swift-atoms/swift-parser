@@ -2,9 +2,9 @@
     import Parser
     import Testing
 
-enum `Tagged Parser Tests` {}
+    enum `Tagged Parser Tests` {}
 
-extension `Tagged Parser Tests` {
+    extension `Tagged Parser Tests` {
         @Suite
         struct `Tagged Parser` {
 
@@ -18,7 +18,7 @@ extension `Tagged Parser Tests` {
                 #expect(input == "bc")
             }
         }
-}
+    }
 
     private enum Field {}
 

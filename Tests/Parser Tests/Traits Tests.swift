@@ -2,9 +2,9 @@
     import Parser
     import Testing
 
-enum `Traits Tests` {}
+    enum `Traits Tests` {}
 
-extension `Traits Tests` {
+    extension `Traits Tests` {
         @Suite
         struct `Parser traits compose through one import` {
             @Test
@@ -26,5 +26,5 @@ extension `Traits Tests` {
                 #expect(input == ";next")
             }
         }
-}
+    }
 #endif

@@ -112,9 +112,9 @@
         _: borrowing Pair<A, N>.Parser<F>
     ) where A.Input == N.Input, A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable, A.Output: ~Copyable & Escapable, N.Output: ~Copyable & Escapable {}
 
-enum `Pair Parser Owner Tests` {}
+    enum `Pair Parser Owner Tests` {}
 
-extension `Pair Parser Owner Tests` {
+    extension `Pair Parser Owner Tests` {
         @Suite
         struct `Parser sequences preserve noncopyable owners across tuple and Pair composition` {
             @Test
@@ -258,9 +258,9 @@ extension `Pair Parser Owner Tests` {
                 #expect(life.owners.sorted() == [1, 2])
             }
         }
-}
+    }
 
-extension `Pair Parser Owner Tests` {
+    extension `Pair Parser Owner Tests` {
         @Suite
         struct `Pair parsers consume both stored owners` {
             @Test
@@ -284,7 +284,7 @@ extension `Pair Parser Owner Tests` {
                 #expect(life.owners.sorted() == [1, 2])
             }
         }
-}
+    }
 
     private func build<P: Parsing & ~Copyable>(
         @Parser::Builder<Int> _ make: () -> P

@@ -158,7 +158,7 @@ private enum ParseFailure: Swift.Error, Equatable {
 }
 
 #if os(macOS)
-extension `Parser Tests` {
+    extension `Parser Tests` {
         @Suite
         private struct `Parser ownership and lifetime constraints survive module emission` {
 
@@ -180,11 +180,11 @@ extension `Parser Tests` {
                 #expect(diagnostic.contains("noncopyable 'owner' cannot be consumed when captured"))
             }
         }
-}
+    }
 #endif
 
 #if Map
-extension `Parser Tests` {
+    extension `Parser Tests` {
         @Suite
         private struct `Parser mapping initializers preserve failures` {
             private enum ConstructionFailure: Swift.Error, Equatable { case invalid }
@@ -249,5 +249,5 @@ extension `Parser Tests` {
 
             private func requireFailure<I, O, F>(_ parser: Parser<I, O, F>, _: F.Type) {}
         }
-}
+    }
 #endif

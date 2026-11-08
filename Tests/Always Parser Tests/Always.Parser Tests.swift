@@ -3,15 +3,15 @@
     import Parser
     import Testing
 
-enum `Always.Parser Tests` {}
+    enum `Always.Parser Tests` {}
 
-extension `Always.Parser Tests` {
+    extension `Always.Parser Tests` {
         @Suite
         struct `Always.Parser` {
             @Suite struct Unit {}
             @Suite struct `Edge Case` {}
         }
-}
+    }
 
     extension `Always.Parser Tests`.`Always.Parser`.Unit {
         @Test

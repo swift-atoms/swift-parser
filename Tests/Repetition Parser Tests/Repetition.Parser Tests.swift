@@ -24,9 +24,9 @@
         }
     }
 
-enum `Repetition.Parser Tests` {}
+    enum `Repetition.Parser Tests` {}
 
-extension `Repetition.Parser Tests` {
+    extension `Repetition.Parser Tests` {
         @Suite struct `Repetition Parser Tests` {
             @Test func `rejected iteration is restored`() throws {
                 let bounds: ClosedRange<Cardinal> = 2...5
@@ -89,7 +89,7 @@ extension `Repetition.Parser Tests` {
                 #expect(input == "3")
             }
         }
-}
+    }
 
     private struct ScopedInput: Restorable, ~Copyable, ~Escapable {
         let values: Span<Int>

@@ -4,15 +4,15 @@
     import Collection_Parser_Test_Support
     import Testing
 
-enum `Parser.Prefix.Through Tests` {}
+    enum `Parser.Prefix.Through Tests` {}
 
-extension `Parser.Prefix.Through Tests` {
+    extension `Parser.Prefix.Through Tests` {
         @Suite
         struct `Parser::Prefix.Through` {
             @Suite struct Unit {}
             @Suite struct `Edge Case` {}
         }
-}
+    }
 
     extension `Parser.Prefix.Through Tests`.`Parser::Prefix.Through`.Unit {
         @Test

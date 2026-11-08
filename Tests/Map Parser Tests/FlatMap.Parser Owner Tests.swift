@@ -4,9 +4,9 @@
     import Either
     import Testing
 
-enum `FlatMap.Parser Owner Tests` {}
+    enum `FlatMap.Parser Owner Tests` {}
 
-extension `FlatMap.Parser Owner Tests` {
+    extension `FlatMap.Parser Owner Tests` {
         @Suite
         struct `Flat map retains its upstream and creates a downstream for each call` {
             @Test(arguments: [false, true])
@@ -90,11 +90,12 @@ extension `FlatMap.Parser Owner Tests` {
                     Downstream(seed: Seed(number: number, lifetime: lifetime), fails: false, lifetime: lifetime)
                 }
                 let parser: FlatMap::FlatMap<Parser<Int, Int, Never>.Output, Downstream>.Parser<Parser<Int, Int, Never>>
-                parser = if fluent {
-                    upstream.flatMap(transform)
-                } else {
-                    FlatMap::FlatMap.Parser(upstream: upstream, transform: transform)
-                }
+                parser =
+                    if fluent {
+                        upstream.flatMap(transform)
+                    } else {
+                        FlatMap::FlatMap.Parser(upstream: upstream, transform: transform)
+                    }
                 requireCopyable(parser)
                 let copied = parser
                 var input = 0
@@ -107,7 +108,7 @@ extension `FlatMap.Parser Owner Tests` {
                 #expect(lifetime.resultsDestroyed == 2)
             }
         }
-}
+    }
 
     private func makeParser(
         fluent: Bool,

@@ -4,15 +4,15 @@
     import Collection_Parser_Test_Support
     import Testing
 
-enum `Parser.Rest Tests` {}
+    enum `Parser.Rest Tests` {}
 
-extension `Parser.Rest Tests` {
+    extension `Parser.Rest Tests` {
         @Suite
         struct `Parser::Rest` {
             @Suite struct Unit {}
             @Suite struct `Edge Case` {}
         }
-}
+    }
 
     extension `Parser.Rest Tests`.`Parser::Rest`.Unit {
         @Test

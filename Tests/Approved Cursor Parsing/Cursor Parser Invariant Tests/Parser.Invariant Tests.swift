@@ -7,13 +7,13 @@
     import Cursor
     import Testing
 
-enum `Parser.Invariant Tests` {}
+    enum `Parser.Invariant Tests` {}
 
-extension `Parser.Invariant Tests` {
+    extension `Parser.Invariant Tests` {
         @Suite
         struct `Parser.Invariant` {
         }
-}
+    }
 
     extension `Parser.Invariant Tests`.`Parser.Invariant` {
         @Suite struct `Input Position` {}

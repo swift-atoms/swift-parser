@@ -6,9 +6,9 @@
     import Parser
     import Testing
 
-enum `Search+Iteration.Parser Tests` {}
+    enum `Search+Iteration.Parser Tests` {}
 
-extension `Search+Iteration.Parser Tests` {
+    extension `Search+Iteration.Parser Tests` {
         @Suite
         struct `Prefix iteration parsing Tests` {
             @Test
@@ -31,6 +31,6 @@ extension `Search+Iteration.Parser Tests` {
                 #expect(input.next() == "f")
             }
         }
-}
+    }
 
 #endif

@@ -4,9 +4,9 @@
     import Parser
     import Testing
 
-enum `FlatMap.Parser Tests` {}
+    enum `FlatMap.Parser Tests` {}
 
-extension `FlatMap.Parser Tests` {
+    extension `FlatMap.Parser Tests` {
         @Suite
         struct `Parser flat maps select downstream operations and distinguish stage failures` {
 
@@ -34,7 +34,7 @@ extension `FlatMap.Parser Tests` {
                 }
             }
         }
-}
+    }
 
     private struct Counted: Parsing {
     }

@@ -5,15 +5,15 @@
     import Collection_Parser_Test_Support
     import Testing
 
-enum `Parser.Prefix.While Tests` {}
+    enum `Parser.Prefix.While Tests` {}
 
-extension `Parser.Prefix.While Tests` {
+    extension `Parser.Prefix.While Tests` {
         @Suite
         struct `Parser::Prefix.While` {
             @Suite struct Unit {}
             @Suite struct `Edge Case` {}
         }
-}
+    }
 
     extension `Parser.Prefix.While Tests`.`Parser::Prefix.While`.Unit {
         @Test

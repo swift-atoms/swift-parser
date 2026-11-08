@@ -3,9 +3,9 @@
     import Parser
     import Testing
 
-enum `Skip.Parser Arity Tests` {}
+    enum `Skip.Parser Arity Tests` {}
 
-extension `Skip.Parser Arity Tests` {
+    extension `Skip.Parser Arity Tests` {
         @Suite
         struct `Parser bodies process twelve elements and stop at the first mismatch` {
 
@@ -53,7 +53,7 @@ extension `Skip.Parser Arity Tests` {
             }
 
         }
-}
+    }
 
     private struct TwelveElements: Parsing {
         typealias Input = Substring

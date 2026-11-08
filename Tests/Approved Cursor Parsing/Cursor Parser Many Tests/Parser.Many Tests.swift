@@ -6,15 +6,15 @@
     import Cursor
     import Testing
 
-enum `Parser.Many Tests` {}
+    enum `Parser.Many Tests` {}
 
-extension `Parser.Many Tests` {
+    extension `Parser.Many Tests` {
         @Suite
         struct `Parser::Many` {
             @Suite struct Unit {}
             @Suite struct `Edge Case` {}
         }
-}
+    }
 
     extension `Parser.Many Tests`.`Parser::Many`.Unit {
         @Test

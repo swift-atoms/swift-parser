@@ -3,9 +3,9 @@
     import Parser
     import Testing
 
-enum `FlatMap Adaptation Tests` {}
+    enum `FlatMap Adaptation Tests` {}
 
-extension `FlatMap Adaptation Tests` {
+    extension `FlatMap Adaptation Tests` {
         @Suite
         struct `FlatMap adapts selected parsers` {
             @Test
@@ -28,6 +28,6 @@ extension `FlatMap Adaptation Tests` {
             }
 
         }
-}
+    }
 
 #endif
