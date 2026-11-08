@@ -3,14 +3,16 @@
     public import Predicate
 
     extension Predicate where T: Copyable & Escapable {
-
         public struct Parser<Input: Swift::Collection>: Parser::Parsing
         where Input.SubSequence == Input, Input.Element == T {
-            public typealias Error = Predicate<T>.Error
             public let wrapped: Predicate<T>
             public init(_ wrapped: Predicate<T>) { self.wrapped = wrapped }
         }
     }
+
+extension Predicate.Parser {
+        public typealias Error = Predicate<T>.Error
+}
 
     extension Predicate.Parser where T: Copyable & Escapable {
         public typealias Output = T

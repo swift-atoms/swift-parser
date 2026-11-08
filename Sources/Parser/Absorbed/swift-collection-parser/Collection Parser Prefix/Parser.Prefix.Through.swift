@@ -3,12 +3,8 @@
     public import Collection
 
     extension Parser::Prefix {
-
         public struct Through<Input: Collection.Slice.`Protocol`>: Parsing
         where Input.Element: Equatable, Input.Element: Copyable {
-
-            public typealias Failure = Parser::Prefix.Through<Input>.Error
-
             @usableFromInline
             let delimiter: [Input.Element]
 
@@ -18,6 +14,10 @@
             }
         }
     }
+
+extension Parser.Through {
+        public typealias Failure = Parser::Prefix.Through<Input>.Error
+}
 
     extension Parser::Prefix.Through {
         public typealias Output = Input
@@ -52,7 +52,6 @@
 
     extension Parser::Prefix.Through
     where Input: Collection.Slice.`Protocol`, Input.Element: Equatable, Input.Element: Copyable {
-
         public enum Error: Swift::Error, Equatable {
             case predicateFailed(description: String)
         }
