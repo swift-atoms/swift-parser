@@ -62,7 +62,7 @@
     }
 
     extension `Parser::First Tests` {
-        @Test func predicateFailureConsumesExactlyOneElementAndEvaluatesOnce() {
+        @Test func `predicate failure consumes exactly one element and evaluates once`() {
             var input = Characters("1a")
             var calls = 0
             let parser = Parser::First.Where<Characters> { value in
@@ -78,7 +78,7 @@
             #expect(input.remainder == "a")
         }
 
-        @Test func noncopyableIteratorWorksAcrossLeafAndLiteralParsers() throws {
+        @Test func `noncopyable iterator works across leaf and literal parsers`() throws {
             var input = OwnedNumbers()
             #expect(try Parser::First.Element<OwnedNumbers>().parse(&input) == 0)
             try Parser::ConsumingLiteral<OwnedNumbers>([1, 2]).parse(&input)

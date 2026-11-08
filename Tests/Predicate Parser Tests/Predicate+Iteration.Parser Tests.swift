@@ -16,7 +16,7 @@
             }
         }
 
-        @Test func rejectionConsumesExactlyOneElement() throws {
+        @Test func `rejection consumes exactly one element`() throws {
             var input = Input(elements: [1, 2, 3])
             let parser = Predicate<Int> { $0.isMultiple(of: 2) }.parser(for: Input.self)
             do {
@@ -32,7 +32,7 @@
             #expect(input.elements == [3])
         }
 
-        @Test func sourceFailureAndExhaustionRemainDistinct() {
+        @Test func `source failure and exhaustion remain distinct`() {
             let parser = Predicate<Int> { _ in true }.parser(for: Input.self)
             var empty = Input(elements: [])
             do {
@@ -64,7 +64,7 @@
                 return Token(value: value)
             }
         }
-        @Test func noncopyableOutputIsTransferred() throws {
+        @Test func `noncopyable output is transferred`() throws {
             var input = Tokens()
             let parser = Predicate<Token> { $0.value == 1 }.parser(for: Tokens.self)
             let token = try parser.parse(&input)
@@ -93,7 +93,7 @@
         }
     }
     extension PredicateIterationParserTests {
-        @Test func scopedOutputRemainsBorrowedFromInput() throws {
+        @Test func `scoped output remains borrowed from input`() throws {
             let values = [42]
             var input = Loans(values.span)
             let parser = Predicate<Loan> { $0.values[0] == 42 }.parser(for: Loans.self)

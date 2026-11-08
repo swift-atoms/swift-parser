@@ -411,7 +411,7 @@ extension `Parser.Invariant Tests` {
     private enum ClassifiedFailure: Swift::Error, Equatable { case mismatch, committed }
 
     extension `Parser.Invariant Tests`.`Parser.Invariant`.Boundary {
-        @Test func zeroMaximumDoesNotAttemptElementOrSeparator() throws {
+        @Test func `zero maximum does not attempt element or separator`() throws {
             let element = Parser::Parser<ArraySlice<UInt8>, UInt8, ClassifiedFailure> { _ throws(ClassifiedFailure) in
                 Issue.record("maximum zero must not execute the element")
                 throw .committed
@@ -434,7 +434,7 @@ extension `Parser.Invariant Tests` {
             #expect(input == [1])
         }
 
-        @Test func committedRepetitionFailureRetainsConsumption() {
+        @Test func `committed repetition failure retains consumption`() {
             let element = Parser::Parser<ArraySlice<UInt8>, UInt8, ClassifiedFailure> { input throws(ClassifiedFailure) in
                 _ = input.popFirst()
                 throw .committed
@@ -447,7 +447,7 @@ extension `Parser.Invariant Tests` {
             #expect(input == [2])
         }
 
-        @Test func choiceRetainsBothRejectionsAndRestoresFinalBranch() {
+        @Test func `choice retains both rejections and restores final branch`() {
             let rejected = Parser::Parser<ArraySlice<UInt8>, UInt8, ClassifiedFailure> { input throws(ClassifiedFailure) in
                 _ = input.popFirst()
                 throw .mismatch
@@ -471,7 +471,7 @@ extension `Parser.Invariant Tests` {
             #expect(input == [1, 2])
         }
 
-        @Test func committedChoiceDoesNotTryTheNextBranch() {
+        @Test func `committed choice does not try the next branch`() {
             let first = Parser::Parser<ArraySlice<UInt8>, UInt8, ClassifiedFailure> { input throws(ClassifiedFailure) in
                 _ = input.popFirst()
                 throw .committed

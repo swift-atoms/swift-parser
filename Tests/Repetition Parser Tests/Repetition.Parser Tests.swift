@@ -28,14 +28,14 @@ enum `Repetition.Parser Tests` {}
 
 extension `Repetition.Parser Tests` {
         @Suite struct `Repetition Parser Tests` {
-            @Test func rejectedIterationIsRestored() throws {
+            @Test func `rejected iteration is restored`() throws {
                 let bounds: ClosedRange<Cardinal> = 2...5
                 let parser: ClosedRange<Cardinal>.Parser<Step, Rejected, Fatal> = bounds.parser { Step() }
                 var input: Substring = "12xrest"
                 #expect(try parser.parse(&input) == ["1", "2"])
                 #expect(input == "xrest")
             }
-            @Test func fatalErrorsPropagateRatherThanStopping() {
+            @Test func `fatal errors propagate rather than stopping`() {
                 let bounds: PartialRangeFrom<Cardinal> = 0...
                 let parser = bounds.parser { Step() }
                 var input: Substring = "12!rest"
@@ -44,7 +44,7 @@ extension `Repetition.Parser Tests` {
                 }
                 #expect(input == "rest")
             }
-            @Test func minimumFailureRestoresOnlyTheRejectedIteration() {
+            @Test func `minimum failure restores only the rejected iteration`() {
                 let bounds: ClosedRange<Cardinal> = 2...5
                 let parser = bounds.parser { Step() }
                 var input: Substring = "1xrest"
@@ -53,7 +53,7 @@ extension `Repetition.Parser Tests` {
                 }
                 #expect(input == "xrest")
             }
-            @Test func noProgressIsAnError() {
+            @Test func `no progress is an error`() {
                 let bounds: PartialRangeFrom<Cardinal> = 0...
                 let parser = bounds.parser {
                     Parser<Substring, Int, Either<Rejected, Fatal>> { _ in 1 }
@@ -70,14 +70,14 @@ extension `Repetition.Parser Tests` {
                 }
                 #expect(input == "abc")
             }
-            @Test func upperBoundDoesNotProbeTheNextElement() throws {
+            @Test func `upper bound does not probe the next element`() throws {
                 let bounds: PartialRangeThrough<Cardinal> = ...2
                 let parser = bounds.parser { Step() }
                 var input: Substring = "12!"
                 #expect(try parser.parse(&input) == ["1", "2"])
                 #expect(input == "!")
             }
-            @Test func exclusiveAndEmptyBoundsAreHandledWithoutUnderflow() throws {
+            @Test func `exclusive and empty bounds are handled without underflow`() throws {
                 let bounds: Range<Cardinal> = 1..<3
                 var input: Substring = "123"
                 #expect(try bounds.parser { Step() }.parse(&input) == ["1", "2"])
@@ -105,7 +105,7 @@ extension `Repetition.Parser Tests` {
     }
 
     extension `Repetition.Parser Tests`.`Repetition Parser Tests` {
-        @Test func scopedNoncopyableInputRestoresItsCheckpoint() throws {
+        @Test func `scoped noncopyable input restores its checkpoint`() throws {
             let values = [1, 2, -1, 4]
             var input = ScopedInput(values.span)
             let bounds: PartialRangeFrom<Cardinal> = 0...
@@ -124,7 +124,7 @@ extension `Repetition.Parser Tests` {
     }
 
     extension `Repetition.Parser Tests`.`Repetition Parser Tests` {
-        @Test func arraySliceRestoresRejectedElement() throws {
+        @Test func `array slice restores rejected element`() throws {
             let bounds: PartialRangeFrom<Cardinal> = 0...
             let parser = bounds.parser {
                 Parser<ArraySlice<Int>, Int, Either<Rejected, Fatal>> { input throws(Either<Rejected, Fatal>) in
@@ -157,7 +157,7 @@ extension `Repetition.Parser Tests` {
     }
 
     extension `Repetition.Parser Tests`.`Repetition Parser Tests` {
-        @Test func aBuilderCountsWholeCompositionsAndRestoresPartialRejection() throws {
+        @Test func `a builder counts whole compositions and restores partial rejection`() throws {
             let bounds: PartialRangeFrom<Cardinal> = 0...
             let parser = bounds.parser(for: Substring.self) {
                 Step()
@@ -170,7 +170,7 @@ extension `Repetition.Parser Tests` {
             #expect(result[0].1 == "2")
             #expect(input == "3x")
         }
-        @Test func theOperationOwnerIsBorrowedAndDestroyedOnce() throws {
+        @Test func `the operation owner is borrowed and destroyed once`() throws {
             let probe = Probe()
             let bounds: PartialRangeFrom<Cardinal> = 0...
             var input: Substring = "1x"

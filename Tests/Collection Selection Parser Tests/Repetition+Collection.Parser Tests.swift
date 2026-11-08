@@ -10,13 +10,13 @@
     import Testing
 
     @Suite struct CollectionSelectionParserTests {
-        @Test func boundedSelectionConsumesExactlyItsOutput() throws {
+        @Test func `bounded selection consumes exactly its output`() throws {
             var input = Fixture.Input(utf8: "abcd")
             let output = try (Cardinal(UInt(2))...Cardinal(UInt(2))).parser(forCollection: Fixture.Input.self).parse(&input)
             #expect(output == Fixture.Input(utf8: "ab"))
             #expect(input == Fixture.Input(utf8: "cd"))
         }
-        @Test func delimiterFailureLeavesInputUnchanged() {
+        @Test func `delimiter failure leaves input unchanged`() {
             var input = Fixture.Input(utf8: "ab-")
             do {
                 _ = try Search(Array("--".utf8)).selecting(.start).parser(forCollection: Fixture.Input.self).parse(&input)
@@ -24,7 +24,7 @@
             } catch { #expect(error == .notFound) }
             #expect(input == Fixture.Input(utf8: "ab-"))
         }
-        @Test func whileAndThroughCompose() throws {
+        @Test func `while and through compose`() throws {
             var input = Fixture.Input(utf8: "aa--z")
             let first = try Repetition((Cardinal.zero...), operation: Predicate<UInt8> { $0 == 97 }).parser(forCollection: Fixture.Input.self).parse(&input)
             #expect(first == Fixture.Input(utf8: "aa"))
@@ -51,7 +51,7 @@
         borrowing func makeIterator() -> Iterator::Iterator.Chunk<UInt8> { wrapped.makeIterator() }
     }
     extension CollectionSelectionParserTests {
-        @Test func selectionBorrowsANoncopyableCollection() throws {
+        @Test func `selection borrows a noncopyable collection`() throws {
             let source = Owned(wrapped: Fixture.Input(utf8: "aa--"))
             let countEnd = try (Cardinal(UInt(2))...Cardinal(UInt(2))).end(inCollection: source)
             let predicateEnd = try Repetition((Cardinal.zero...), operation: Predicate<UInt8> { $0 == 97 }).end(inCollection: source)
@@ -64,7 +64,7 @@
 
     extension CollectionSelectionParserTests {
         @Test(arguments: [0, 1, 3])
-        func exactCountIncludesEmptyAndCompleteInput(_ count: Int) throws {
+        func `exact count includes empty and complete input`(_ count: Int) throws {
             let original = Fixture.Input([1, 2, 3])
             var input = original
             let output = try (Cardinal(UInt(count))...Cardinal(UInt(count))).parser(forCollection: Fixture.Input.self).parse(&input)
@@ -73,7 +73,7 @@
             var empty = Fixture.Input([])
             #expect(try (Cardinal.zero...Cardinal(UInt(0))).parser(forCollection: Fixture.Input.self).parse(&empty) == Fixture.Input([]))
         }
-        @Test func insufficientCountDoesNotConsumeInput() {
+        @Test func `insufficient count does not consume input`() {
             var input = Fixture.Input([1, 2])
             do {
                 _ = try (Cardinal(UInt(3))...Cardinal(UInt(3))).parser(forCollection: Fixture.Input.self).parse(&input)
