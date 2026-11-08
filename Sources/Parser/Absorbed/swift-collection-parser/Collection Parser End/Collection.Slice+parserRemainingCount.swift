@@ -4,7 +4,7 @@
     extension Collection.Slice.`Protocol` {
 
         @usableFromInline
-        package var parserRemainingCount: Int {
+        var parserRemainingCount: Int {
             var count = 0
             var index = startIndex
             while index < endIndex {

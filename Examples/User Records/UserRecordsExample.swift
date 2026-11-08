@@ -2,7 +2,7 @@ import Foundation
 import Parser
 
 @main
-struct UserRecordsExample {
+fileprivate struct UserRecordsExample {
 }
 
 extension UserRecordsExample {
