@@ -33,7 +33,7 @@
     extension Repetition.Parser
     where Bounds: Cardinal.Range, Operation: Parsing & ~Copyable, Operation.Input: Restorable & ~Copyable & ~Escapable, Operation.Input.Checkpoint: Equatable, Operation.Output: Copyable & Escapable {
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-            guard wrapped.bounds.contains(wrapped.bounds.minimum) else { throw .left(.emptyBounds) }
+            guard wrapped.bounds.bounds != .empty else { throw .left(.emptyBounds) }
             var output: Output = []
             var count = Cardinal.zero
             while wrapped.bounds.permitsAnother(after: count) {
