@@ -33,6 +33,7 @@
                 var checkIndex = endIndex
                 for element in delimiter {
                     guard checkIndex < input.endIndex else {
+                        endIndex = input.endIndex
                         break outer
                     }
                     guard input[checkIndex] == element else {

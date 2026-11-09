@@ -60,6 +60,17 @@
         }
 
         @Test
+        func `consumes a partial trailing delimiter`() {
+            let parser = Parser::Prefix.UpTo<CollectionParserTest.Input>(Swift::Array("cd".utf8))
+            var input = CollectionParserTest.Input(utf8: "abc")
+
+            let result = parser.parse(&input)
+
+            #expect(result == CollectionParserTest.Input(utf8: "abc"))
+            #expect(input.isEmpty)
+        }
+
+        @Test
         func `empty input returns empty result`() {
             let parser = Parser::Prefix.UpTo<CollectionParserTest.Input>([0x00])
             var input: CollectionParserTest.Input = []
