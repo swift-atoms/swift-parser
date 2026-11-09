@@ -64,7 +64,10 @@
                     input.seek(to: saved)
                     break
                 }
-                guard input.checkpoint != saved else { throw .noProgress }
+                guard input.checkpoint != saved else {
+                    input.seek(to: saved)
+                    throw .noProgress
+                }
                 results.append(value)
             }
             guard results.count >= minimum else { throw .countTooLow(expected: minimum, got: results.count) }
@@ -209,7 +212,10 @@
                         input.seek(to: saved)
                         break
                     }
-                    guard input.checkpoint != saved else { throw .noProgress }
+                    guard input.checkpoint != saved else {
+                        input.seek(to: saved)
+                        throw .noProgress
+                    }
                     results.append(value)
                 }
                 guard results.count >= minimum else { throw .countTooLow(expected: minimum, got: results.count) }

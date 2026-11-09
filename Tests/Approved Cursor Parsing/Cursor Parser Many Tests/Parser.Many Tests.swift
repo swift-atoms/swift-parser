@@ -8,6 +8,8 @@
 
     enum `Parser.Many Tests` {}
 
+    private enum ClassifiedFailure: Swift::Error, Equatable { case mismatch }
+
     extension `Parser.Many Tests` {
         @Suite
         struct `Parser::Many` {
@@ -69,6 +71,37 @@
                 try parser.parse(&input)
             }
             #expect(input.first == 0x41)
+        }
+
+        @Test
+        func `no progress leaves the input where the stalled iteration began`() {
+            let element = Parser::Parser<ArraySlice<UInt8>, UInt8?, ClassifiedFailure> { input throws(ClassifiedFailure) in
+                guard input.first == 0x41 else { return nil }
+                return input.removeFirst()
+            }
+            let parser = Parser::Many(element, rejected: { _ in true })
+            var input = ArraySlice<UInt8>([0x41, 0x42])
+
+            #expect(throws: Parser::Many<ArraySlice<UInt8>, Parser::Parser<ArraySlice<UInt8>, UInt8?, ClassifiedFailure>>.Error.noProgress) {
+                try parser.parse(&input)
+            }
+            #expect(input == [0x42])
+        }
+
+        @Test
+        func `separated no progress leaves the input where the stalled iteration began`() {
+            let element = Parser::Parser<ArraySlice<UInt8>, UInt8?, ClassifiedFailure> { input throws(ClassifiedFailure) in
+                guard input.first == 0x41 else { return nil }
+                return input.removeFirst()
+            }
+            let separator = Parser::Parser<ArraySlice<UInt8>, Void, ClassifiedFailure> { _ throws(ClassifiedFailure) in () }
+            let parser = Parser::Many.Separated(element, separator: separator, rejected: { _ in true }, separatorRejected: { _ in true })
+            var input = ArraySlice<UInt8>([0x41, 0x42])
+
+            #expect(throws: (any Swift::Error).self) {
+                try parser.parse(&input)
+            }
+            #expect(input == [0x42])
         }
 
         @Test
