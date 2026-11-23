@@ -8,10 +8,8 @@ where
     Success.Failure == Failure
 {
 
-    public struct Parser: Parser::Parsing, ~Copyable {
-
-        public typealias Input = Success.Input
-        public typealias Output = Success.Output
+    public struct Parser<Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable>: Parser::Parsing, ~Copyable
+    where Success.Input == Input, Success.Output == Output {
 
         public let wrapped: Swift::Result<Success, Failure>
 
@@ -22,7 +20,7 @@ where
     }
 }
 
-extension Swift::Result.Parser where Success: Parser::Parsing & ~Copyable, Success.Input: ~Copyable & ~Escapable, Success.Output: ~Copyable & ~Escapable, Success.Failure == Failure {
+extension Swift::Result.Parser where Success: Parser::Parsing & ~Copyable, Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Success.Failure == Failure {
     @inlinable
     @_lifetime(borrow self, &input)
     public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
@@ -38,8 +36,8 @@ extension Swift::Result.Parser where Success: Parser::Parsing & ~Copyable, Succe
 extension Swift::Result.Parser: Copyable
 where
     Success: Copyable,
-    Success.Input: ~Copyable & ~Escapable,
-    Success.Output: ~Copyable & ~Escapable,
+    Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & ~Escapable,
     Success.Failure == Failure
 {}
 
@@ -47,7 +45,7 @@ extension Parser::Builder where Input: ~Copyable & ~Escapable {
     @inlinable
     public static func buildExpression<P: Parser::Parsing & ~Copyable>(
         _ result: consuming Swift::Result<P, P.Failure>
-    ) -> Swift::Result<P, P.Failure>.Parser
+    ) -> Swift::Result<P, P.Failure>.Parser<P.Input, P.Output>
     where
         P.Input == Input,
         P.Input: ~Copyable & ~Escapable,

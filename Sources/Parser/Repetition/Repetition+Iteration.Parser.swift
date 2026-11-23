@@ -7,8 +7,8 @@
 
     extension Repetition where Bounds: Cardinal.Range {
         public func parser<I: Iterating & ~Copyable & ~Escapable>(
-            for input: Iterator::Iterator.Buffered<I, I.Failure>.Type
-        ) -> Parser::Parser<Iterator::Iterator.Buffered<I, I.Failure>, [I.Element], Either<Repetition<Bounds, Void>.Error, I.Failure>>
+            for input: Iterator::Iterator.Buffered<I, I.Element, I.Failure>.Type
+        ) -> Parser::Parser<Iterator::Iterator.Buffered<I, I.Element, I.Failure>, [I.Element], Either<Repetition<Bounds, Void>.Error, I.Failure>>
         where I.Element: Copyable & Escapable, Operation == Predicate<I.Element> {
             Parser::Parser { input throws(Either<Repetition<Bounds, Void>.Error, I.Failure>) in
                 var output: [I.Element] = []
